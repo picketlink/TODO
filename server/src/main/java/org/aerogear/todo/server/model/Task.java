@@ -11,10 +11,7 @@ import java.lang.Override;
 import java.util.Date;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import java.util.Set;
-import java.util.HashSet;
-import org.aerogear.todo.server.model.Tag;
-import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import javax.persistence.CascadeType;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -132,16 +129,29 @@ public class Task implements java.io.Serializable
       return result;
    }
 
-   private @OneToMany
-   Set<Tag> tags = new HashSet<Tag>();
+   @Column
+   private ArrayList<Integer> tags = new ArrayList<Integer>();
 
-   public Set<Tag> getTags()
+   public ArrayList<Integer> getTags()
    {
       return this.tags;
    }
 
-   public void setTags(final Set<Tag> tags)
+   public void setTags(final ArrayList<Integer> tags)
    {
       this.tags = tags;
+   }
+
+   @Column
+   private int project;
+
+   public int getProject()
+   {
+      return this.project;
+   }
+
+   public void setProject(final int project)
+   {
+      this.project = project;
    }
 }
