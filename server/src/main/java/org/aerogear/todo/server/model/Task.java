@@ -11,8 +11,8 @@ import java.lang.Override;
 import java.util.Date;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Lob;
 import java.util.ArrayList;
-import javax.persistence.CascadeType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -93,7 +93,8 @@ public class Task implements java.io.Serializable
       this.title = title;
    }
 
-   @Column
+   @Lob
+   @Column(name="description", columnDefinition="TEXT")
    private String description;
 
    public String getDescription()
