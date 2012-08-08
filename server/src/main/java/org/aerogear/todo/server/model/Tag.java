@@ -18,13 +18,19 @@ public class Tag implements java.io.Serializable
 {
 
    @Id
-   private @GeneratedValue(strategy = GenerationType.AUTO)
+   @GeneratedValue(strategy = GenerationType.AUTO)
    @Column(name = "id", updatable = false, nullable = false)
-   Long id = null;
+   private Long id = null;
    
    @Version
-   private @Column(name = "version")
-   int version = 0;
+   @Column(name = "version")
+   private int version = 0;
+
+   @Column
+   private String name;
+
+   @Column
+   private String style;
 
    public Long getId()
    {
@@ -78,9 +84,6 @@ public class Tag implements java.io.Serializable
       return super.hashCode();
    }
 
-   @Column
-   private String name;
-
    public String getName()
    {
       return this.name;
@@ -90,9 +93,6 @@ public class Tag implements java.io.Serializable
    {
       this.name = name;
    }
-
-   @Column
-   private String style;
 
    public String getStyle()
    {

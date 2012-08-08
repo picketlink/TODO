@@ -1,158 +1,135 @@
 package org.aerogear.todo.server.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.io.Serializable;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.Version;
-import java.lang.Override;
-import java.util.Date;
+import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.persistence.Lob;
-import java.util.ArrayList;
+import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 
 @XmlRootElement
 @Entity
-public class Task implements java.io.Serializable
-{
+public class Task implements Serializable {
 
-   @Id
-   private @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   Long id = null;
-   @Version
-   private @Column(name = "version")
-   int version = 0;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id = null;
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    @Version
+    @Column(name = "version")
+    private int version = 0;
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+    @Column
+    private String title;
 
-   public int getVersion()
-   {
-      return this.version;
-   }
+    @Lob
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 
-   public void setVersion(final int version)
-   {
-      this.version = version;
-   }
+    @Temporal(TemporalType.DATE)
+    private Date date;
 
-   @Override
-   public boolean equals(Object that)
-   {
-      if (this == that)
-      {
-         return true;
-      }
-      if (that == null)
-      {
-         return false;
-      }
-      if (getClass() != that.getClass())
-      {
-         return false;
-      }
-      if (id != null)
-      {
-         return id.equals(((Task) that).id);
-      }
-      return super.equals(that);
-   }
+    @Column
+    private ArrayList<Integer> tags = new ArrayList<Integer>();
 
-   @Override
-   public int hashCode()
-   {
-      if (id != null)
-      {
-         return id.hashCode();
-      }
-      return super.hashCode();
-   }
+    @Column
+    private int project;
 
-   @Column
-   private String title;
+    public Long getId() {
+        return this.id;
+    }
 
-   public String getTitle()
-   {
-      return this.title;
-   }
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-   public void setTitle(final String title)
-   {
-      this.title = title;
-   }
+    public int getVersion() {
+        return this.version;
+    }
 
-   @Lob
-   @Column(name="description", columnDefinition="TEXT")
-   private String description;
+    public void setVersion(final int version) {
+        this.version = version;
+    }
 
-   public String getDescription()
-   {
-      return this.description;
-   }
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        if (that == null) {
+            return false;
+        }
+        if (getClass() != that.getClass()) {
+            return false;
+        }
+        if (id != null) {
+            return id.equals(((Task) that).id);
+        }
+        return super.equals(that);
+    }
 
-   public void setDescription(final String description)
-   {
-      this.description = description;
-   }
+    @Override
+    public int hashCode() {
+        if (id != null) {
+            return id.hashCode();
+        }
+        return super.hashCode();
+    }
 
-   private @Temporal(TemporalType.DATE)
-   Date date;
+    public String getTitle() {
+        return this.title;
+    }
 
-   public Date getDate()
-   {
-      return this.date;
-   }
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 
-   public void setDate(final Date date)
-   {
-      this.date = date;
-   }
+    public String getDescription() {
+        return this.description;
+    }
 
-   public String toString()
-   {
-      String result = "";
-      if (title != null && !title.trim().isEmpty())
-         result += title;
-      if (description != null && !description.trim().isEmpty())
-         result += " " + description;
-      return result;
-   }
+    public void setDescription(final String description) {
+        this.description = description;
+    }
 
-   @Column
-   private ArrayList<Integer> tags = new ArrayList<Integer>();
+    public Date getDate() {
+        return this.date;
+    }
 
-   public ArrayList<Integer> getTags()
-   {
-      return this.tags;
-   }
+    public void setDate(final Date date) {
+        this.date = date;
+    }
 
-   public void setTags(final ArrayList<Integer> tags)
-   {
-      this.tags = tags;
-   }
+    public String toString() {
+        String result = "";
+        if (title != null && !title.trim().isEmpty())
+            result += title;
+        if (description != null && !description.trim().isEmpty())
+            result += " " + description;
+        return result;
+    }
 
-   @Column
-   private int project;
+    public ArrayList<Integer> getTags() {
+        return this.tags;
+    }
 
-   public int getProject()
-   {
-      return this.project;
-   }
+    public void setTags(final ArrayList<Integer> tags) {
+        this.tags = tags;
+    }
 
-   public void setProject(final int project)
-   {
-      this.project = project;
-   }
+    public int getProject() {
+        return this.project;
+    }
+
+    public void setProject(final int project) {
+        this.project = project;
+    }
 }

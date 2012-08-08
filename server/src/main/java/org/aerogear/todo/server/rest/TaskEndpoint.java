@@ -28,7 +28,16 @@ import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 import org.aerogear.todo.server.model.Task;
 
 /**
@@ -45,7 +54,7 @@ public class TaskEndpoint
    private EntityManager em;
 
    @POST
-   @Consumes("application/json")
+   @Consumes(MediaType.APPLICATION_JSON)
    public Task create(Task entity)
    {
       em.joinTransaction();
@@ -55,7 +64,7 @@ public class TaskEndpoint
 
    @DELETE
    @Path("/{id:[0-9][0-9]*}")
-   @Produces("application/json")
+   @Produces(MediaType.APPLICATION_JSON)
    public Task deleteById(@PathParam("id")
    Long id)
    {
@@ -67,7 +76,7 @@ public class TaskEndpoint
 
    @GET
    @Path("/{id:[0-9][0-9]*}")
-   @Produces("application/json")
+   @Produces(MediaType.APPLICATION_JSON)
    public Task findById(@PathParam("id")
    Long id)
    {
@@ -75,7 +84,7 @@ public class TaskEndpoint
    }
 
    @GET
-   @Produces("application/json")
+   @Produces(MediaType.APPLICATION_JSON)
    public List<Task> listAll()
    {
       @SuppressWarnings("unchecked")
@@ -85,7 +94,7 @@ public class TaskEndpoint
 
    @PUT
    @Path("/{id:[0-9][0-9]*}")
-   @Consumes("application/json")
+   @Consumes(MediaType.APPLICATION_JSON)
    public Task update(@PathParam("id")
    Long id, Task entity)
    {

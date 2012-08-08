@@ -1,130 +1,110 @@
 package org.aerogear.todo.server.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import java.io.Serializable;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.Version;
-import java.lang.Override;
-import java.util.Set;
-import java.util.HashSet;
-import org.aerogear.todo.server.model.Task;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.HashSet;
+import java.util.Set;
 
 @XmlRootElement
 @Entity
 public class Project implements java.io.Serializable
 {
 
-   @Id
-   private @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   Long id = null;
-   @Version
-   private @Column(name = "version")
-   int version = 0;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id = null;
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    @Version
+    @Column(name = "version")
+    private int version = 0;
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+    @Column
+    private String title;
 
-   public int getVersion()
-   {
-      return this.version;
-   }
+    @Column
+    private String style;
 
-   public void setVersion(final int version)
-   {
-      this.version = version;
-   }
+    @OneToMany
+    private Set<Task> tasks = new HashSet<Task>();
 
-   @Override
-   public boolean equals(Object that)
-   {
-      if (this == that)
-      {
-         return true;
-      }
-      if (that == null)
-      {
-         return false;
-      }
-      if (getClass() != that.getClass())
-      {
-         return false;
-      }
-      if (id != null)
-      {
-         return id.equals(((Project) that).id);
-      }
-      return super.equals(that);
-   }
+    public Long getId() {
+        return this.id;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      if (id != null)
-      {
-         return id.hashCode();
-      }
-      return super.hashCode();
-   }
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-   @Column
-   private String title;
+    public int getVersion() {
+        return this.version;
+    }
 
-   public String getTitle()
-   {
-      return this.title;
-   }
+    public void setVersion(final int version) {
+        this.version = version;
+    }
 
-   public void setTitle(final String title)
-   {
-      this.title = title;
-   }
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        if (that == null) {
+            return false;
+        }
+        if (getClass() != that.getClass()) {
+            return false;
+        }
+        if (id != null) {
+            return id.equals(((Project) that).id);
+        }
+        return super.equals(that);
+    }
 
-   @Column
-   private String style;
+    @Override
+    public int hashCode() {
+        if (id != null) {
+            return id.hashCode();
+        }
+        return super.hashCode();
+    }
 
-   public String getStyle()
-   {
-      return this.style;
-   }
+    public String getTitle() {
+        return this.title;
+    }
 
-   public void setStyle(final String style)
-   {
-      this.style = style;
-   }
+    public void setTitle(final String title) {
+        this.title = title;
+    }
 
-   public String toString()
-   {
-      String result = "";
-      if (title != null && !title.trim().isEmpty())
-         result += title;
-      if (style != null && !style.trim().isEmpty())
-         result += " " + style;
-      return result;
-   }
+    public String getStyle() {
+        return this.style;
+    }
 
-   @OneToMany
-   private Set<Task> tasks = new HashSet<Task>();
+    public void setStyle(final String style) {
+        this.style = style;
+    }
 
-   public Set<Task> getTasks()
-   {
-      return this.tasks;
-   }
+    public String toString() {
+        String result = "";
+        if (title != null && !title.trim().isEmpty())
+            result += title;
+        if (style != null && !style.trim().isEmpty())
+            result += " " + style;
+        return result;
+    }
 
-   public void setTasks(final Set<Task> tasks)
-   {
-      this.tasks = tasks;
-   }
+    public Set<Task> getTasks() {
+        return this.tasks;
+    }
+
+    public void setTasks(final Set<Task> tasks) {
+        this.tasks = tasks;
+    }
 }
