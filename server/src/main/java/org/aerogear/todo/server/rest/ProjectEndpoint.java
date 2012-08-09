@@ -39,9 +39,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import org.aerogear.todo.server.model.Project;
 
-/**
- * 
- */
 @Stateful
 @Path("/project")
 @TransactionAttribute

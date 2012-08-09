@@ -40,11 +40,6 @@ import javax.ws.rs.core.MediaType;
 
 import org.aerogear.todo.server.model.Task;
 
-/**
- * @author <a href="mailto:lincolnbaxter@gmail.com">Lincoln Baxter, III</a>
- * 
- *         JAX-RS Example This class produces a RESTful service to read the contents of the table.
- */
 @Stateful
 @Path("/task")
 @TransactionAttribute
