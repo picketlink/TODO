@@ -28,7 +28,8 @@ import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
+import static org.aerogear.todo.server.util.DateBuilder.newDateBuilder;
 
 @XmlRootElement
 @Entity
@@ -50,8 +51,9 @@ public class Task implements Serializable {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Temporal(TemporalType.DATE)
-    private Date date;
+    @Temporal(value = TemporalType.DATE)
+    @Column(name = "date", columnDefinition = "timestamp")
+    private Calendar date;
 
     @Column
     private ArrayList<Integer> tags = new ArrayList<Integer>();
@@ -116,11 +118,11 @@ public class Task implements Serializable {
         this.description = description;
     }
 
-    public Date getDate() {
-        return this.date;
+    public String getDate() {
+        return newDateBuilder().withCalendar(date).build();
     }
 
-    public void setDate(final Date date) {
+    public void setDate(final Calendar date) {
         this.date = date;
     }
 
