@@ -52,6 +52,7 @@ public class ProjectEndpoint
 
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public Project create(Project entity)
    {
       em.joinTransaction();
@@ -92,6 +93,7 @@ public class ProjectEndpoint
    @PUT
    @Path("/{id:[0-9][0-9]*}")
    @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public Project update(@PathParam("id")
    Long id, Project entity)
    {

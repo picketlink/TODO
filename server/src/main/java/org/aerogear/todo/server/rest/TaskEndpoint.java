@@ -55,6 +55,7 @@ public class TaskEndpoint
 
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public Task create(Task entity)
    {
       em.joinTransaction();
@@ -95,6 +96,7 @@ public class TaskEndpoint
    @PUT
    @Path("/{id:[0-9][0-9]*}")
    @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public Task update(@PathParam("id")
    Long id, Task entity)
    {

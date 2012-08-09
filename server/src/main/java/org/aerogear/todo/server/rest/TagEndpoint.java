@@ -54,6 +54,7 @@ public class TagEndpoint
 
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public Tag create(Tag entity)
    {
       em.joinTransaction();
@@ -94,6 +95,7 @@ public class TagEndpoint
    @PUT
    @Path("/{id:[0-9][0-9]*}")
    @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public Tag update(@PathParam("id")
    Long id, Tag entity)
    {
