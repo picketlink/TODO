@@ -50,6 +50,16 @@ public class Project implements java.io.Serializable
     @OneToMany
     private Set<Task> tasks = new HashSet<Task>();
 
+    public Project() {
+    }
+
+    public Project(int version, String title, String style, Set<Task> tasks) {
+        this.version = version;
+        this.title = title;
+        this.style = style;
+        this.tasks = tasks;
+    }
+
     public Long getId() {
         return this.id;
     }
