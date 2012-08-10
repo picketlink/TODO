@@ -21,13 +21,13 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
-import javax.persistence.Version;
+import java.io.Serializable;
 import java.lang.Override;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 @Entity
-public class Tag implements java.io.Serializable
+public class Tag implements Serializable
 {
 
    @Id
@@ -35,10 +35,6 @@ public class Tag implements java.io.Serializable
    @Column(name = "id", updatable = false, nullable = false)
    private Long id = null;
    
-   @Version
-   @Column(name = "version")
-   private int version;
-
    @Column
    private String name;
 
@@ -53,16 +49,6 @@ public class Tag implements java.io.Serializable
    public void setId(final Long id)
    {
       this.id = id;
-   }
-
-   public int getVersion()
-   {
-      return this.version;
-   }
-
-   public void setVersion(final int version)
-   {
-      this.version = version;
    }
 
    @Override

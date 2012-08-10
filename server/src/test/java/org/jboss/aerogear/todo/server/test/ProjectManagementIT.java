@@ -15,9 +15,7 @@ import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Uses Arquilian to test the JAX-RS processing class for member registration.
@@ -43,7 +41,7 @@ public class ProjectManagementIT {
 
     @Before
     public void setUp() throws Exception {
-        project = new Project(1, "AeroGear", "fancy", null);
+        project = new Project("AeroGear", "fancy", null);
         project = projectEndpoint.create(project);
     }
 
