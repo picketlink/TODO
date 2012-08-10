@@ -17,15 +17,12 @@
 package org.aerogear.todo.server.model;
 
 import javax.persistence.Entity;
-import java.io.Serializable;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Column;
 import javax.persistence.Version;
 import java.lang.Override;
-import org.aerogear.todo.server.model.Task;
-import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
@@ -40,7 +37,7 @@ public class Tag implements java.io.Serializable
    
    @Version
    @Column(name = "version")
-   private int version = 0;
+   private int version;
 
    @Column
    private String name;

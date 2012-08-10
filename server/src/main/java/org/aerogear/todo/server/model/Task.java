@@ -42,7 +42,7 @@ public class Task implements Serializable {
 
     @Version
     @Column(name = "version")
-    private int version = 0;
+    private int version;
 
     @Column
     private String title;

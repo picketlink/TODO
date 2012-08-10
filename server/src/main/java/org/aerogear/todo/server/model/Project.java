@@ -39,7 +39,7 @@ public class Project implements java.io.Serializable
 
     @Version
     @Column(name = "version")
-    private int version = 0;
+    private int version;
 
     @Column
     private String title;
