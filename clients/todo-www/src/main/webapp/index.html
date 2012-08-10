@@ -47,6 +47,7 @@
                     <div class="add-project"><i class="icon-plus-sign"></i> Add Project</div>
                     <div class="add-project-form">
                         <form id="add-project" name="project">
+                            <input type="hidden" name="id" id="project-id" value="" />
                             <label for="project-name">Project Name:</label>
                             <input type="text" name="title" id="project-name"/>
                             <label for="project-color" class="color-picker-label">Color:</label>
@@ -73,6 +74,7 @@
                     <div class="add-tag"><i class="icon-plus-sign"></i> Add Tag</div>
                     <div class="add-tag-form">
                         <form id="add-tag" name="tag">
+                            <input type="hidden" name="id" id="tag-id" value="" />
                             <label for="tag-name">Tag Name:</label>
                             <input type="text" name="name" id="tag-name"/>
                             <label for="tag-color" class="color-picker-label">Color:</label>
@@ -157,13 +159,24 @@
                 </div>
                 <hr>
                 <div class="task-desc"><%= task.description %></div>
+                <div class="option-overlay" data-id="<%= task.id %>" data-type="task">
+                    <div class="col">
+                        <a class="btn sort" title="Filter"><i class="icon-filter"></i><span class="btn-txt">Filter</span></a>
+                    </div>
+                    <div class="col">
+                        <a class="btn edit" title="Edit"><i class="icon-edit"></i><span class="btn-txt">Edit</span></a>
+                    </div>
+                    <div class="col">
+                        <a class="btn delete" title="Delete"><i class="icon-remove"></i><span class="btn-txt">Delete</span></a>
+                    </div>
+                </div>
             </div>
         <% }); %>
     </script>
     <script type="text/template" id="project-tmpl">
         <% _.each( projects, function( project ) { %>
             <div class="project <%= project.style %>">
-                <div class="project-option-overlay">
+                <div class="option-overlay" data-id="<%= project.id %>" data-type="project">
                     <div class="col">
                         <a class="btn sort" title="Filter"><i class="icon-filter"></i><span class="btn-txt">Filter</span></a>
                     </div>
@@ -180,7 +193,20 @@
     </script>
     <script type="text/template" id="tag-tmpl">
         <% _.each( tags, function( tag ) { %>
-            <div><div class="swatch <%= tag.style %>"></div><%= tag.name %></div>
+            <div class="tag">
+                <div class="swatch <%= tag.style %>"></div><%= tag.name %>
+                <div class="option-overlay" data-id="<%= tag.id %>" data-type="tag">
+                    <div class="col">
+                        <a class="btn sort" title="Filter"><i class="icon-filter"></i><span class="btn-txt">Filter</span></a>
+                    </div>
+                    <div class="col">
+                        <a class="btn edit" title="Edit"><i class="icon-edit"></i><span class="btn-txt">Edit</span></a>
+                    </div>
+                    <div class="col">
+                        <a class="btn delete" title="Delete"><i class="icon-remove"></i><span class="btn-txt">Delete</span></a>
+                    </div>
+                </div>
+            </div>
         <% }); %>
     </script>
     <script type="text/template" id="project-select-tmpl">

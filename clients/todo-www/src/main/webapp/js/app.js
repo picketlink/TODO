@@ -89,9 +89,10 @@ $( function() {
             // all form id's start with add
             formType = form.attr( "name" ),
             formValid = true,
+            isUpdate = false,
             data, hex, tags;
         form.find( "input" ).each( function() {
-            if ( !$.trim( $( this ).val() ).length ) {
+            if ( !$.trim( $( this ).val() ).length && this.type != "hidden" ) {
                 formValid = false;
                 return false;
             }
@@ -102,6 +103,9 @@ $( function() {
             // Add some sort of visual feedback
         } else {
             data = form.serializeObject();
+            if ( data.id && data.id.length ) {
+                isUpdate = parseInt( data.id, 10 );
+            }
             if ( data.style ) {
                 hex = hex2rgb( data.style );
                 data.style = formType + "-" + hex[ "red" ] + "-" + hex[ "green" ] + "-" + hex[ "blue" ];
@@ -111,7 +115,7 @@ $( function() {
                     Projects.save( data, {
                         ajax: {
                             success: function( data ) {
-                                updateProjectList( [ data ] );
+                                updateProjectList( [ data ], isUpdate );
                             }
                         }
                     } );
@@ -120,7 +124,7 @@ $( function() {
                     Tags.save( data, {
                         ajax: {
                             success: function( data ) {
-                                updateTagList( [ data ] );
+                                updateTagList( [ data ], isUpdate );
                             }
                         }
                     } );
@@ -138,7 +142,7 @@ $( function() {
                     Tasks.save( data, {
                         ajax: {
                             success: function( data ) {
-                                updateTaskList( [ data ] );
+                                updateTaskList( [ data ], isUpdate );
                             }
                         }
                     });
@@ -150,8 +154,68 @@ $( function() {
         }
     });
 
+    // Delete Buttons
+    $( ".todo-app" ).on( "click", ".btn.delete", function( event ) {
+        var target = $( event.target ),
+            dataTarget = target.closest( ".option-overlay" ),
+            toRemove = dataTarget.parent(),
+            success = function() {
+                toRemove.remove();
+            },
+            options = {
+                record: dataTarget.data( "id" ),
+                ajax: {
+                    success: success
+                }
+            };
+        switch( dataTarget.data( "type" ) ) {
+            case "project":
+                Projects.del( options );
+                break;
+            case "tag":
+                Tags.del( options );
+                break;
+            case "task":
+                Tasks.del( options );
+                break;
+        }
+    });
+
+    // Edit Buttons
+    $( ".todo-app" ).on( "click", ".btn.edit", function( event ) {
+        var target = $( event.target ).closest( ".option-overlay" ),
+            toEdit, rgb;
+        switch( target.data( "type" ) ) {
+            case "project":
+                toEdit = Projects.data.filter( function( element, index ) {
+                    return element.id == target.data( "id" );
+                })[ 0 ];
+                rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
+
+                $( "#project-id" ).val( toEdit.id );
+                $( "#project-name" ).val( toEdit.title );
+                $( "#project-color" ).miniColors( "value", rgb2hex( rgb[ 0 ], rgb[ 1 ], rgb[ 2 ] ) );
+                $( ".add-project" ).click();
+                break;
+            case "tag":
+                toEdit = Tags.data.filter( function( element, index ) {
+                    return element.id == target.data( "id" );
+                })[ 0 ];
+                rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
+
+                $( "#tag-id" ).val( toEdit.id );
+                $( "#tag-name" ).val( toEdit.name );
+                $( "#tag-color" ).miniColors( "value", rgb2hex( rgb[ 0 ], rgb[ 1 ], rgb[ 2 ] ) );
+                $( ".add-tag" ).click();
+                break;
+            case "task":
+                Tasks.del( target.data( "id" ) );
+                break;
+        }
+    });
+
     // Helper Functions
-    function updateTaskList( data ) {
+    function updateTaskList( data, isUpdate ) {
         var taskList;
         $( "#task-loader" ).hide();
 
@@ -160,7 +224,7 @@ $( function() {
         $( "#add-task" )[ 0 ].reset();
     }
 
-    function updateProjectList( data ) {
+    function updateProjectList( data, isUpdate ) {
         var projectList,
             projectSelect,
             styleList;
@@ -172,12 +236,17 @@ $( function() {
         $( "#project-loader" ).hide();
         projectList = _.template( $( "#project-tmpl" ).html(), { projects: data } );
         projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: data } );
-        $( "#project-loader" ).after( projectList );
-        $( "#task-project-select" ).append( projectSelect );
+        if ( !isUpdate ) {
+            $( "#project-loader" ).after( projectList );
+            $( "#task-project-select" ).append( projectSelect );
+        } else {
+            $( ".project-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( projectList );
+            $( "#task-project-select" ).children( "[value='" + isUpdate + "']" ).replaceWith( projectSelect );
+        }
         $( "#add-project" )[ 0 ].reset();
     }
 
-    function updateTagList( data ) {
+    function updateTagList( data, isUpdate ) {
         var i,
             tagList,
             tagSelect,
@@ -244,6 +313,23 @@ $( function() {
             green: parseInt( triplets[ 1 ], 16 ),
             blue:  parseInt( triplets[ 2 ], 16 )
         };
+    }
+
+    function rgb2hex( r, g, b ) {
+        return toHex( r ) + toHex( g ) + toHex( b );
+    }
+    function toHex( n ) {
+        if ( n === null ) {
+            return "00";
+        }
+        n = parseInt( n, 10 );
+        if ( n === 0 || isNaN( n ) ) {
+            return "00";
+        }
+        n = Math.max( 0, n );
+        n = Math.min( n, 255 );
+        n = Math.round( n );
+        return "0123456789ABCDEF".charAt( ( n - n % 16 ) / 16 ) + "0123456789ABCDEF".charAt( n % 16 );
     }
 
     function isArray( obj ) {

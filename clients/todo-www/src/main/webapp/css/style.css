@@ -50,7 +50,7 @@ body {
 }
 
 .todo-app .span2 > div > div, .todo-app .span9 > div.task {
-    padding: 10px;
+    padding: 12px 10px;
     margin-top: 5px;
     background-color: #fff;
     -webkit-border-radius: 3px;
@@ -115,7 +115,7 @@ body {
     width: 98%;
     margin-left: -4px;
 }
-#add-task input {
+#add-task input[type="text"] {
     width: 275px;
 }
 #add-task textarea {
@@ -137,56 +137,75 @@ body {
     margin: 10px;
 }
 
-.project {
+.project, .tag, .task {
     position: relative;
 }
 
-.project:hover .project-option-overlay {
+.project:hover .option-overlay, .tag:hover .option-overlay, .task:hover .option-overlay {
     display: block;
 }
 
-.project-option-overlay {
+.option-overlay {
     position: absolute;
     top: 0px;
     left: 0px;
     background: rgba(0,0,0,0.3);
     width: 100%;
-    height: 38px;
+    height: 100%;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
     display: none;
 }
 
-.project-option-overlay .col {
+.task .option-overlay {
+    width: 55px;
+    left: auto;
+    right: 0px;
+}
+
+.option-overlay .col {
     width: 33%;
     float: left;
 }
 
-.project-option-overlay .col .btn {
+.task .option-overlay .col {
+    width: 100%;
+}
+
+.option-overlay .col .btn {
     margin: 5px 10px;
     font-size: 12px;
     font-weight: bold;
     line-height: 14px;
 }
 
-.project-option-overlay .col .btn.delete {
+.task .option-overlay .col .btn {
+    margin: 1px 10px;
+}
+
+.option-overlay .col .btn.delete {
     padding: 5px 10px;
 }
 
-.project-option-overlay .col .btn:hover, .project-option-overlay .col .btn.delete:hover {
+.option-overlay .col .btn:hover, .option-overlay .col .btn.delete:hover {
     padding: 5px 0;
     width: 90%;
     margin: 5px 2px;
 }
 
-.project-option-overlay .col .btn:hover i {
+.task .option-overlay .col .btn:hover {
+    width: 50px;
+    margin: 1px 1px;
+}
+
+.option-overlay .col .btn:hover i {
     display: none;
 }
-.project-option-overlay .col .btn .btn-txt {
+.option-overlay .col .btn .btn-txt {
     display: none;
 }
-.project-option-overlay .col .btn:hover .btn-txt {
+.option-overlay .col .btn:hover .btn-txt {
     display: block;
 }
 
@@ -197,9 +216,9 @@ body {
 }
 
 .tag-select-box {
-    width: 20px;
     float: left;
     margin-right: 10px;
+    padding: 0 4px;
 }
 
 .span12 h1 {
