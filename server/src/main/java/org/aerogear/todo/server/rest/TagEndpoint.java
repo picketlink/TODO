@@ -55,13 +55,12 @@ public class TagEndpoint
    @DELETE
    @Path("/{id:[0-9][0-9]*}")
    @Produces(MediaType.APPLICATION_JSON)
-   public Tag deleteById(@PathParam("id")
+   public void deleteById(@PathParam("id")
    Long id)
    {
       em.joinTransaction();
       Tag result = em.find(Tag.class, id);
       em.remove(result);
-      return result;
    }
 
    @GET

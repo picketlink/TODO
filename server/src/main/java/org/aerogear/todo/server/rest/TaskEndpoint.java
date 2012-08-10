@@ -56,13 +56,12 @@ public class TaskEndpoint
    @DELETE
    @Path("/{id:[0-9][0-9]*}")
    @Produces(MediaType.APPLICATION_JSON)
-   public Task deleteById(@PathParam("id")
+   public void deleteById(@PathParam("id")
    Long id)
    {
       em.joinTransaction();
       Task result = em.find(Task.class, id);
       em.remove(result);
-      return result;
    }
 
    @GET

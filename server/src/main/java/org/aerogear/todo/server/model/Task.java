@@ -52,7 +52,7 @@ public class Task implements Serializable {
     private String description;
 
     @Temporal(value = TemporalType.DATE)
-    @Column(name = "date", columnDefinition = "timestamp")
+    @Column(name = "date", columnDefinition = "TIMESTAMP")
     private Calendar date;
 
     @Column
