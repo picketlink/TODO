@@ -165,11 +165,29 @@ body {
 
 .project-option-overlay .col .btn {
     margin: 5px 10px;
-    font-size: 10px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 14px;
 }
 
-.project-option-overlay .col .btn.project-delete {
-    padding: 6px 10px;
+.project-option-overlay .col .btn.delete {
+    padding: 5px 10px;
+}
+
+.project-option-overlay .col .btn:hover, .project-option-overlay .col .btn.delete:hover {
+    padding: 5px 0;
+    width: 90%;
+    margin: 5px 2px;
+}
+
+.project-option-overlay .col .btn:hover i {
+    display: none;
+}
+.project-option-overlay .col .btn .btn-txt {
+    display: none;
+}
+.project-option-overlay .col .btn:hover .btn-txt {
+    display: block;
 }
 
 .tag-select-column {
@@ -201,7 +219,10 @@ body {
 #project-list, #tag-list {
     max-height: 200px;
     overflow: scroll;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+#project-list:hover, #tag-list:hover {
+    max-height: none;
 }
 
 #task-overlay, #project-overlay, #tag-overlay {
