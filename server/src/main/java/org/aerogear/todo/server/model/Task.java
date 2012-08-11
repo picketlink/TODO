@@ -22,12 +22,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
 import static org.aerogear.todo.server.util.DateBuilder.newDateBuilder;
 
 @XmlRootElement
@@ -50,11 +54,11 @@ public class Task implements Serializable {
     @Column(name = "date", columnDefinition = "TIMESTAMP")
     private Calendar date;
 
-    @Column
-    private ArrayList<Integer> tags = new ArrayList<Integer>();
+    @OneToMany
+    private List<Tag> tags = new ArrayList<Tag>();
 
-    @Column
-    private int project;
+    @OneToOne
+    private Project project;
 
     public Long getId() {
         return this.id;
@@ -122,19 +126,19 @@ public class Task implements Serializable {
         return result;
     }
 
-    public ArrayList<Integer> getTags() {
+    public List<Tag> getTags() {
         return this.tags;
     }
 
-    public void setTags(final ArrayList<Integer> tags) {
+    public void setTags(final List<Tag> tags) {
         this.tags = tags;
     }
 
-    public int getProject() {
+    public Project getProject() {
         return this.project;
     }
 
-    public void setProject(final int project) {
+    public void setProject(final Project project) {
         this.project = project;
     }
 }
