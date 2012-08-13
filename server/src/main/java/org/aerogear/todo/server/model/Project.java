@@ -16,6 +16,9 @@
  */
 package org.aerogear.todo.server.model;
 
+import org.aerogear.todo.server.serializer.CustomSerializer;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -47,6 +50,10 @@ public class Project implements Serializable
     private Set<Task> tasks = new HashSet<Task>();
 
     public Project() {
+    }
+
+    public Project(Long id) {
+        this.id = id;
     }
 
     public Project(String title, String style, Set<Task> tasks) {

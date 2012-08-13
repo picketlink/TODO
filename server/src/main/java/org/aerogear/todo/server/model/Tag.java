@@ -34,12 +34,16 @@ public class Tag implements Serializable
    @GeneratedValue(strategy = GenerationType.AUTO)
    @Column(name = "id", updatable = false, nullable = false)
    private Long id = null;
-   
+
    @Column
    private String name;
 
    @Column
    private String style;
+
+   public Tag(Long id) {
+       this.id = id;
+   }
 
    public Long getId()
    {

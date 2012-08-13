@@ -16,6 +16,9 @@
  */
 package org.aerogear.todo.server.model;
 
+import org.aerogear.todo.server.serializer.CustomSerializer;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -35,6 +38,7 @@ import java.util.List;
 import static org.aerogear.todo.server.util.DateBuilder.newDateBuilder;
 
 @XmlRootElement
+@JsonSerialize(using = CustomSerializer.class)
 @Entity
 public class Task implements Serializable {
 
