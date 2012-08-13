@@ -41,7 +41,10 @@ public class Tag implements Serializable
    @Column
    private String style;
 
-   public Tag(Long id) {
+   public Tag() {
+   }
+
+    public Tag(Long id) {
        this.id = id;
    }
 
