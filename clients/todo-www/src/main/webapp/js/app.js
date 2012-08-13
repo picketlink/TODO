@@ -36,6 +36,7 @@ $( function() {
     projectGet = Projects.read({
         ajax: {
             success: function( data, textStatus, jqXHR ) {
+                $( "#project-loader" ).hide();
                 updateProjectList( data );
             }
         }
@@ -47,6 +48,7 @@ $( function() {
                 if ( data.length ) {
                     $( "#task-tag-column" ).empty();
                 }
+                $( "#tag-loader" ).hide();
                 updateTagList( data );
             }
         }
@@ -54,6 +56,7 @@ $( function() {
 
     // When both the available projects and available tags have returned, get the task data
     $.when( projectGet, tagGet, Tasks.read() ).done( function( g1, g2, g3 ) {
+        $( "#task-loader" ).hide();
         updateTaskList();
     });
 
@@ -187,9 +190,7 @@ $( function() {
             toEdit, rgb;
         switch( target.data( "type" ) ) {
             case "project":
-                toEdit = Projects.data.filter( function( element, index ) {
-                    return element.id == target.data( "id" );
-                })[ 0 ];
+                toEdit = findItemToEdit( target, Projects.data );
                 rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
 
                 $( "#project-id" ).val( toEdit.id );
@@ -198,9 +199,7 @@ $( function() {
                 $( ".add-project" ).click();
                 break;
             case "tag":
-                toEdit = Tags.data.filter( function( element, index ) {
-                    return element.id == target.data( "id" );
-                })[ 0 ];
+                toEdit = findItemToEdit( target, Tags.data );
                 rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
 
                 $( "#tag-id" ).val( toEdit.id );
@@ -209,7 +208,7 @@ $( function() {
                 $( ".add-tag" ).click();
                 break;
             case "task":
-                Tasks.del( target.data( "id" ) );
+                
                 break;
         }
     });
@@ -217,7 +216,6 @@ $( function() {
     // Helper Functions
     function updateTaskList( data, isUpdate ) {
         var taskList;
-        $( "#task-loader" ).hide();
 
         taskList = _.template( $( "#task-tmpl" ).html(), { tasks: data ? data : Tasks.data, tags: Tags.data, projects: Projects.data } );
         $( "#task-loader" ).after( taskList );
@@ -233,7 +231,7 @@ $( function() {
         if ( styleList.length ) {
             $( "head" ).append( "<style id='project-styles'>" + styleList + "</style>" );
         }
-        $( "#project-loader" ).hide();
+
         projectList = _.template( $( "#project-tmpl" ).html(), { projects: data } );
         projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: data } );
         if ( !isUpdate ) {
@@ -256,7 +254,7 @@ $( function() {
         if ( styleList.length ) {
             $( "head" ).append( "<style id='tag-styles'>" + styleList + "</style>" );
         }
-        $( "#tag-loader" ).hide();
+
         tagList = _.template( $( "#tag-tmpl" ).html(), { tags: data } );
         tagSelect = "";
         if ( data.length ) {
@@ -269,6 +267,12 @@ $( function() {
             $( "#task-tag-column" ).append( tagSelect );
         }
         $( "#add-tag" )[ 0 ].reset();
+    }
+
+    function findItemToEdit( idElement, data ) {
+        return data.filter( function( element, index ) {
+            return element.id == idElement.data( "id" );
+        })[ 0 ];
     }
 
     function hideForm( toHide ) {

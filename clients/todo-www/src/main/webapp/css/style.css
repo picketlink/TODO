@@ -237,21 +237,11 @@ body {
 
 #project-list, #tag-list {
     max-height: 200px;
-    overflow: scroll;
+    overflow: hidden;
     padding-bottom: 20px;
 }
 #project-list:hover, #tag-list:hover {
     max-height: none;
-}
-
-#task-overlay, #project-overlay, #tag-overlay {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    height: inherit;
-    width: inherit;
-    background: rgba(255,255,255,0.4);
-    z-index: 998;
 }
 
 .task {
