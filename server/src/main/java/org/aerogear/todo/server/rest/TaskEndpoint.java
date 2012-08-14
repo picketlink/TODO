@@ -38,60 +38,54 @@ import org.aerogear.todo.server.model.Task;
 @Stateful
 @Path("/task")
 @TransactionAttribute
-public class TaskEndpoint
-{
-   @PersistenceContext(type = PersistenceContextType.EXTENDED)
-   private EntityManager em;
+public class TaskEndpoint {
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    private EntityManager em;
 
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public Task create(Task entity)
-   {
-      em.joinTransaction();
-      em.persist(entity);
-      return entity;
-   }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Task create(Task entity) {
+        em.joinTransaction();
+        em.persist(entity);
+        return entity;
+    }
 
-   @DELETE
-   @Path("/{id:[0-9][0-9]*}")
-   @Produces(MediaType.APPLICATION_JSON)
-   public void deleteById(@PathParam("id")
-   Long id)
-   {
-      em.joinTransaction();
-      Task result = em.find(Task.class, id);
-      em.remove(result);
-   }
+    @DELETE
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteById(@PathParam("id")
+                           Long id) {
+        em.joinTransaction();
+        Task result = em.find(Task.class, id);
+        em.remove(result);
+    }
 
-   @GET
-   @Path("/{id:[0-9][0-9]*}")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Task findById(@PathParam("id")
-   Long id)
-   {
-      return em.find(Task.class, id);
-   }
+    @GET
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Task findById(@PathParam("id")
+                         Long id) {
+        return em.find(Task.class, id);
+    }
 
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   public List<Task> listAll()
-   {
-      @SuppressWarnings("unchecked")
-      final List<Task> results = em.createQuery("SELECT x FROM Task x").getResultList();
-      return results;
-   }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Task> listAll() {
+        @SuppressWarnings("unchecked")
+        final List<Task> results = em.createQuery("SELECT x FROM Task x").getResultList();
+        return results;
+    }
 
-   @PUT
-   @Path("/{id:[0-9][0-9]*}")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public Task update(@PathParam("id")
-   Long id, Task entity)
-   {
-      entity.setId(id);
-      em.joinTransaction();
-      entity = em.merge(entity);
-      return entity;
-   }
+    @PUT
+    @Path("/{id:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Task update(@PathParam("id")
+                       Long id, Task entity) {
+        entity.setId(id);
+        em.joinTransaction();
+        entity = em.merge(entity);
+        return entity;
+    }
 }

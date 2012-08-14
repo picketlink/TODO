@@ -17,7 +17,7 @@ public class DateBuilder {
         return dateBuilder;
     }
 
-    public DateBuilder withCalendar(Calendar calendar){
+    public DateBuilder withCalendar(Calendar calendar) {
         this.calendar = calendar;
         return this;
     }
@@ -25,9 +25,7 @@ public class DateBuilder {
     /**
      * Workaround for date build issue
      *
-     * TODO: Refactor it to use consolidated solutions like Joda time
-     * @param calendar
-     * @return
+     * @TODO: Refactor it to use consolidated solutions like Joda time
      */
     public String build() {
         calendar.add(Calendar.DATE, 1);

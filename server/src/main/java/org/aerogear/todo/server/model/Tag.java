@@ -16,100 +16,92 @@
  */
 package org.aerogear.todo.server.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import java.io.Serializable;
-import java.lang.Override;
+import javax.persistence.Id;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 @XmlRootElement
 @Entity
-public class Tag implements Serializable
-{
+public class Tag implements Serializable {
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.AUTO)
-   @Column(name = "id", updatable = false, nullable = false)
-   private Long id = null;
-   
-   @Column
-   private String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id = null;
 
-   @Column
-   private String style;
+    @Column
+    private String name;
 
-   public Long getId()
-   {
-      return this.id;
-   }
+    @Column
+    private String style;
 
-   public void setId(final Long id)
-   {
-      this.id = id;
-   }
+    public Tag() {
+    }
 
-   @Override
-   public boolean equals(Object that)
-   {
-      if (this == that)
-      {
-         return true;
-      }
-      if (that == null)
-      {
-         return false;
-      }
-      if (getClass() != that.getClass())
-      {
-         return false;
-      }
-      if (id != null)
-      {
-         return id.equals(((Tag) that).id);
-      }
-      return super.equals(that);
-   }
+    public Tag(Long id) {
+        this.id = id;
+    }
 
-   @Override
-   public int hashCode()
-   {
-      if (id != null)
-      {
-         return id.hashCode();
-      }
-      return super.hashCode();
-   }
+    public Long getId() {
+        return this.id;
+    }
 
-   public String getName()
-   {
-      return this.name;
-   }
+    public void setId(final Long id) {
+        this.id = id;
+    }
 
-   public void setName(final String name)
-   {
-      this.name = name;
-   }
+    public String getName() {
+        return this.name;
+    }
 
-   public String getStyle()
-   {
-      return this.style;
-   }
+    public void setName(final String name) {
+        this.name = name;
+    }
 
-   public void setStyle(final String style)
-   {
-      this.style = style;
-   }
+    public String getStyle() {
+        return this.style;
+    }
 
-   public String toString()
-   {
-      String result = "";
-      if (name != null && !name.trim().isEmpty())
-         result += name;
-      if (style != null && !style.trim().isEmpty())
-         result += " " + style;
-      return result;
-   }
+    public void setStyle(final String style) {
+        this.style = style;
+    }
+
+    public String toString() {
+        String result = "";
+        if (name != null && !name.trim().isEmpty())
+            result += name;
+        if (style != null && !style.trim().isEmpty())
+            result += " " + style;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        if (that == null) {
+            return false;
+        }
+        if (getClass() != that.getClass()) {
+            return false;
+        }
+        if (id != null) {
+            return id.equals(((Tag) that).id);
+        }
+        return super.equals(that);
+    }
+
+    @Override
+    public int hashCode() {
+        if (id != null) {
+            return id.hashCode();
+        }
+        return super.hashCode();
+    }
+
 }

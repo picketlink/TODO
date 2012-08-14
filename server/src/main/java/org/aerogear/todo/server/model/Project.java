@@ -16,6 +16,9 @@
  */
 package org.aerogear.todo.server.model;
 
+import org.aerogear.todo.server.serializer.CustomSerializer;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,8 +32,7 @@ import java.util.Set;
 
 @XmlRootElement
 @Entity
-public class Project implements Serializable
-{
+public class Project implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,6 +51,10 @@ public class Project implements Serializable
     public Project() {
     }
 
+    public Project(Long id) {
+        this.id = id;
+    }
+
     public Project(String title, String style, Set<Task> tasks) {
         this.title = title;
         this.style = style;
@@ -61,6 +67,39 @@ public class Project implements Serializable
 
     public void setId(final Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public String getStyle() {
+        return this.style;
+    }
+
+    public void setStyle(final String style) {
+        this.style = style;
+    }
+
+    public Set<Task> getTasks() {
+        return this.tasks;
+    }
+
+    public void setTasks(final Set<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public String toString() {
+        String result = "";
+        if (title != null && !title.trim().isEmpty())
+            result += title;
+        if (style != null && !style.trim().isEmpty())
+            result += " " + style;
+        return result;
     }
 
     @Override
@@ -88,36 +127,4 @@ public class Project implements Serializable
         return super.hashCode();
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public String getStyle() {
-        return this.style;
-    }
-
-    public void setStyle(final String style) {
-        this.style = style;
-    }
-
-    public String toString() {
-        String result = "";
-        if (title != null && !title.trim().isEmpty())
-            result += title;
-        if (style != null && !style.trim().isEmpty())
-            result += " " + style;
-        return result;
-    }
-
-    public Set<Task> getTasks() {
-        return this.tasks;
-    }
-
-    public void setTasks(final Set<Task> tasks) {
-        this.tasks = tasks;
-    }
 }
