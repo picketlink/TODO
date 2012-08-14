@@ -32,65 +32,60 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
 import org.aerogear.todo.server.model.Tag;
 
 @Stateful
 @Path("/tag")
 @TransactionAttribute
-public class TagEndpoint
-{
-   @PersistenceContext(type = PersistenceContextType.EXTENDED)
-   private EntityManager em;
+public class TagEndpoint {
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    private EntityManager em;
 
-   @POST
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public Tag create(Tag entity)
-   {
-      em.joinTransaction();
-      em.persist(entity);
-      return entity;
-   }
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Tag create(Tag entity) {
+        em.joinTransaction();
+        em.persist(entity);
+        return entity;
+    }
 
-   @DELETE
-   @Path("/{id:[0-9][0-9]*}")
-   @Produces(MediaType.APPLICATION_JSON)
-   public void deleteById(@PathParam("id")
-   Long id)
-   {
-      em.joinTransaction();
-      Tag result = em.find(Tag.class, id);
-      em.remove(result);
-   }
+    @DELETE
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteById(@PathParam("id")
+                           Long id) {
+        em.joinTransaction();
+        Tag result = em.find(Tag.class, id);
+        em.remove(result);
+    }
 
-   @GET
-   @Path("/{id:[0-9][0-9]*}")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Tag findById(@PathParam("id")
-   Long id)
-   {
-      return em.find(Tag.class, id);
-   }
+    @GET
+    @Path("/{id:[0-9][0-9]*}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Tag findById(@PathParam("id")
+                        Long id) {
+        return em.find(Tag.class, id);
+    }
 
-   @GET
-   @Produces(MediaType.APPLICATION_JSON)
-   public List<Tag> listAll()
-   {
-      @SuppressWarnings("unchecked")
-      final List<Tag> results = em.createQuery("SELECT x FROM Tag x").getResultList();
-      return results;
-   }
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Tag> listAll() {
+        @SuppressWarnings("unchecked")
+        final List<Tag> results = em.createQuery("SELECT x FROM Tag x").getResultList();
+        return results;
+    }
 
-   @PUT
-   @Path("/{id:[0-9][0-9]*}")
-   @Consumes(MediaType.APPLICATION_JSON)
-   @Produces(MediaType.APPLICATION_JSON)
-   public Tag update(@PathParam("id")
-   Long id, Tag entity)
-   {
-      entity.setId(id);
-      em.joinTransaction();
-      entity = em.merge(entity);
-      return entity;
-   }
+    @PUT
+    @Path("/{id:[0-9][0-9]*}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Tag update(@PathParam("id")
+                      Long id, Tag entity) {
+        entity.setId(id);
+        em.joinTransaction();
+        entity = em.merge(entity);
+        return entity;
+    }
 }

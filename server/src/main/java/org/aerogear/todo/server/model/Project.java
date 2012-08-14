@@ -32,8 +32,7 @@ import java.util.Set;
 
 @XmlRootElement
 @Entity
-public class Project implements Serializable
-{
+public class Project implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -70,6 +69,39 @@ public class Project implements Serializable
         this.id = id;
     }
 
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public String getStyle() {
+        return this.style;
+    }
+
+    public void setStyle(final String style) {
+        this.style = style;
+    }
+
+    public Set<Task> getTasks() {
+        return this.tasks;
+    }
+
+    public void setTasks(final Set<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public String toString() {
+        String result = "";
+        if (title != null && !title.trim().isEmpty())
+            result += title;
+        if (style != null && !style.trim().isEmpty())
+            result += " " + style;
+        return result;
+    }
+
     @Override
     public boolean equals(Object that) {
         if (this == that) {
@@ -95,36 +127,4 @@ public class Project implements Serializable
         return super.hashCode();
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public String getStyle() {
-        return this.style;
-    }
-
-    public void setStyle(final String style) {
-        this.style = style;
-    }
-
-    public String toString() {
-        String result = "";
-        if (title != null && !title.trim().isEmpty())
-            result += title;
-        if (style != null && !style.trim().isEmpty())
-            result += " " + style;
-        return result;
-    }
-
-    public Set<Task> getTasks() {
-        return this.tasks;
-    }
-
-    public void setTasks(final Set<Task> tasks) {
-        this.tasks = tasks;
-    }
 }

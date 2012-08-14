@@ -35,10 +35,10 @@ public class CustomSerializer extends JsonSerializer<Task> {
 
     /**
      * This can decrease the server performance
-     * @TODO must be replaced by jpa-ql refinement
      *
+     * @TODO must be replaced by jpa-ql refinement
      */
-    private List<Long> retrieveIds(List<Tag> tags){
+    private List<Long> retrieveIds(List<Tag> tags) {
         List<Long> ids = new ArrayList<Long>();
         for (Tag tag : tags) {
             ids.add(tag.getId());
