@@ -27,13 +27,13 @@ import org.apache.deltaspike.security.api.Identity.AuthenticationResult;
 import org.apache.deltaspike.security.api.credential.Credential;
 import org.apache.deltaspike.security.api.credential.LoginCredential;
 import org.picketbox.core.authentication.credential.UsernamePasswordCredential;
-import org.picketbox.deltaspike.PicketBoxUser;
 
 import javax.inject.Inject;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
 @Path("/auth")
 public class LoginService {
@@ -47,11 +47,11 @@ public class LoginService {
     @POST
     @Path("/login")
     @Produces("application/json")
-    public String login(final @HeaderParam("Auth-Credential") String name,
-                        final @HeaderParam("Auth-Password") String password) {
+    public Response login(final @HeaderParam("Auth-Credential") String name,
+                          final @HeaderParam("Auth-Password") String password) {
 
         if (this.identity.isLoggedIn()) {
-            return createResponse(AuthenticationResult.SUCCESS);
+            return Response.ok(AuthenticationResult.SUCCESS).build();
         }
 
         credential.setUserId(name);
@@ -65,26 +65,10 @@ public class LoginService {
 
         AuthenticationResult result = this.identity.login();
 
-        return createResponse(result);
+        return Response.ok(createResponse(result)).build();
     }
 
     private String createResponse(AuthenticationResult result) {
-        return "{\"authentication\": {\"loggedIn\":" + result.equals(AuthenticationResult.SUCCESS) + ",\"userPage\":\"" + getUserPage() + "\"}}";
-    }
-
-    private String getUserPage() {
-        PicketBoxUser user = (PicketBoxUser) this.identity.getUser();
-
-        String userPage = "/login.html";
-
-        if (user != null) {
-            if (user.hasRole("admin")) {
-                userPage = "/admin.html";
-            } else {
-                userPage = "/index.html";
-            }
-        }
-
-        return userPage;
+        return "{\"authentication\": {\"loggedIn\":" + result.equals(AuthenticationResult.SUCCESS) + "\"}}";
     }
 }
