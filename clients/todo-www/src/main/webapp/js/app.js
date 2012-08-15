@@ -1,5 +1,5 @@
 $( function() {
-    var projectGet, tagGet;
+    var projectGet, tagGet, overlayTimer;
 
     // Instantiate our pipeline
     var todo = aerogear.pipeline([
@@ -29,6 +29,7 @@ $( function() {
         projectContainer = $( "#project-list" ),
         tagContainer = $( "#tag-list" );
 
+    // Loading overlays
     $( "#task-overlay" ).height( taskContainer.outerHeight() ).width( taskContainer.outerWidth() );
     $( "#project-overlay" ).height( projectContainer.outerHeight() ).width( projectContainer.outerWidth() );
     $( "#tag-overlay" ).height( tagContainer.outerHeight() ).width( tagContainer.outerWidth() );
@@ -75,7 +76,22 @@ $( function() {
     });
 
     $( ".form-close" ).on( "click", function( event ) {
-        hideForm( $( this ).closest( "div" ) );
+        var $this = $( this ),
+            form = $this.closest( "form" ),
+            btn = form.find( ".submit-btn" ),
+            plus = '<i class="icon-plus-sign"></i>';
+        switch( form.attr( "name" ) ) {
+            case "project":
+                btn.html( plus + " Add Project" );
+                break;
+            case "tag":
+                btn.html( plus + " Add Tag" );
+                break;
+            case "task":
+                btn.html( plus + " Add Task" );
+                break;
+        }
+        hideForm( $this.closest( "div" ) );
     });
 
     // Handle form submissions
@@ -93,7 +109,9 @@ $( function() {
             formType = form.attr( "name" ),
             formValid = true,
             isUpdate = false,
+            plus = '<i class="icon-plus-sign"></i>',
             data, hex, tags;
+
         form.find( "input" ).each( function() {
             if ( !$.trim( $( this ).val() ).length && this.type != "hidden" ) {
                 formValid = false;
@@ -108,6 +126,8 @@ $( function() {
             data = form.serializeObject();
             if ( data.id && data.id.length ) {
                 isUpdate = parseInt( data.id, 10 );
+            } else {
+                delete data.id;
             }
             if ( data.style ) {
                 hex = hex2rgb( data.style );
@@ -119,6 +139,7 @@ $( function() {
                         ajax: {
                             success: function( data ) {
                                 updateProjectList( [ data ], isUpdate );
+                                $( "#add-project" ).find( ".submit-btn" ).html( plus + " Add Project" );
                             }
                         }
                     } );
@@ -128,6 +149,7 @@ $( function() {
                         ajax: {
                             success: function( data ) {
                                 updateTagList( [ data ], isUpdate );
+                                $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Add Tag" );
                             }
                         }
                     } );
@@ -146,6 +168,7 @@ $( function() {
                         ajax: {
                             success: function( data ) {
                                 updateTaskList( [ data ], isUpdate );
+                                $( "#add-task" ).find( ".submit-btn" ).html( plus + " Add Task" );
                             }
                         }
                     });
@@ -156,6 +179,30 @@ $( function() {
             hideForm( $( this ).closest( "div" ) );
         }
     });
+
+    // Item Hover Menus
+    $( ".todo-app" )
+        .on( "mouseenter", ".project, .tag, .task", function( event ) {
+            var overlay = $( event.target ).children( ".option-overlay" ).eq( 0 );
+
+            // Delay clicking of buttons in the overlay to prevent accidental clicks on touch devices
+            overlay.data( "clickable", false );
+            setTimeout( function() { overlay.data( "clickable", true ); }, 500 );
+
+            // Show the overlay if not already visible
+            if ( !overlay.is( ":visible" ) ) {
+                overlay.show();
+            }
+        })
+        .on( "mouseleave", ".project, .tag, .task", function( event ) {
+            var overlay = $( event.target ).closest( ".project, .tag, .task" ).children( ".option-overlay" ).eq( 0 );
+            // Add a delay for touch devices to allow clicking of buttons before the overlay disappears
+            if ( Modernizr.touch ) {
+                setTimeout( function() { overlay.hide(); }, 500 );
+            } else {
+                overlay.hide();
+            }
+        });
 
     // Delete Buttons
     $( ".todo-app" ).on( "click", ".btn.delete", function( event ) {
@@ -171,6 +218,10 @@ $( function() {
                     success: success
                 }
             };
+        if ( !dataTarget.data( "clickable" ) ) {
+            event.preventDefault();
+            return;
+        }
         switch( dataTarget.data( "type" ) ) {
             case "project":
                 Projects.del( options );
@@ -187,7 +238,14 @@ $( function() {
     // Edit Buttons
     $( ".todo-app" ).on( "click", ".btn.edit", function( event ) {
         var target = $( event.target ).closest( ".option-overlay" ),
+            plus = '<i class="icon-plus-sign"></i>',
             toEdit, rgb;
+
+        if ( !target.data( "clickable" ) ) {
+            event.preventDefault();
+            return;
+        }
+
         switch( target.data( "type" ) ) {
             case "project":
                 toEdit = findItemToEdit( target, Projects.data );
@@ -196,6 +254,7 @@ $( function() {
                 $( "#project-id" ).val( toEdit.id );
                 $( "#project-name" ).val( toEdit.title );
                 $( "#project-color" ).miniColors( "value", rgb2hex( rgb[ 0 ], rgb[ 1 ], rgb[ 2 ] ) );
+                $( "#add-project" ).find( ".submit-btn" ).html( plus + " Update Project" );
                 $( ".add-project" ).click();
                 break;
             case "tag":
@@ -205,6 +264,7 @@ $( function() {
                 $( "#tag-id" ).val( toEdit.id );
                 $( "#tag-name" ).val( toEdit.name );
                 $( "#tag-color" ).miniColors( "value", rgb2hex( rgb[ 0 ], rgb[ 1 ], rgb[ 2 ] ) );
+                $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Update Tag" );
                 $( ".add-tag" ).click();
                 break;
             case "task":
@@ -212,6 +272,11 @@ $( function() {
                 break;
         }
     });
+
+    // Show all tags and projects on touch devices
+    if ( Modernizr.touch ) {
+        $( "#project-list, #tag-list" ).css( "max-height", "none" );
+    }
 
     // Helper Functions
     function updateTaskList( data, isUpdate ) {
@@ -238,7 +303,8 @@ $( function() {
             $( "#project-loader" ).after( projectList );
             $( "#task-project-select" ).append( projectSelect );
         } else {
-            $( ".project-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( projectList );
+            console.log($(projectList).length);
+            $( "#property-container .option-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( projectList );
             $( "#task-project-select" ).children( "[value='" + isUpdate + "']" ).replaceWith( projectSelect );
         }
         $( "#add-project" )[ 0 ].reset();
