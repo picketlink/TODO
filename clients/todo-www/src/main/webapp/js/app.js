@@ -273,7 +273,26 @@ $( function() {
                 $( ".add-tag" ).click();
                 break;
             case "task":
-                
+                toEdit = findItemToEdit( target, Tasks.data );
+
+                $( "#task-id" ).val( toEdit.id );
+                $( "#task-name" ).val( toEdit.title );
+                $( "#task-date" ).val( toEdit.date );
+                $( "#task-desc" ).val( toEdit.description );
+                if ( toEdit.project ) {
+                    $( "#task-project-select" ).val( toEdit.project );
+                }
+
+                // Reset tag checkboxes
+                $( "#add-task input:checkbox" ).prop( "checked", false );
+
+                if ( toEdit.tags.length ) {
+                    $.each( toEdit.tags, function( index, value ) {
+                        $( "input[name='tag-" + value + "']" ).prop( "checked", true );
+                    });
+                }
+                $( "#add-task" ).find( ".submit-btn" ).html( plus + " Update Task" );
+                $( ".add-task" ).click();
                 break;
         }
     });
