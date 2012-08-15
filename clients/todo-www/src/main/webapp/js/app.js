@@ -6,19 +6,19 @@ $( function() {
             {
                 name: "tasks",
                 settings: {
-                    url: "/todo-server/rest/task"
+                    url: "/todo-server/task"
                 }
             },
             {
                 name: "projects",
                 settings: {
-                    url: "/todo-server/rest/project"
+                    url: "/todo-server/project"
                 }
             },
             {
                 name: "tags",
                 settings: {
-                    url: "/todo-server/rest/tag"
+                    url: "/todo-server/tag"
                 }
             }
         ]),
