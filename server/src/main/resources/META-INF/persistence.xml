@@ -12,6 +12,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.transaction.flush_before_completion" value="true"/>
+            <property name="jboss.entity.manager.factory.jndi.name" value="java:/AuthTestEMF" />
         </properties>
     </persistence-unit>
 </persistence>

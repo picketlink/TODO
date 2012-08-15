@@ -170,6 +170,17 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
             <version>1.9.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.picketbox</groupId>
+            <artifactId>picketbox-core</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.picketbox</groupId>
+            <artifactId>picketbox-deltaspike</artifactId>
+            <version>5.0.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>

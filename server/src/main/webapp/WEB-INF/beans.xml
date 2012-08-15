@@ -6,4 +6,7 @@
        xsi:schemaLocation="
         http://java.sun.com/xml/ns/javaee 
         http://java.sun.com/xml/ns/javaee/beans_1_0.xsd">
+    <interceptors>
+        <class>org.apache.deltaspike.security.impl.authorization.SecurityInterceptor</class>
+    </interceptors>
 </beans>
