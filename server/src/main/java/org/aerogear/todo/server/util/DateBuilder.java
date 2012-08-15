@@ -1,10 +1,12 @@
 package org.aerogear.todo.server.util;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DateBuilder {
 
     private static DateBuilder dateBuilder = null;
+    public static final String PATTERN = "yyyy-MM-dd";
     private Calendar calendar;
 
     private DateBuilder() {
@@ -29,9 +31,7 @@ public class DateBuilder {
      */
     public String build() {
         calendar.add(Calendar.DATE, 1);
-        return calendar.get(Calendar.YEAR) + "-"
-                + (calendar.get(Calendar.MONTH) + 1) + "-"
-                + calendar.get(Calendar.DATE);
 
+        return new SimpleDateFormat(PATTERN).format(calendar.getTime());
     }
 }

@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.aerogear.todo.server.util.DateBuilder.newDateBuilder;
+
 /**
  * Replacement to the default serialization strategy for JSON
  */
@@ -26,7 +28,7 @@ public class TaskCustomSerializer extends JsonSerializer<Task> {
         jsonGenerator.writeFieldName("description");
         jsonGenerator.writeString(task.getDescription());
         jsonGenerator.writeFieldName("date");
-        jsonGenerator.writeString(task.getDate());
+        jsonGenerator.writeString(newDateBuilder().withCalendar(task.getDate()).build());
         jsonGenerator.writeFieldName("project");
         jsonGenerator.writeNumber(task.getProject().getId());
         jsonGenerator.writeObjectField("tags", retrieveIds(task.getTags()));

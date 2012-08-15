@@ -35,8 +35,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import static org.aerogear.todo.server.util.DateBuilder.newDateBuilder;
-
 @XmlRootElement
 @JsonSerialize(using = TaskCustomSerializer.class)
 @Entity
@@ -61,7 +59,7 @@ public class Task implements Serializable {
     @OneToMany
     private List<Tag> tags = new ArrayList<Tag>();
 
-    @OneToOne
+    @OneToOne(optional = true)
     private Project project;
 
     public Task() {
@@ -120,8 +118,8 @@ public class Task implements Serializable {
         this.description = description;
     }
 
-    public String getDate() {
-        return newDateBuilder().withCalendar(date).build();
+    public Calendar getDate() {
+        return date;
     }
 
     public void setDate(final Calendar date) {
