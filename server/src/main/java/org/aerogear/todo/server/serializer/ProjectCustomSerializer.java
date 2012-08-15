@@ -1,5 +1,6 @@
 package org.aerogear.todo.server.serializer;
 
+import org.aerogear.todo.server.model.Project;
 import org.aerogear.todo.server.model.Tag;
 import org.aerogear.todo.server.model.Task;
 import org.codehaus.jackson.JsonGenerator;
@@ -10,26 +11,23 @@ import org.codehaus.jackson.map.SerializerProvider;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Replacement to the default serialization strategy for JSON
  */
-public class CustomSerializer extends JsonSerializer<Task> {
+public class ProjectCustomSerializer extends JsonSerializer<Project> {
 
     @Override
-    public void serialize(Task task, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+    public void serialize(Project project, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
         jsonGenerator.writeStartObject();
         jsonGenerator.writeFieldName("id");
-        jsonGenerator.writeNumber(task.getId());
+        jsonGenerator.writeNumber(project.getId());
         jsonGenerator.writeFieldName("title");
-        jsonGenerator.writeString(task.getTitle());
-        jsonGenerator.writeFieldName("description");
-        jsonGenerator.writeString(task.getDescription());
-        jsonGenerator.writeFieldName("date");
-        jsonGenerator.writeString(task.getDate());
-        jsonGenerator.writeFieldName("project");
-        jsonGenerator.writeNumber(task.getProject().getId());
-        jsonGenerator.writeObjectField("tags", retrieveIds(task.getTags()));
+        jsonGenerator.writeString(project.getTitle());
+        jsonGenerator.writeFieldName("style");
+        jsonGenerator.writeString(project.getStyle());
+        jsonGenerator.writeObjectField("tasks", retrieveIds(project.getTasks()));
         jsonGenerator.writeEndObject();
     }
 
@@ -38,10 +36,10 @@ public class CustomSerializer extends JsonSerializer<Task> {
      *
      * @TODO must be replaced by jpa-ql refinement
      */
-    private List<Long> retrieveIds(List<Tag> tags) {
+    private List<Long> retrieveIds(Set<Task> tasks) {
         List<Long> ids = new ArrayList<Long>();
-        for (Tag tag : tags) {
-            ids.add(tag.getId());
+        for (Task task : tasks) {
+            ids.add(task.getId());
         }
         return ids;
     }

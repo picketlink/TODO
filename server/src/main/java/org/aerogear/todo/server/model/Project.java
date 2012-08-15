@@ -16,7 +16,7 @@
  */
 package org.aerogear.todo.server.model;
 
-import org.aerogear.todo.server.serializer.CustomSerializer;
+import org.aerogear.todo.server.serializer.ProjectCustomSerializer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.Column;
@@ -31,6 +31,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @XmlRootElement
+@JsonSerialize(using = ProjectCustomSerializer.class)
 @Entity
 public class Project implements Serializable {
 

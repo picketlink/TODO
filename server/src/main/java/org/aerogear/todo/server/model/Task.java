@@ -16,7 +16,7 @@
  */
 package org.aerogear.todo.server.model;
 
-import org.aerogear.todo.server.serializer.CustomSerializer;
+import org.aerogear.todo.server.serializer.TaskCustomSerializer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.Column;
@@ -38,7 +38,7 @@ import java.util.List;
 import static org.aerogear.todo.server.util.DateBuilder.newDateBuilder;
 
 @XmlRootElement
-@JsonSerialize(using = CustomSerializer.class)
+@JsonSerialize(using = TaskCustomSerializer.class)
 @Entity
 public class Task implements Serializable {
 
@@ -63,6 +63,13 @@ public class Task implements Serializable {
 
     @OneToOne
     private Project project;
+
+    public Task() {
+    }
+
+    public Task(Long id) {
+        this.id = id;
+    }
 
     public Long getId() {
         return this.id;
