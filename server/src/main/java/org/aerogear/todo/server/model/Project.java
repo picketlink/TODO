@@ -38,7 +38,7 @@ public class Project implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", updatable = false, nullable = false)
-    private Long id = null;
+    private Long id;
 
     @Column
     private String title;

@@ -29,9 +29,13 @@ public class TaskCustomSerializer extends JsonSerializer<Task> {
         jsonGenerator.writeString(task.getDescription());
         jsonGenerator.writeFieldName("date");
         jsonGenerator.writeString(newDateBuilder().withCalendar(task.getDate()).build());
-        jsonGenerator.writeFieldName("project");
-        jsonGenerator.writeNumber(task.getProject().getId());
         jsonGenerator.writeObjectField("tags", retrieveIds(task.getTags()));
+
+        //@TODO must to be refactored
+        if (task.getProject() != null) {
+            jsonGenerator.writeFieldName("project");
+            jsonGenerator.writeNumber(task.getProject().getId());
+        }
         jsonGenerator.writeEndObject();
     }
 
