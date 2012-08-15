@@ -133,8 +133,10 @@ $( function() {
                 hex = hex2rgb( data.style );
                 data.style = formType + "-" + hex[ "red" ] + "-" + hex[ "green" ] + "-" + hex[ "blue" ];
             }
-            if ( data.project ) {
+            if ( data.project.length ) {
                 data.project = parseInt( data.project, 10 );
+            } else {
+                delete data.project;
             }
             switch ( formType ) {
                 case "project":
