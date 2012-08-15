@@ -149,8 +149,9 @@
                 <div class="task-upper">
                     <div class="task-tags">
                         <% _.each( task.tags, function( taskTag ) {
-                            var swatchClass = _.find( tags, function(tag) { return tag.id == taskTag; }).style,
-                                swatchTitle = _.find( tags, function(tag) { return tag.id == taskTag; }).name %>
+                            var current = _.find( tags, function(tag) { return tag.id == taskTag; }) || {};
+                                swatchClass = current.style || "",
+                                swatchTitle = current.name || "" %>
                             <div class="swatch <%= swatchClass %>" title="<%= swatchTitle %>"></div>
                         <% }); %>
                     </div>
