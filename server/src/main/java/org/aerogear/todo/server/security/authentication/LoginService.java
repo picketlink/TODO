@@ -22,6 +22,7 @@
 
 package org.aerogear.todo.server.security.authentication;
 
+import org.aerogear.todo.server.security.idm.SimpleCredential;
 import org.apache.deltaspike.security.api.Identity;
 import org.apache.deltaspike.security.api.Identity.AuthenticationResult;
 import org.apache.deltaspike.security.api.credential.Credential;
@@ -55,13 +56,7 @@ public class LoginService {
         }
 
         credential.setUserId(name);
-        credential.setCredential(new Credential<UsernamePasswordCredential>() {
-
-            @Override
-            public UsernamePasswordCredential getValue() {
-                return new UsernamePasswordCredential(name, password);
-            }
-        });
+        credential.setCredential(new SimpleCredential(name, password));
 
         AuthenticationResult result = this.identity.login();
 

@@ -32,22 +32,19 @@ import java.util.List;
 @ApplicationScoped
 public class DefaultIdentityManager implements IdentityManager {
 
-    /* (non-Javadoc)
-     * @see org.picketbox.core.identity.IdentityManager#getIdentity(org.picketbox.core.PicketBoxSubject)
-     */
     @Override
-    public PicketBoxSubject getIdentity(PicketBoxSubject resultingSubject) {
+    public PicketBoxSubject getIdentity(PicketBoxSubject picketBoxSubject) {
         List<String> roles = new ArrayList<String>();
 
-        if (resultingSubject.getUser().getName().equals("admin")) {
+        if (picketBoxSubject.getUser().getName().equals("admin")) {
             roles.add("admin");
         } else {
             roles.add("guest");
         }
 
-        resultingSubject.setRoleNames(roles);
+        picketBoxSubject.setRoleNames(roles);
 
-        return resultingSubject;
+        return picketBoxSubject;
     }
 
 }
