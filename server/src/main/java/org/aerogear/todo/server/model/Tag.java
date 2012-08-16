@@ -36,7 +36,7 @@ public class Tag implements Serializable {
     private Long id = null;
 
     @Column
-    private String name;
+    private String title;
 
     @Column
     private String style;
@@ -60,12 +60,12 @@ public class Tag implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return this.name;
+    public String getTitle() {
+        return this.title;
     }
 
-    public void setName(final String name) {
-        this.name = name;
+    public void setTitle(final String title) {
+        this.title = title;
     }
 
     public String getStyle() {
@@ -86,8 +86,8 @@ public class Tag implements Serializable {
 
     public String toString() {
         String result = "";
-        if (name != null && !name.trim().isEmpty())
-            result += name;
+        if (title != null && !title.trim().isEmpty())
+            result += title;
         if (style != null && !style.trim().isEmpty())
             result += " " + style;
         return result;
