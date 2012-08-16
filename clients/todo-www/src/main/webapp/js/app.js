@@ -307,7 +307,13 @@ $( function() {
         var taskList;
 
         taskList = _.template( $( "#task-tmpl" ).html(), { tasks: data ? data : Tasks.data, tags: Tags.data, projects: Projects.data } );
-        $( "#task-loader" ).after( taskList );
+        if ( !isUpdate ) {
+            $( "#task-loader" ).after( taskList );
+        } else {
+            $( "#task-container .option-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( taskList );
+        }
+        // Enable tooltips
+        $( "#task-container .swatch" ).tooltip();
         $( "#add-task" )[ 0 ].reset();
     }
 
@@ -327,7 +333,6 @@ $( function() {
             $( "#project-loader" ).after( projectList );
             $( "#task-project-select" ).append( projectSelect );
         } else {
-            console.log($(projectList).length);
             $( "#property-container .option-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( projectList );
             $( "#task-project-select" ).children( "[value='" + isUpdate + "']" ).replaceWith( projectSelect );
         }
@@ -366,12 +371,18 @@ $( function() {
     }
 
     function hideForm( toHide ) {
+        var form = toHide.find( "form" );
         toHide.slideUp( "slow", function() {
             $( this ).hide( 0, function() {
                 $( this ).height( "auto" );
             });
         });
         toHide.prev().slideDown( "slow" );
+        form
+            .find( "input[name='id']" ).val( "" ).end()
+            .find( ".color-picker" ).miniColors( "value", "#ffffff" );
+
+        form[ 0 ].reset();
     }
 
     function parseClasses( data, alpha ) {
