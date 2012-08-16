@@ -257,7 +257,7 @@ $( function() {
                 rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
 
                 $( "#project-id" ).val( toEdit.id );
-                $( "#project-name" ).val( toEdit.title );
+                $( "#project-title" ).val( toEdit.title );
                 $( "#project-color" ).miniColors( "value", rgb2hex( rgb[ 0 ], rgb[ 1 ], rgb[ 2 ] ) );
                 $( "#add-project" ).find( ".submit-btn" ).html( plus + " Update Project" );
                 $( ".add-project" ).click();
@@ -267,7 +267,7 @@ $( function() {
                 rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
 
                 $( "#tag-id" ).val( toEdit.id );
-                $( "#tag-name" ).val( toEdit.name );
+                $( "#tag-title" ).val( toEdit.title );
                 $( "#tag-color" ).miniColors( "value", rgb2hex( rgb[ 0 ], rgb[ 1 ], rgb[ 2 ] ) );
                 $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Update Tag" );
                 $( ".add-tag" ).click();
@@ -276,7 +276,7 @@ $( function() {
                 toEdit = findItemToEdit( target, Tasks.data );
 
                 $( "#task-id" ).val( toEdit.id );
-                $( "#task-name" ).val( toEdit.title );
+                $( "#task-title" ).val( toEdit.title );
                 $( "#task-date" ).val( toEdit.date );
                 $( "#task-desc" ).val( toEdit.description );
                 if ( toEdit.project ) {
@@ -314,7 +314,6 @@ $( function() {
         }
         // Enable tooltips
         $( "#task-container .swatch" ).tooltip();
-        $( "#add-task" )[ 0 ].reset();
     }
 
     function updateProjectList( data, isUpdate ) {
@@ -333,10 +332,9 @@ $( function() {
             $( "#project-loader" ).after( projectList );
             $( "#task-project-select" ).append( projectSelect );
         } else {
-            $( "#property-container .option-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( projectList );
+            $( "#project-list .option-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( projectList );
             $( "#task-project-select" ).children( "[value='" + isUpdate + "']" ).replaceWith( projectSelect );
         }
-        $( "#add-project" )[ 0 ].reset();
     }
 
     function updateTagList( data, isUpdate ) {
@@ -357,11 +355,13 @@ $( function() {
                 tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: data.slice( i, i+3 ) } );
             }
         }
-        $( "#tag-loader" ).after( tagList );
-        if ( tagSelect.length ) {
+        if ( !isUpdate ) {
+            $( "#tag-loader" ).after( tagList );
             $( "#task-tag-column" ).append( tagSelect );
+        } else {
+            $( "#tag-list .option-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( tagList );
+            $( "#task-tag-select" ).find( "input[name='tag-" + isUpdate + "']" ).closest( ".tag-select-column" ).replaceWith( tagSelect );
         }
-        $( "#add-tag" )[ 0 ].reset();
     }
 
     function findItemToEdit( idElement, data ) {

@@ -48,8 +48,8 @@
                     <div class="add-project-form">
                         <form id="add-project" name="project">
                             <input type="hidden" name="id" id="project-id" value="" />
-                            <label for="project-name">Project Name:</label>
-                            <input type="text" name="title" id="project-name"/>
+                            <label for="project-name">Title:</label>
+                            <input type="text" name="title" id="project-title"/>
                             <label for="project-color" class="color-picker-label">Color:</label>
                             <input type="hidden" name="style" id="project-color" class="color-picker" value="#ffffff"/>
                             <a class="btn submit-btn"><i class="icon-plus-sign"></i> Add Project</a>
@@ -75,8 +75,8 @@
                     <div class="add-tag-form">
                         <form id="add-tag" name="tag">
                             <input type="hidden" name="id" id="tag-id" value="" />
-                            <label for="tag-name">Tag Name:</label>
-                            <input type="text" name="name" id="tag-name"/>
+                            <label for="tag-name">Title:</label>
+                            <input type="text" name="title" id="tag-title"/>
                             <label for="tag-color" class="color-picker-label">Color:</label>
                             <input type="hidden" name="style" id="tag-color" class="color-picker" value="#ffffff"/>
                             <a class="btn submit-btn"><i class="icon-plus-sign"></i> Add Tag</a>
@@ -99,8 +99,8 @@
                         <input type="hidden" name="id" id="task-id" value="" />
                         <div>
                             <div class="form-column">
-                                <label for="task-name">Task Name:</label>
-                                <input type="text" name="title" id="task-name"/>
+                                <label for="task-name">Title:</label>
+                                <input type="text" name="title" id="task-title"/>
                             </div>
                             <div class="form-column">
                                 <label for="task-date">Date:</label>
@@ -152,7 +152,7 @@
                         <% _.each( task.tags, function( taskTag ) {
                             var current = _.find( tags, function(tag) { return tag.id == taskTag; }) || {};
                                 swatchClass = current.style || "",
-                                swatchTitle = current.name || "" %>
+                                swatchTitle = current.title || "" %>
                             <div rel="tooltip" class="swatch <%= swatchClass %>" title="<%= swatchTitle %>"></div>
                         <% }); %>
                     </div>
@@ -196,7 +196,7 @@
     <script type="text/template" id="tag-tmpl">
         <% _.each( tags, function( tag ) { %>
             <div class="tag">
-                <div class="swatch <%= tag.style %>"></div><%= tag.name %>
+                <div class="swatch <%= tag.style %>"></div><%= tag.title %>
                 <div class="option-overlay" data-id="<%= tag.id %>" data-type="tag">
                     <div class="col">
                         <a class="btn sort" title="Filter"><i class="icon-filter"></i><span class="btn-txt">Filter</span></a>
@@ -217,15 +217,13 @@
         <% }); %>
     </script>
     <script type="text/template" id="tag-select-tmpl">
-        <div>
         <% _.each( tags, function( tag ) { %>
             <div class="tag-select-column">
                 <div class="tag-select-box <%= tag.style %>">
                     <input type="checkbox" name="tag-<%= tag.id %>" value="<%= tag.id %>"/>
-                </div><%= tag.name %>
+                </div><%= tag.title %>
             </div>
         <% }); %>
-        </div>
     </script>
     <!-- End Templates -->
 
