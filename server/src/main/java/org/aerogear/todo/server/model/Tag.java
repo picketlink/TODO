@@ -21,6 +21,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
@@ -38,6 +40,10 @@ public class Tag implements Serializable {
 
     @Column
     private String style;
+
+    @ManyToOne
+    @JoinColumn(name = "task_id", nullable = true)
+    private Task task;
 
     public Tag() {
     }
@@ -68,6 +74,14 @@ public class Tag implements Serializable {
 
     public void setStyle(final String style) {
         this.style = style;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     public String toString() {

@@ -59,12 +59,11 @@ public class Task implements Serializable {
     @Column(name = "date", columnDefinition = "TIMESTAMP")
     private Calendar date;
 
-    @ManyToMany
-    @JoinColumn(name = "tags_id", nullable = true)
+    @OneToMany(mappedBy = "task", orphanRemoval = true)
     private List<Tag> tags = new ArrayList<Tag>();
 
     @ManyToOne
-    @JoinColumn(name = "project_id",  nullable = true)
+    @JoinColumn(name = "project_id", nullable = true)
     private Project project;
 
     public Task() {
@@ -80,6 +79,46 @@ public class Task implements Serializable {
 
     public void setId(final Long id) {
         this.id = id;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(final String description) {
+        this.description = description;
+    }
+
+    public Calendar getDate() {
+        return date;
+    }
+
+    public void setDate(final Calendar date) {
+        this.date = date;
+    }
+
+    public List<Tag> getTags() {
+        return this.tags;
+    }
+
+    public void setTags(final List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public Project getProject() {
+        return this.project;
+    }
+
+    public void setProject(final Project project) {
+        this.project = project;
     }
 
     @Override
@@ -107,30 +146,6 @@ public class Task implements Serializable {
         return super.hashCode();
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(final String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    public Calendar getDate() {
-        return date;
-    }
-
-    public void setDate(final Calendar date) {
-        this.date = date;
-    }
-
     public String toString() {
         String result = "";
         if (title != null && !title.trim().isEmpty())
@@ -138,21 +153,5 @@ public class Task implements Serializable {
         if (description != null && !description.trim().isEmpty())
             result += " " + description;
         return result;
-    }
-
-    public List<Tag> getTags() {
-        return this.tags;
-    }
-
-    public void setTags(final List<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public Project getProject() {
-        return this.project;
-    }
-
-    public void setProject(final Project project) {
-        this.project = project;
     }
 }
