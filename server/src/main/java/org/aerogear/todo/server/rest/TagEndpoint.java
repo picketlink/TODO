@@ -58,6 +58,11 @@ public class TagEndpoint {
                            Long id) {
         em.joinTransaction();
         Tag result = em.find(Tag.class, id);
+//        em.createQuery("UPDATE Task task, Tag tag " +
+//                "SET task.tags = null " +
+//                "WHERE task.tags = tag.")
+//                .setParameter(1, id)
+//                .executeUpdate();
         em.remove(result);
     }
 
