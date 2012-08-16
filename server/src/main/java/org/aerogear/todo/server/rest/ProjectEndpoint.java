@@ -57,6 +57,11 @@ public class ProjectEndpoint {
                            Long id) {
         em.joinTransaction();
         Project result = em.find(Project.class, id);
+        em.createQuery("UPDATE Task e " +
+                "SET e.project.id = null " +
+                "WHERE e.project.id = ?1")
+                .setParameter(1, id)
+                .executeUpdate();
         em.remove(result);
     }
 
