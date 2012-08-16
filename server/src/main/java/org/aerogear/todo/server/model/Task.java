@@ -25,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
@@ -56,7 +57,7 @@ public class Task implements Serializable {
     @Column(name = "date", columnDefinition = "TIMESTAMP")
     private Calendar date;
 
-    @OneToMany
+    @ManyToMany
     private List<Tag> tags = new ArrayList<Tag>();
 
     @OneToOne(optional = true)
