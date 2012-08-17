@@ -19,6 +19,7 @@ package org.aerogear.todo.server.rest;
 import java.util.List;
 
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -35,7 +36,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.aerogear.todo.server.model.Task;
 
-@Stateful
+@Stateless
 @Path("/task")
 @TransactionAttribute
 public class TaskEndpoint {

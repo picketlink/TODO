@@ -21,6 +21,7 @@ import org.aerogear.todo.server.model.Tag;
 import org.aerogear.todo.server.model.Task;
 
 import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -36,7 +37,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 
-@Stateful
+@Stateless
 @Path("/project")
 @TransactionAttribute
 public class ProjectEndpoint {

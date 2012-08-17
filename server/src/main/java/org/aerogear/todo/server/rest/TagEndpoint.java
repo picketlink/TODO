@@ -16,9 +16,10 @@
  */
 package org.aerogear.todo.server.rest;
 
-import java.util.List;
+import org.aerogear.todo.server.model.Tag;
+import org.aerogear.todo.server.model.Task;
 
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -32,11 +33,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
-import org.aerogear.todo.server.model.Tag;
-import org.aerogear.todo.server.model.Task;
-
-@Stateful
+@Stateless
 @Path("/tag")
 @TransactionAttribute
 public class TagEndpoint {
@@ -56,7 +55,7 @@ public class TagEndpoint {
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Long> deleteById(@PathParam("id")
-                                    Long id) {
+                                 Long id) {
         em.joinTransaction();
 
         //@TODO extract it to another class
