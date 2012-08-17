@@ -69,7 +69,7 @@ $( function() {
 
     // Event Bindings
     $( ".add-project, .add-tag, .add-task" ).on( "click", function( event ) {
-        var target = $( event.target );
+        var target = $( event.currentTarget);
         target.parent().height( "100%" );
         target.slideUp( "slow" );
         target.next().slideDown( "slow" );
