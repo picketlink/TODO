@@ -16,6 +16,9 @@
  */
 package org.aerogear.todo.server.model;
 
+import org.aerogear.todo.server.serializer.TagCustomSerializer;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @XmlRootElement
+@JsonSerialize(using = TagCustomSerializer.class)
 @Entity
 public class Tag implements Serializable {
 

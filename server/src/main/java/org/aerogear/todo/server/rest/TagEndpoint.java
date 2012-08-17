@@ -60,6 +60,7 @@ public class TagEndpoint {
         em.joinTransaction();
 
         //@TODO extract it to another class
+        @SuppressWarnings("unchecked")
         List<Long> taskIds = em.createQuery("select c.id from Task c inner join c.tags o where o.id = ?1")
                 .setParameter(1, id)
                 .getResultList();

@@ -60,6 +60,7 @@ public class ProjectEndpoint {
         em.joinTransaction();
 
         //@TODO extract it to another class
+        @SuppressWarnings("unchecked")
         List<Long> taskIds = em.createQuery("select c.id from Task c inner join c.project o where o.id = ?1")
                 .setParameter(1, id)
                 .getResultList();
