@@ -34,6 +34,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.aerogear.todo.server.model.Tag;
+import org.aerogear.todo.server.model.Task;
 
 @Stateful
 @Path("/tag")
@@ -57,8 +58,13 @@ public class TagEndpoint {
     public void deleteById(@PathParam("id")
                            Long id) {
         em.joinTransaction();
-        Tag result = em.find(Tag.class, id);
-        em.remove(result);
+        Tag tag = em.find(Tag.class, id);
+        for (Task task : tag.getTasks()) {
+            task.getTags().remove(tag);
+        }
+        em.merge(tag);
+        em.remove(tag);
+        em.flush();
     }
 
     @GET

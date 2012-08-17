@@ -46,7 +46,7 @@ public class Project implements Serializable {
     @Column
     private String style;
 
-    @OneToMany
+    @OneToMany(mappedBy = "project")
     private Set<Task> tasks = new HashSet<Task>();
 
     public Project() {

@@ -25,6 +25,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -59,8 +60,11 @@ public class Task implements Serializable {
     @Column(name = "date", columnDefinition = "TIMESTAMP")
     private Calendar date;
 
+
     @ManyToMany
-    @JoinColumn(name = "tags_id", nullable = true)
+    @JoinTable(name="task_tag",
+            joinColumns=@JoinColumn(name="task_id", referencedColumnName="id"),
+            inverseJoinColumns=@JoinColumn(name="tags_id", referencedColumnName="id"))
     private List<Tag> tags = new ArrayList<Tag>();
 
     @ManyToOne

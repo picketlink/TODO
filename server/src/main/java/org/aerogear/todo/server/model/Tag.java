@@ -21,8 +21,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @XmlRootElement
 @Entity
@@ -38,6 +41,9 @@ public class Tag implements Serializable {
 
     @Column
     private String style;
+
+    @ManyToMany(mappedBy = "tags")
+    private List<Task> tasks = new ArrayList<Task>();
 
     public Tag() {
     }
@@ -68,6 +74,14 @@ public class Tag implements Serializable {
 
     public void setStyle(final String style) {
         this.style = style;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> task) {
+        this.tasks = task;
     }
 
     public String toString() {

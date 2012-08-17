@@ -17,11 +17,11 @@
 package org.aerogear.todo.server.rest;
 
 import org.aerogear.todo.server.model.Project;
-import org.aerogear.todo.server.service.ProjectService;
+import org.aerogear.todo.server.model.Tag;
+import org.aerogear.todo.server.model.Task;
 
 import javax.ejb.Stateful;
 import javax.ejb.TransactionAttribute;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
@@ -43,9 +43,6 @@ public class ProjectEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;
 
-    @Inject
-    private ProjectService projectService;
-
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -60,7 +57,15 @@ public class ProjectEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public void deleteById(@PathParam("id")
                            Long id) {
-        projectService.removeProject(id);
+        em.joinTransaction();
+        Project project = em.find(Project.class, id);
+
+        em.createQuery("UPDATE Task e SET e.project.id = null WHERE e.project.id = ?1")
+                .setParameter(1, id)
+                .executeUpdate();
+
+        em.remove(project);
+
     }
 
     @GET
