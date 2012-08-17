@@ -229,13 +229,13 @@ $( function() {
         }
         switch( dataTarget.data( "type" ) ) {
             case "project":
-                Projects.del( options );
+                Projects.remove( options );
                 break;
             case "tag":
-                Tags.del( options );
+                Tags.remove( options );
                 break;
             case "task":
-                Tasks.del( options );
+                Tasks.remove( options );
                 break;
         }
     });
