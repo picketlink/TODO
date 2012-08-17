@@ -115,13 +115,14 @@ $( function() {
         form.find( "input" ).each( function() {
             if ( !$.trim( $( this ).val() ).length && this.type != "hidden" ) {
                 formValid = false;
+                $( "#errorMessage" ).text( "Please provide a " + $( this ).attr( "name" ) );
                 return false;
             }
         });
 
         // Handle invalid form
         if ( !formValid ) {
-            // Add some sort of visual feedback
+            $( "#errorModal" ).modal();
         } else {
             data = form.serializeObject();
             if ( data.id && data.id.length ) {

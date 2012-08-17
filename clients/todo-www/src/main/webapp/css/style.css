@@ -59,6 +59,13 @@ body {
     display: block;
 }
 
+.todo-app .span9 > div.task {
+    min-height: 60px;
+}
+.todo-app .span9 > div.add-task {
+    min-height: 0;
+}
+
 .todo-app .span2, .todo-app .span9 {
     background: rgba(0, 0, 0, 0.1);
     padding: 10px;
@@ -177,7 +184,7 @@ body {
 }
 
 .task .option-overlay .col .btn {
-    margin: 1px 10px;
+    margin: 1px 10px 2px 10px;
 }
 
 .option-overlay .col .btn.delete {
