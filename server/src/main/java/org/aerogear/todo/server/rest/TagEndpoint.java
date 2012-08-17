@@ -55,9 +55,15 @@ public class TagEndpoint {
     @DELETE
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void deleteById(@PathParam("id")
-                           Long id) {
+    public List<Long> deleteById(@PathParam("id")
+                                    Long id) {
         em.joinTransaction();
+
+        //@TODO extract it to another class
+        List<Long> taskIds = em.createQuery("select c.id from Task c inner join c.tags o where o.id = ?1")
+                .setParameter(1, id)
+                .getResultList();
+
         Tag tag = em.find(Tag.class, id);
         for (Task task : tag.getTasks()) {
             task.getTags().remove(tag);
@@ -65,6 +71,8 @@ public class TagEndpoint {
         em.merge(tag);
         em.remove(tag);
         em.flush();
+
+        return taskIds;
     }
 
     @GET

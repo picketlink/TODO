@@ -55,9 +55,16 @@ public class ProjectEndpoint {
     @DELETE
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void deleteById(@PathParam("id")
-                           Long id) {
+    public List<Long> deleteById(@PathParam("id")
+                                 Long id) {
         em.joinTransaction();
+
+        //@TODO extract it to another class
+        List<Long> taskIds = em.createQuery("select c.id from Task c inner join c.project o where o.id = ?1")
+                .setParameter(1, id)
+                .getResultList();
+
+
         Project project = em.find(Project.class, id);
 
         em.createQuery("UPDATE Task e SET e.project.id = null WHERE e.project.id = ?1")
@@ -66,6 +73,7 @@ public class ProjectEndpoint {
 
         em.remove(project);
 
+        return taskIds;
     }
 
     @GET
