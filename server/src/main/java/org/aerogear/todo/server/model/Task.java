@@ -29,14 +29,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 @XmlRootElement
@@ -47,7 +46,7 @@ public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false, nullable = false)
-    private Long id = null;
+    private Long id;
 
     @Column
     private String title;
@@ -58,17 +57,17 @@ public class Task implements Serializable {
 
     @Temporal(value = TemporalType.DATE)
     @Column(name = "date", columnDefinition = "TIMESTAMP")
-    private Calendar date;
+    private Calendar date = GregorianCalendar.getInstance();
 
 
     @ManyToMany
-    @JoinTable(name="task_tag",
-            joinColumns=@JoinColumn(name="task_id", referencedColumnName="id"),
-            inverseJoinColumns=@JoinColumn(name="tags_id", referencedColumnName="id"))
+    @JoinTable(name = "task_tag",
+            joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))
     private List<Tag> tags = new ArrayList<Tag>();
 
     @ManyToOne
-    @JoinColumn(name = "project_id",  nullable = true)
+    @JoinColumn(name = "project_id", nullable = true)
     private Project project;
 
     public Task() {
