@@ -280,7 +280,11 @@ $( function() {
         switch( target.data( "type" ) ) {
             case "project":
                 toEdit = filterData( target, Projects.data )[ 0 ];
-                rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
+                if ( toEdit.style ) {
+                    rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
+                } else {
+                    rgb = [ 255, 255, 255 ];
+                }
 
                 $( "#project-id" ).val( toEdit.id );
                 $( "#project-title" ).val( toEdit.title );
@@ -290,7 +294,11 @@ $( function() {
                 break;
             case "tag":
                 toEdit = filterData( target, Tags.data )[ 0 ];
-                rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
+                if ( toEdit.style ) {
+                    rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
+                } else {
+                    rgb = [ 255, 255, 255 ];
+                }
 
                 $( "#tag-id" ).val( toEdit.id );
                 $( "#tag-title" ).val( toEdit.title );
@@ -402,8 +410,10 @@ $( function() {
     function parseClasses( data, alpha ) {
         var styleList = "";
         $.each( data, function() {
-            var rgb = this.style.substr( this.style.indexOf( "-" ) + 1 ).split( "-" );
-            styleList += "#property-container ." + this.style + "," + "#task-container ." + this.style + "{background: rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + alpha + ");}";
+            if ( this.style ) {
+                var rgb = this.style.substr( this.style.indexOf( "-" ) + 1 ).split( "-" );
+                styleList += "#property-container ." + this.style + "," + "#task-container ." + this.style + "{background: rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + alpha + ");}";
+            }
         });
         return styleList;
     }
