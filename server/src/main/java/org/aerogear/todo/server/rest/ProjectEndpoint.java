@@ -38,7 +38,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Stateless
-@Path("/project")
+@Path("/projects")
 @TransactionAttribute
 public class ProjectEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)

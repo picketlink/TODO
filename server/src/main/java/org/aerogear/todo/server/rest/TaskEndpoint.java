@@ -37,7 +37,7 @@ import javax.ws.rs.core.MediaType;
 import org.aerogear.todo.server.model.Task;
 
 @Stateless
-@Path("/task")
+@Path("/tasks")
 @TransactionAttribute
 public class TaskEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
