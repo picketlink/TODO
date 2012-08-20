@@ -38,7 +38,7 @@ $( function() {
         ajax: {
             success: function( data, textStatus, jqXHR ) {
                 $( "#project-loader" ).hide();
-                updateProjectList( data );
+                updateProjectList();
             }
         }
     });
@@ -50,7 +50,7 @@ $( function() {
                     $( "#task-tag-column" ).empty();
                 }
                 $( "#tag-loader" ).hide();
-                updateTagList( data );
+                updateTagList();
             }
         }
     });
@@ -108,8 +108,10 @@ $( function() {
             // all form id's start with add
             formType = form.attr( "name" ),
             formValid = true,
+            // 0 - add items
             isUpdate = false,
             plus = '<i class="icon-plus-sign"></i>',
+            filteredData = [],
             data, hex, tags;
 
         form.find( "input" ).each( function() {
@@ -126,7 +128,8 @@ $( function() {
         } else {
             data = form.serializeObject();
             if ( data.id && data.id.length ) {
-                isUpdate = parseInt( data.id, 10 );
+                // 1 - replace items in list
+                isUpdate = true;
             } else {
                 delete data.id;
             }
@@ -144,7 +147,11 @@ $( function() {
                     Projects.save( data, {
                         ajax: {
                             success: function( data ) {
-                                updateProjectList( [ data ], isUpdate );
+                                updateProjectList();
+                                if ( isUpdate ) {
+                                    updateTaskList();
+                                }
+
                                 $( "#add-project" ).find( ".submit-btn" ).html( plus + " Add Project" );
                             }
                         }
@@ -154,7 +161,10 @@ $( function() {
                     Tags.save( data, {
                         ajax: {
                             success: function( data ) {
-                                updateTagList( [ data ], isUpdate );
+                                updateTagList();
+                                if ( isUpdate ) {
+                                    updateTaskList();
+                                }
                                 $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Add Tag" );
                             }
                         }
@@ -173,7 +183,7 @@ $( function() {
                     Tasks.save( data, {
                         ajax: {
                             success: function( data ) {
-                                updateTaskList( [ data ], isUpdate );
+                                updateTaskList();
                                 $( "#add-task" ).find( ".submit-btn" ).html( plus + " Add Task" );
                             }
                         }
@@ -214,9 +224,24 @@ $( function() {
     $( ".todo-app" ).on( "click", ".btn.delete", function( event ) {
         var target = $( event.target ),
             dataTarget = target.closest( ".option-overlay" ),
+            type = dataTarget.data( "type" ),
             toRemove = dataTarget.parent(),
-            success = function() {
-                toRemove.remove();
+            current,
+            success = function( data ) {
+                for ( var item in data ) {
+                    current = filterData( data[ item ], Tasks.data )[ 0 ];
+                    if ( type == "project" ) {
+                        current.project = null;
+                    } else if ( type == "tag" ) {
+                        current.tags.splice( item, 1 );
+                    }
+                }
+                if ( type == "project" ) {
+                    updateProjectList();
+                } else if ( type == "tag" ) {
+                    updateTagList();
+                }
+                updateTaskList();
             },
             options = {
                 record: dataTarget.data( "id" ),
@@ -228,7 +253,7 @@ $( function() {
             event.preventDefault();
             return;
         }
-        switch( dataTarget.data( "type" ) ) {
+        switch( type ) {
             case "project":
                 Projects.remove( options );
                 break;
@@ -254,7 +279,7 @@ $( function() {
 
         switch( target.data( "type" ) ) {
             case "project":
-                toEdit = findItemToEdit( target, Projects.data );
+                toEdit = filterData( target, Projects.data )[ 0 ];
                 rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
 
                 $( "#project-id" ).val( toEdit.id );
@@ -264,7 +289,7 @@ $( function() {
                 $( ".add-project" ).click();
                 break;
             case "tag":
-                toEdit = findItemToEdit( target, Tags.data );
+                toEdit = filterData( target, Tags.data )[ 0 ];
                 rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
 
                 $( "#tag-id" ).val( toEdit.id );
@@ -274,7 +299,7 @@ $( function() {
                 $( ".add-tag" ).click();
                 break;
             case "task":
-                toEdit = findItemToEdit( target, Tasks.data );
+                toEdit = filterData( target, Tasks.data )[ 0 ];
 
                 $( "#task-id" ).val( toEdit.id );
                 $( "#task-title" ).val( toEdit.title );
@@ -304,71 +329,59 @@ $( function() {
     }
 
     // Helper Functions
-    function updateTaskList( data, isUpdate ) {
-        var taskList;
+    function updateTaskList() {
+        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: Tasks.data, tags: Tags.data, projects: Projects.data } );
 
-        taskList = _.template( $( "#task-tmpl" ).html(), { tasks: data ? data : Tasks.data, tags: Tags.data, projects: Projects.data } );
-        if ( !isUpdate ) {
-            $( "#task-loader" ).after( taskList );
-        } else {
-            $( "#task-container .option-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( taskList );
-        }
+        $( "#task-list-container" ).html( taskList );
+
         // Enable tooltips
-        $( "#task-container .swatch" ).tooltip();
+        $( "#task-list-container .swatch" ).tooltip();
     }
 
-    function updateProjectList( data, isUpdate ) {
-        var projectList,
-            projectSelect,
-            styleList;
+    function updateProjectList() {
+        var projectList = "",
+            projectSelect = "",
+            styleList = "";
 
-        styleList = parseClasses( data, "0.4" );
-        if ( styleList.length ) {
-            $( "head" ).append( "<style id='project-styles'>" + styleList + "</style>" );
-        }
+        styleList = parseClasses( Projects.data, "0.4" );
+        $( "#project-styles" ).html( styleList );
 
-        projectList = _.template( $( "#project-tmpl" ).html(), { projects: data } );
-        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: data } );
-        if ( !isUpdate ) {
-            $( "#project-loader" ).after( projectList );
-            $( "#task-project-select" ).append( projectSelect );
-        } else {
-            $( "#project-list .option-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( projectList );
-            $( "#task-project-select" ).children( "[value='" + isUpdate + "']" ).replaceWith( projectSelect );
-        }
+        projectList = _.template( $( "#project-tmpl" ).html(), { projects: Projects.data } );
+        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: Projects.data } );
+        $( "#project-container" ).html( projectList );
+        projectSelect = '<option value="">No Project</option>' + projectSelect;
+        $( "#task-project-select" ).html( projectSelect );
     }
 
-    function updateTagList( data, isUpdate ) {
+    function updateTagList() {
         var i,
-            tagList,
-            tagSelect,
-            styleList;
+            tagList = "",
+            tagSelect = "",
+            styleList = "";
 
-        styleList = parseClasses( data, "1" );
-        if ( styleList.length ) {
-            $( "head" ).append( "<style id='tag-styles'>" + styleList + "</style>" );
-        }
+        styleList = parseClasses( Tags.data, "1" );
+        $( "#tag-styles" ).html( styleList );
 
-        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: data } );
+        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: Tags.data } );
         tagSelect = "";
-        if ( data.length ) {
-            for ( i = 0; i < data.length; i += 3 ) {
-                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: data.slice( i, i+3 ) } );
+        if ( Tags.data.length ) {
+            for ( i = 0; i < Tags.data.length; i += 3 ) {
+                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: Tags.data.slice( i, i+3 ) } );
             }
         }
-        if ( !isUpdate ) {
-            $( "#tag-loader" ).after( tagList );
-            $( "#task-tag-column" ).append( tagSelect );
-        } else {
-            $( "#tag-list .option-overlay[data-id='" + isUpdate + "']" ).parent().replaceWith( tagList );
-            $( "#task-tag-select" ).find( "input[name='tag-" + isUpdate + "']" ).closest( ".tag-select-column" ).replaceWith( tagSelect );
+        $( "#tag-container" ).html( tagList );
+        if ( !$.trim( tagSelect ).length ) {
+            tagSelect = "<strong>No Tags Available</strong>";
         }
+        $( "#task-tag-column" ).html( tagSelect );
     }
 
-    function findItemToEdit( idElement, data ) {
+    function filterData( idElement, data ) {
+        var checkId;
         return data.filter( function( element, index ) {
-            return element.id == idElement.data( "id" );
-        })[ 0 ];
+            checkId = idElement.data ? idElement.data( "id" ) : idElement;
+            return element.id === checkId;
+        });
     }
 
     function hideForm( toHide ) {

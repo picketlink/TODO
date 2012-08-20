@@ -16,6 +16,10 @@
     <link href='http://fonts.googleapis.com/css?family=Aldrich' rel='stylesheet' type='text/css'>
 
     <script src="js/libs/modernizr-2.6.1.min.js"></script>
+
+    <!-- Placeholders for dynamic styles -->
+    <style id="project-styles"></style>
+    <style id="tag-styles"></style>
 </head>
 <body>
     <div class="navbar navbar-fixed-top">
@@ -62,6 +66,7 @@
                         </div>
                         <div id="project-overlay"></div>
                     </div>
+                    <div id="project-container"></div>
                 </div>
                 <h3>Tags
                     <a class="btn btn-navbar" data-toggle="collapse" data-target="#tag-list">
@@ -89,6 +94,7 @@
                         </div>
                         <div id="tag-overlay"></div>
                     </div>
+                    <div id="tag-container"></div>
                 </div>
             </div>
             <div id="task-container" class="span9">
@@ -121,7 +127,7 @@
                                 </div>
                             </div>
                             <div class="form-column">
-                                <label for="task-tag-select">Tag(s):</label>
+                                <label for="task-tag-column">Tag(s):</label>
                                 <div id="task-tag-column">
                                     <strong>No Tags Available</strong>
                                 </div>
@@ -137,6 +143,7 @@
                     </div>
                     <div id="task-overlay"></div>
                 </div>
+                <div id="task-list-container"></div>
             </div>
         </div>
     </div>
