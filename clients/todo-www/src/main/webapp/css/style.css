@@ -65,11 +65,8 @@ body {
     display: block;
 }
 
-.todo-app .span9 > div.task {
+.todo-app .span9 > div > div.task {
     min-height: 60px;
-}
-.todo-app .span9 > div.add-task {
-    min-height: 0;
 }
 
 .todo-app .span2, .todo-app .span9 {
