@@ -60,8 +60,8 @@ public class TagEndpoint {
 
         //@TODO extract it to another class
         @SuppressWarnings("unchecked")
-        List<Long> taskIds = em.createQuery("select c.id from Task c inner join c.tags o where o.id = ?1")
-                .setParameter(1, id)
+        List<Long> taskIds = em.createQuery("select c.id from Task c inner join c.tags o where o.id = :id")
+                .setParameter("id", id)
                 .getResultList();
 
         Tag tag = em.find(Tag.class, id);

@@ -62,15 +62,15 @@ public class ProjectEndpoint {
 
         //@TODO extract it to another class
         @SuppressWarnings("unchecked")
-        List<Long> taskIds = em.createQuery("select c.id from Task c inner join c.project o where o.id = ?1")
-                .setParameter(1, id)
+        List<Long> taskIds = em.createQuery("select c.id from Task c inner join c.project o where o.id = :id")
+                .setParameter("id", id)
                 .getResultList();
 
 
         Project project = em.find(Project.class, id);
 
-        em.createQuery("UPDATE Task e SET e.project.id = null WHERE e.project.id = ?1")
-                .setParameter(1, id)
+        em.createQuery("UPDATE Task e SET e.project.id = null WHERE e.project.id = :id")
+                .setParameter("id", id)
                 .executeUpdate();
 
         em.remove(project);
