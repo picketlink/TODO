@@ -112,19 +112,19 @@ $( function() {
             isUpdate = false,
             plus = '<i class="icon-plus-sign"></i>',
             filteredData = [],
-            data, hex, tags;
+            data, hex, tags, errorElement;
 
         form.find( "input" ).each( function() {
             if ( !$.trim( $( this ).val() ).length && this.type != "hidden" ) {
                 formValid = false;
-                $( "#errorMessage" ).text( "Please provide a " + $( this ).attr( "name" ) );
+                errorElement = $( this );
                 return false;
             }
         });
 
         // Handle invalid form
         if ( !formValid ) {
-            $( "#errorModal" ).modal();
+            errorElement.addClass( "form-error" ).val( "Field may not be empty" );
         } else {
             data = form.serializeObject();
             if ( data.id && data.id.length ) {
@@ -194,6 +194,11 @@ $( function() {
             // Close the add form
             hideForm( $( this ).closest( "div" ) );
         }
+    });
+
+    // Clear error fields
+    $( "form" ).on( "focus", ".form-error", function( event ) {
+        $( this ).removeClass( "form-error" ).val( "" );
     });
 
     // Item Hover Menus

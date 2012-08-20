@@ -277,6 +277,13 @@ label {
     font-weight: bold;
 }
 
+.todo-app .form-error {
+    border-color: #ff0000;
+    background: rgb(255, 0, 0);
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff0000;
+}
+
 /* Footer styles */
 footer {
     width: 100%;
