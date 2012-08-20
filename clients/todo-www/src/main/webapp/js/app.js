@@ -351,7 +351,7 @@ $( function() {
             projectSelect = "",
             styleList = "";
 
-        styleList = parseClasses( Projects.data, "0.4" );
+        styleList = parseClasses( Projects.data );
         $( "#project-styles" ).html( styleList );
 
         projectList = _.template( $( "#project-tmpl" ).html(), { projects: Projects.data } );
@@ -407,15 +407,26 @@ $( function() {
         form[ 0 ].reset();
     }
 
-    function parseClasses( data, alpha ) {
-        var styleList = "";
+    function parseClasses( data ) {
+        var styleList = "",
+            rgb,
+            fontColor;
         $.each( data, function() {
             if ( this.style ) {
-                var rgb = this.style.substr( this.style.indexOf( "-" ) + 1 ).split( "-" );
-                styleList += "#property-container ." + this.style + "," + "#task-container ." + this.style + "{background: rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + alpha + ");}";
+                rgb = this.style.substr( this.style.indexOf( "-" ) + 1 ).split( "-" );
+                fontColor = calcBrightness( rgb ) < 130 ? "#EEE" : "#222" ;
+                styleList += "#property-container ." + this.style + "," + "#task-container ." + this.style + "{background: rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ",1); color: " + fontColor + ";}";
             }
         });
         return styleList;
+    }
+
+    function calcBrightness( rgb ) {
+        return Math.round( Math.sqrt(
+            ( parseInt( rgb[ 0 ], 10 ) * parseInt( rgb[ 0 ], 10 ) * 0.241 ) +
+            ( parseInt( rgb[ 1 ], 10 ) * parseInt( rgb[ 1 ], 10 ) * 0.691 ) +
+            ( parseInt( rgb[ 2 ], 10 ) * parseInt( rgb[ 2 ], 10 ) * 0.068 )
+        ));
     }
 
     function hex2rgb(hex) {

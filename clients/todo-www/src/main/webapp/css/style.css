@@ -318,10 +318,7 @@ footer {
     -webkit-border-radius: 5px;
     border-radius: 5px;
 }
-#add-project .miniColors-trigger {
-    opacity: 0.5;
-    filter:alpha(opacity=50);
-}
+
 .miniColors-selector {
     position: absolute;
     width: 175px;
