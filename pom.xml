@@ -8,6 +8,7 @@
       <version>6-beta-2</version>
       <relativePath />
    </parent>
+
    <groupId>org.jboss.aerogear.todo</groupId>
    <artifactId>todo-parent</artifactId>
    <version>1.0.0-SNAPSHOT</version>
@@ -47,6 +48,7 @@
     <modules>
         <module>server</module>
         <module>client</module>
+        <module>ear</module>
     </modules>
 
     <dependencyManagement>

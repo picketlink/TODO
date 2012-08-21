@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             version="6"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_6.xsd">
+
+    <application-name>todo-ear</application-name>
+
+    <initialize-in-order>true</initialize-in-order>
+
+    <module>
+        <web>
+            <web-uri>todo-server.war</web-uri>
+            <context-root>todo-server</context-root>
+        </web>
+    </module>
+    <module>
+        <web>
+            <web-uri>todo-www.war</web-uri>
+            <context-root>todo-www</context-root>
+        </web>
+    </module>
+
+</application>
