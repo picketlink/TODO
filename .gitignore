@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+client/.DS_Store
+client/target/
+client/todo-www.iml
+ear/target/
+ear/todo-ear.iml
+server/target/
+server/todo-server.iml
+todo-parent.iml
+todo.iml
