@@ -16,7 +16,7 @@
     <module>
         <web>
             <web-uri>todo-www.war</web-uri>
-            <context-root>todo</context-root>
+            <context-root>ROOT</context-root>
         </web>
     </module>
 
