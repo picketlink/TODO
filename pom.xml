@@ -46,7 +46,7 @@
 
     <modules>
         <module>server</module>
-        <module>clients</module>
+        <module>client</module>
     </modules>
 
     <dependencyManagement>
