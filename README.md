@@ -32,18 +32,14 @@ To build the projects simply run the following command from the root directory:
 
     mvn clean install
 
-This will build to _war_ files:
+This will build the _ear_ file with:
 - the web application (_todo-www.war_)
-- the REST endpoints (_todo-server.war_) 
+- the REST endpoints (_todo-server.war_)
 
-Deploying the application
+The application will be automaticaly deployed to **$JBOSS_HOME/standalone/deployments**
+
+Starting the server
 -------------------------
-
-### Deploying locally
- 
-Next you need to copy the two _war files_ into the deployment folder of your JBoss Application server
-
-    $JBOSS_HOME/standalone/deployments/
 
 Once you have done that, you need to start the JBoss container. To do this, run
   
