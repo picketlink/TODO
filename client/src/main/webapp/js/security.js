@@ -51,3 +51,20 @@ $(document).ready(function() {
 		return false; // prevents submit of the form
 	});
 });
+
+$(document).ready(function() {
+	if (!$('#logout-btn')) {
+		return;
+	}
+	
+	$('#logout-btn').click(function() {
+		var jqxhr = $.ajax('/todo-server/logout', {
+            data:{},
+            type:'GET', 
+            success:function (data) {
+            	window.location = getHost() + "/login.html";
+            }
+        });
+		return false; // prevents submit of the form
+	});
+});

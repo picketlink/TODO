@@ -20,43 +20,38 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.aerogear.todo.server.security;
+package org.aerogear.todo.server.security.idm;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
-import org.aerogear.todo.server.security.idm.TODOIdentityManager;
-import org.picketbox.core.config.ConfigurationBuilder;
-import org.picketbox.core.config.PicketBoxConfiguration;
+import org.jboss.picketlink.idm.internal.JPAIdentityStore;
+import org.jboss.picketlink.idm.internal.jpa.JPATemplate;
+import org.picketbox.core.identity.IdentityManager;
 
 /**
- * <p>Application scoped bean responsible for producing the {@link PicketBoxConfiguration}.</p>
+ * <p>This bean is responsible to produce {@link JPAIdentityStore} instances that will be used by the {@link IdentityManager}.</p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  *
  */
-@ApplicationScoped
-public class PicketBoxConfigurer {
+public class JPAIdentityStoreProducer {
 
     @Inject
-    private TODOIdentityManager identityManager;
-    
-    /**
-     * <p>Produces the {@link PicketBoxConfiguration}.</p>
-     * 
-     * @return
-     */
+    private EntityManager entityManager;
+
     @Produces
-    public PicketBoxConfiguration produceConfiguration() {
-        ConfigurationBuilder builder = new ConfigurationBuilder();
-        
-        builder
-            .sessionManager()
-                .inMemorySessionStore()
-            .identityManager().manager(this.identityManager);
-        
-        return builder.build();
+    public JPAIdentityStore produceIdentityStore() {
+        JPAIdentityStore identityStore = new JPAIdentityStore();
+
+        JPATemplate template = new JPATemplate();
+
+        template.setEntityManager(this.entityManager);
+
+        identityStore.setJpaTemplate(template);
+
+        return identityStore;
     }
-    
+
 }

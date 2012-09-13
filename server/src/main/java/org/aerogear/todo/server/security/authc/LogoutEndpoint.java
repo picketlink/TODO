@@ -20,43 +20,40 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.aerogear.todo.server.security;
+package org.aerogear.todo.server.security.authc;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
 
-import org.aerogear.todo.server.security.idm.TODOIdentityManager;
-import org.picketbox.core.config.ConfigurationBuilder;
-import org.picketbox.core.config.PicketBoxConfiguration;
+import org.aerogear.todo.server.security.AuthenticationRequest;
+import org.jboss.picketlink.cdi.Identity;
 
 /**
- * <p>Application scoped bean responsible for producing the {@link PicketBoxConfiguration}.</p>
+ * <p>JAX-RS Endpoint to logout users.</p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  *
  */
-@ApplicationScoped
-public class PicketBoxConfigurer {
+@Stateless
+@Path("/logout")
+public class LogoutEndpoint {
 
     @Inject
-    private TODOIdentityManager identityManager;
+    private Identity identity;
     
     /**
-     * <p>Produces the {@link PicketBoxConfiguration}.</p>
+     * <p>Performs the logout.</p>
      * 
+     * @param authcRequest
      * @return
      */
-    @Produces
-    public PicketBoxConfiguration produceConfiguration() {
-        ConfigurationBuilder builder = new ConfigurationBuilder();
-        
-        builder
-            .sessionManager()
-                .inMemorySessionStore()
-            .identityManager().manager(this.identityManager);
-        
-        return builder.build();
+    @GET
+    public void logout() {
+        if (this.identity.isLoggedIn()) {
+            this.identity.logout();
+        }
     }
-    
+   
 }

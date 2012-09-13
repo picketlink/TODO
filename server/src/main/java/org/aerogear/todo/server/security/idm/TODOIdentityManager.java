@@ -20,43 +20,41 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.aerogear.todo.server.security;
+package org.aerogear.todo.server.security.idm;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
 
-import org.aerogear.todo.server.security.idm.TODOIdentityManager;
-import org.picketbox.core.config.ConfigurationBuilder;
-import org.picketbox.core.config.PicketBoxConfiguration;
+import org.jboss.picketlink.idm.internal.DefaultIdentityManager;
+import org.jboss.picketlink.idm.model.User;
+import org.picketbox.cdi.idm.IdentityManagerImpl;
+import org.picketbox.core.PicketBoxSubject;
 
 /**
- * <p>Application scoped bean responsible for producing the {@link PicketBoxConfiguration}.</p>
+ * <p>Customizes the {@link IdentityManagerImpl} to load some users during the first call.</p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  *
  */
 @ApplicationScoped
-public class PicketBoxConfigurer {
+public class TODOIdentityManager extends IdentityManagerImpl {
 
-    @Inject
-    private TODOIdentityManager identityManager;
+    private boolean initialized;
     
-    /**
-     * <p>Produces the {@link PicketBoxConfiguration}.</p>
-     * 
-     * @return
-     */
-    @Produces
-    public PicketBoxConfiguration produceConfiguration() {
-        ConfigurationBuilder builder = new ConfigurationBuilder();
+    @Override
+    public PicketBoxSubject getIdentity(PicketBoxSubject resultingSubject) {
+        if (!initialized) {
+            DefaultIdentityManager identityManager = getIdentityManager();
+            
+            User user = identityManager.createUser("admin");
+            
+            user.setEmail("admin@admin.com.br");
+            user.setFirstName("The");
+            user.setLastName("Administrator");
+            
+            this.initialized = true;
+        }
         
-        builder
-            .sessionManager()
-                .inMemorySessionStore()
-            .identityManager().manager(this.identityManager);
-        
-        return builder.build();
+        return super.getIdentity(resultingSubject);
     }
     
 }
