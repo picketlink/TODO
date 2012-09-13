@@ -1,90 +1,86 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
-
-    <parent>
-        <groupId>org.jboss.aerogear.todo</groupId>
-        <artifactId>todo-parent</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-
-    <artifactId>todo-ear</artifactId>
-    <packaging>ear</packaging>
-    <name>TODO EAR</name>
-    <description>TODO EAR includes: todo-www and todo-server - EAR</description>
-
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <distribution>repo</distribution>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
-        </license>
-    </licenses>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.jboss.aerogear.todo.server</groupId>
-            <artifactId>todo-server</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>war</type>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.aerogear.todo.clients.www</groupId>
-            <artifactId>todo-www</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
-            <type>war</type>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-ear-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <finalName>todo-ear</finalName>
-                    <modules>
-                        <webModule>
-                            <groupId>org.jboss.aerogear.todo.server</groupId>
-                            <artifactId>todo-server</artifactId>
-                        </webModule>
-                        <webModule>
-                            <groupId>org.jboss.aerogear.todo.clients.www</groupId>
-                            <artifactId>todo-www</artifactId>
-                        </webModule>
-
-                    </modules>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.jboss.as.plugins</groupId>
-                <artifactId>jboss-as-maven-plugin</artifactId>
-                <version>7.1.1.Final</version>
-                <configuration>
-                    <filename>todo-ear.ear</filename>
-                    <skip>false</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>deploy</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+<project
+	xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jboss.aerogear.todo</groupId>
+		<artifactId>todo-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	<artifactId>todo-ear</artifactId>
+	<packaging>ear</packaging>
+	<name>TODO EAR</name>
+	<description>TODO EAR includes: todo-www and todo-server - EAR</description>
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<distribution>repo</distribution>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+		</license>
+	</licenses>
+	<dependencies>
+		<dependency>
+			<groupId>org.jboss.aerogear.todo.server</groupId>
+			<artifactId>todo-server</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.aerogear.todo.clients.www</groupId>
+			<artifactId>todo-www</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
+			<type>war</type>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-ear-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<finalName>todo-ear</finalName>
+					<defaultJavaBundleDir>lib/</defaultJavaBundleDir>
+					<modules>
+						<webModule>
+							<groupId>org.jboss.aerogear.todo.server</groupId>
+							<artifactId>todo-server</artifactId>
+						</webModule>
+						<webModule>
+							<groupId>org.jboss.aerogear.todo.clients.www</groupId>
+							<artifactId>todo-www</artifactId>
+						</webModule>
+					</modules>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jboss.as.plugins</groupId>
+				<artifactId>jboss-as-maven-plugin</artifactId>
+				<version>7.1.1.Final</version>
+				<configuration>
+					<filename>todo-ear.ear</filename>
+					<skip>false</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.1</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

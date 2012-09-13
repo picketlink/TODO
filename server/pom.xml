@@ -57,6 +57,7 @@ to work with JBoss EAP 6. It requires you have access to the JBoss EAP 6 maven r
     </properties>
 
     <dependencyManagement>
+    	
         <dependencies>
             <!-- JBoss distributes a complete set of Java EE 6 APIs including
 a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or
@@ -74,7 +75,19 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
     </dependencyManagement>
 
     <dependencies>
-
+		
+		<!-- PicketBox CDI -->
+    	<dependency>
+    		<groupId>org.picketbox</groupId>
+    		<artifactId>picketbox-core</artifactId>
+    		<version>5.0.0-SNAPSHOT</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.picketbox</groupId>
+    		<artifactId>picketbox-cdi</artifactId>
+    		<version>5.0.0-SNAPSHOT</version>
+    	</dependency>
+		
         <!-- First declare the APIs we depend on and need for compilation.
  All of them are provided by JBoss -->
 
@@ -175,7 +188,12 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
             <artifactId>jackson-jaxrs</artifactId>
             <version>1.9.2</version>
         </dependency>
-
+        <dependency>
+        	<groupId>org.jboss.resteasy</groupId>
+        	<artifactId>resteasy-jaxrs</artifactId>
+        	<version>2.3.3.Final</version>
+        	<scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
