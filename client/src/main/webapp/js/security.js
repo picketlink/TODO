@@ -25,6 +25,13 @@ $.ajaxSetup({
 	},
 	error : function(xhr, textStatus, errorThrown) {
 		if (window.location.pathname.indexOf("login.html", 0) == -1) {
+			if (window.location.pathname.indexOf("error.html", 0) == -1) {
+				if (xhr.status == 500 || xhr.status == 403) {
+					window.location = getHost() + "/error.html";
+					return;
+				}
+			}
+
 			window.location = getHost() + "/login.html";
 		}
 	}
