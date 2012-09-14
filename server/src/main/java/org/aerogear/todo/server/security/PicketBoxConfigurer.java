@@ -26,7 +26,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.aerogear.todo.server.security.authc.IDMAuthenticationManager;
+import org.picketbox.cdi.authentication.IDMAuthenticationManager;
 import org.picketbox.core.config.ConfigurationBuilder;
 import org.picketbox.core.config.PicketBoxConfiguration;
 import org.picketbox.core.identity.IdentityManager;
