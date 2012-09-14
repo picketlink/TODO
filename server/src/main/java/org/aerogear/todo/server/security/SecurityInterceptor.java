@@ -28,6 +28,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 
+import org.aerogear.todo.server.security.authc.AuthenticationResponse;
 import org.aerogear.todo.server.security.authc.SignInEndpoint;
 import org.apache.http.HttpStatus;
 import org.jboss.picketlink.cdi.authentication.AuthenticationException;

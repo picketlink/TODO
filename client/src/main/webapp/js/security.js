@@ -68,3 +68,17 @@ $(document).ready(function() {
 		return false; // prevents submit of the form
 	});
 });
+
+$(document).ready(function() {
+	if (!$('#userinfo-msg')) {
+		return;
+	}
+
+	var jqxhr = $.ajax('/todo-server/userinfo', {
+        data:{},
+        type:'GET', 
+        success:function (data) { 
+        	$('#userinfo-msg').text("Welcome " + data.fullName + ". Your roles are: " + data.roles);
+        }
+    });
+});

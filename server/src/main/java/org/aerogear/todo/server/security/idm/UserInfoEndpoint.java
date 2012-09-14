@@ -20,39 +20,48 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.aerogear.todo.server.security.authc;
+package org.aerogear.todo.server.security.idm;
+
+import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import org.jboss.picketlink.cdi.Identity;
+import org.picketbox.cdi.PicketBoxUser;
 
 /**
- * <p>JAX-RS Endpoint to logout users.</p>
+ * <p>JAX-RS Endpoint to authenticate users.</p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  *
  */
 @Stateless
-@Path("/logout")
-public class LogoutEndpoint {
+@Path("/userinfo")
+public class UserInfoEndpoint {
 
     @Inject
     private Identity identity;
     
-    /**
-     * <p>Performs the logout.</p>
-     * 
-     * @param authcRequest
-     * @return
-     */
     @GET
-    public void logout() {
-        if (this.identity.isLoggedIn()) {
-            this.identity.logout();
-        }
+    @Produces (MediaType.APPLICATION_JSON)
+    public UserInfo getInfo() {
+        UserInfo userInfo = new UserInfo();
+        
+        PicketBoxUser user = (PicketBoxUser) this.identity.getUser();
+        
+        userInfo.setUserId(user.getSubject().getUser().getName());
+        userInfo.setFullName(user.getFullName());
+        
+        List<String> roles = user.getSubject().getRoleNames();
+        
+        userInfo.setRoles(roles.toArray(new String[roles.size()]));
+        
+        return userInfo;
     }
-   
+    
 }

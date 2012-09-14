@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.aerogear.todo.server.security;
+package org.aerogear.todo.server.security.authc;
 
 import java.security.Principal;
 
@@ -35,9 +35,12 @@ import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
 import org.picketbox.core.PicketBoxPrincipal;
 import org.picketbox.core.authentication.AbstractAuthenticationManager;
+import org.picketbox.core.authentication.AuthenticationManager;
 import org.picketbox.core.exceptions.AuthenticationException;
 
 /**
+ * <p>{@link AuthenticationManager} that uses the PicketLink IDM to check user credentials.</p>
+ * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  *
  */
@@ -47,6 +50,9 @@ public class IDMAuthenticationManager extends AbstractAuthenticationManager {
     @Inject
     private Instance<org.jboss.picketlink.idm.IdentityManager> identityManager;
     
+    /* (non-Javadoc)
+     * @see org.picketbox.core.authentication.AbstractAuthenticationManager#authenticate(java.lang.String, java.lang.Object)
+     */
     @Override
     public Principal authenticate(String username, Object credential) throws AuthenticationException {
         User user = getIdentityManager().getUser(username);
@@ -62,13 +68,6 @@ public class IDMAuthenticationManager extends AbstractAuthenticationManager {
         return null;
     }
  
-    protected org.jboss.picketlink.idm.IdentityManager getIdentityManager() {
-        try {
-            return this.identityManager.get();
-        } finally {
-        }
-    }
-    
     @PostConstruct
     public void loadUsers() {
         IdentityManager identityManager = getIdentityManager();
@@ -89,4 +88,12 @@ public class IDMAuthenticationManager extends AbstractAuthenticationManager {
         identityManager.grantRole(roleDeveloper, user, groupCoreDeveloper);
         identityManager.grantRole(roleAdmin, user, groupCoreDeveloper);
     }
+    
+    private org.jboss.picketlink.idm.IdentityManager getIdentityManager() {
+        try {
+            return this.identityManager.get();
+        } finally {
+        }
+    }
+
 }

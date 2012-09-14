@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aerogear.todo.server.security;
+package org.aerogear.todo.server.security.idm;
 
 import java.io.Serializable;
 
@@ -24,14 +24,14 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @XmlRootElement
 @JsonSerialize
-public class AuthenticationResponse implements Serializable {
+public class UserInfo implements Serializable {
 
     private static final long serialVersionUID = 2637023097272776078L;
 
     private String userId;
-    private boolean loggedIn;
+    private String[] roles;
 
-    private String token;
+    private String fullName;
 
     /**
      * @return the userId
@@ -48,25 +48,25 @@ public class AuthenticationResponse implements Serializable {
     }
 
     /**
-     * @return the loggedIn
+     * @return the roles
      */
-    public boolean isLoggedIn() {
-        return loggedIn;
+    public String[] getRoles() {
+        return roles;
     }
 
     /**
-     * @param loggedIn the loggedIn to set
+     * @param roles the roles to set
      */
-    public void setLoggedIn(boolean loggedIn) {
-        this.loggedIn = loggedIn;
+    public void setRoles(String[] roles) {
+        this.roles = roles;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
     
-    public String getToken() {
-        return token;
+    public String getFullName() {
+        return fullName;
     }
 
 }
