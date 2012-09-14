@@ -26,9 +26,9 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.aerogear.todo.server.security.idm.TODOIdentityManager;
 import org.picketbox.core.config.ConfigurationBuilder;
 import org.picketbox.core.config.PicketBoxConfiguration;
+import org.picketbox.core.identity.IdentityManager;
 
 /**
  * <p>Application scoped bean responsible for producing the {@link PicketBoxConfiguration}.</p>
@@ -40,7 +40,10 @@ import org.picketbox.core.config.PicketBoxConfiguration;
 public class PicketBoxConfigurer {
 
     @Inject
-    private TODOIdentityManager identityManager;
+    private IdentityManager identityManager;
+    
+    @Inject
+    private IDMAuthenticationManager authenticationManager;
     
     /**
      * <p>Produces the {@link PicketBoxConfiguration}.</p>
@@ -52,6 +55,8 @@ public class PicketBoxConfigurer {
         ConfigurationBuilder builder = new ConfigurationBuilder();
         
         builder
+            .authentication()
+                .authManager(this.authenticationManager)
             .sessionManager()
                 .inMemorySessionStore()
             .identityManager().manager(this.identityManager);
