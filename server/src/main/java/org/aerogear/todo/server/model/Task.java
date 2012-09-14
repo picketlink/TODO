@@ -17,6 +17,7 @@
 package org.aerogear.todo.server.model;
 
 import org.aerogear.todo.server.serializer.TaskCustomSerializer;
+import org.aerogear.todo.server.util.DateBuilder;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import javax.persistence.Column;
@@ -37,6 +38,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+
+import static org.aerogear.todo.server.util.DateBuilder.*;
 
 @XmlRootElement
 @JsonSerialize(using = TaskCustomSerializer.class)
@@ -131,7 +134,7 @@ public class Task implements Serializable {
     }
 
     public void setDate(final Calendar date) {
-        this.date = date;
+        this.date = newDateBuilder().withCalendar(date).build();
     }
 
     public String toString() {

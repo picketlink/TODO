@@ -46,9 +46,13 @@ public class DateBuilder {
      *
      * @TODO: Refactor it to use consolidated solutions like Joda time
      */
-    public String build() {
+    public Calendar build() {
         calendar.add(Calendar.DATE, 1);
+        return calendar;
+    }
 
+    public String format(Calendar calendar){
         return new SimpleDateFormat(PATTERN).format(calendar.getTime());
     }
+
 }
