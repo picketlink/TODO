@@ -45,6 +45,8 @@ $(document).ready(function() {
                 if (data.loggedIn) {
                 	storeToken(data.token);
 					window.location = getHost() + "/index.html";
+                } else {
+                	$('#login-msg').text("Authentication failed. Try again ...");
                 }
             }
         });
