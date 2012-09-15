@@ -24,9 +24,10 @@ package org.aerogear.todo.server.security;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 
-import org.picketbox.cdi.authentication.IDMAuthenticationManager;
+import org.picketbox.cdi.config.CDIConfigurationBuilder;
 import org.picketbox.core.config.ConfigurationBuilder;
 import org.picketbox.core.config.PicketBoxConfiguration;
 
@@ -40,7 +41,7 @@ import org.picketbox.core.config.PicketBoxConfiguration;
 public class PicketBoxConfigurer {
 
     @Inject
-    private IDMAuthenticationManager authenticationManager;
+    private BeanManager beanManager;
     
     /**
      * <p>Produces the {@link ConfigurationBuilder}.</p>
@@ -49,11 +50,13 @@ public class PicketBoxConfigurer {
      */
     @Produces
     public ConfigurationBuilder produceConfiguration() {
-        ConfigurationBuilder builder = new ConfigurationBuilder();
+        CDIConfigurationBuilder builder = new CDIConfigurationBuilder(this.beanManager);
         
         builder
             .authentication()
-                .authManager(this.authenticationManager)
+                .idm()
+            .identityManager()
+                .jpa()
             .sessionManager()
                 .inMemorySessionStore();
         
