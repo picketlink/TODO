@@ -24,23 +24,30 @@ package org.aerogear.todo.server.security;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
-import org.picketbox.cdi.authentication.IDMAuthenticationManager;
+import org.jboss.picketlink.idm.IdentityManager;
+import org.jboss.picketlink.idm.internal.JPAIdentityStore;
+import org.jboss.picketlink.idm.internal.jpa.JPATemplate;
+import org.picketbox.cdi.config.CDIConfigurationBuilder;
 import org.picketbox.core.config.ConfigurationBuilder;
 import org.picketbox.core.config.PicketBoxConfiguration;
 
 /**
- * <p>Application scoped bean responsible for producing the {@link PicketBoxConfiguration}.</p>
+ * <p>Bean responsible for producing the {@link CDIConfigurationBuilder}.</p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  *
  */
-@ApplicationScoped
 public class PicketBoxConfigurer {
 
     @Inject
-    private IDMAuthenticationManager authenticationManager;
+    private EntityManager entityManager;
+
+    @Inject
+    private BeanManager beanManager;
     
     /**
      * <p>Produces the {@link ConfigurationBuilder}.</p>
@@ -49,15 +56,35 @@ public class PicketBoxConfigurer {
      */
     @Produces
     public ConfigurationBuilder produceConfiguration() {
-        ConfigurationBuilder builder = new ConfigurationBuilder();
+        CDIConfigurationBuilder builder = new CDIConfigurationBuilder(this.beanManager);
         
         builder
             .authentication()
-                .authManager(this.authenticationManager)
+                .idm()
+            .identityManager()
+                .jpa()
             .sessionManager()
                 .inMemorySessionStore();
         
         return builder;
+    }
+    
+    /**
+     * <p>Produces the {@link JPAIdentityStore} that will be used by the PicketLink IDM {@link IdentityManager}.</p>
+     * 
+     * @return
+     */
+    @Produces
+    public JPAIdentityStore produceIdentityStore() {
+        JPAIdentityStore identityStore = new JPAIdentityStore();
+
+        JPATemplate template = new JPATemplate();
+
+        template.setEntityManager(this.entityManager);
+
+        identityStore.setJpaTemplate(template);
+
+        return identityStore;
     }
     
 }
