@@ -29,7 +29,6 @@ import javax.inject.Inject;
 import org.picketbox.cdi.authentication.IDMAuthenticationManager;
 import org.picketbox.core.config.ConfigurationBuilder;
 import org.picketbox.core.config.PicketBoxConfiguration;
-import org.picketbox.core.identity.IdentityManager;
 
 /**
  * <p>Application scoped bean responsible for producing the {@link PicketBoxConfiguration}.</p>
@@ -41,28 +40,24 @@ import org.picketbox.core.identity.IdentityManager;
 public class PicketBoxConfigurer {
 
     @Inject
-    private IdentityManager identityManager;
-    
-    @Inject
     private IDMAuthenticationManager authenticationManager;
     
     /**
-     * <p>Produces the {@link PicketBoxConfiguration}.</p>
+     * <p>Produces the {@link ConfigurationBuilder}.</p>
      * 
      * @return
      */
     @Produces
-    public PicketBoxConfiguration produceConfiguration() {
+    public ConfigurationBuilder produceConfiguration() {
         ConfigurationBuilder builder = new ConfigurationBuilder();
         
         builder
             .authentication()
                 .authManager(this.authenticationManager)
             .sessionManager()
-                .inMemorySessionStore()
-            .identityManager().manager(this.identityManager);
+                .inMemorySessionStore();
         
-        return builder.build();
+        return builder;
     }
     
 }
