@@ -19,7 +19,7 @@ package org.aerogear.todo.server.rest;
 import org.aerogear.todo.server.model.Project;
 import org.aerogear.todo.server.model.Tag;
 import org.aerogear.todo.server.model.Task;
-import org.picketbox.cdi.authorization.RestrictedRoles;
+import org.picketbox.cdi.authorization.RolesAllowed;
 
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
@@ -48,7 +48,7 @@ public class ProjectEndpoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RestrictedRoles ({"admin"})
+    @RolesAllowed ({"admin"})
     public Project create(Project entity) {
         em.joinTransaction();
         em.persist(entity);
