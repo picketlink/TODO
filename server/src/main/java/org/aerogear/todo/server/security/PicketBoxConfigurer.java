@@ -60,9 +60,9 @@ public class PicketBoxConfigurer {
         
         builder
             .authentication()
-                .idm()
+                .idmAuthentication()
             .identityManager()
-                .jpa()
+                .jpaStore()
             .sessionManager()
                 .inMemorySessionStore();
         
