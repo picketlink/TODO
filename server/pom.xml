@@ -79,11 +79,6 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
 		<!-- PicketBox CDI -->
     	<dependency>
     		<groupId>org.picketbox</groupId>
-    		<artifactId>picketbox-core</artifactId>
-    		<version>5.0.0-SNAPSHOT</version>
-    	</dependency>
-    	<dependency>
-    		<groupId>org.picketbox</groupId>
     		<artifactId>picketbox-cdi</artifactId>
     		<version>5.0.0-SNAPSHOT</version>
     	</dependency>
