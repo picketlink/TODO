@@ -67,21 +67,21 @@ public class SignInEndpoint {
      */
     @PostConstruct
     public void loadUsers() {
-        User abstractj = this.identityManager.createUser("abstractj");
+        User john = this.identityManager.createUser("abstractj");
 
-        abstractj.setEmail("abstractj@aerogear.com");
-        abstractj.setFirstName("Bruno");
-        abstractj.setLastName("Oliveira");
+        john.setEmail("john@doe.org");
+        john.setFirstName("John");
+        john.setLastName("Doe");
         
-        this.identityManager.updatePassword(abstractj, "123");
+        this.identityManager.updatePassword(john, "123");
         
         Role roleDeveloper = this.identityManager.createRole("developer");
         Role roleAdmin = this.identityManager.createRole("admin");
 
         Group groupCoreDeveloper = identityManager.createGroup("Core Developers");
 
-        identityManager.grantRole(roleDeveloper, abstractj, groupCoreDeveloper);
-        identityManager.grantRole(roleAdmin, abstractj, groupCoreDeveloper);
+        identityManager.grantRole(roleDeveloper, john, groupCoreDeveloper);
+        identityManager.grantRole(roleAdmin, john, groupCoreDeveloper);
         
         User guest = this.identityManager.createUser("guest");
 
