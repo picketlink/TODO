@@ -22,6 +22,7 @@
 
 package org.aerogear.todo.server.security.authc;
 
+import org.aerogear.todo.server.security.service.UserManager;
 import org.jboss.logging.Logger;
 import org.jboss.picketlink.cdi.Identity;
 import org.jboss.picketlink.cdi.credential.Credential;
@@ -50,19 +51,12 @@ import javax.ws.rs.core.MediaType;
  */
 @Stateless
 @Path("/auth")
-@TransactionAttribute
 public class AuthenticationEndpoint {
 
-    @Inject
-    private Identity identity;
-
-    @Inject
-    private LoginCredentials credential;
-
-    @Inject
-    private IdentityManager identityManager;
-
     private static final Logger LOGGER = Logger.getLogger(AuthenticationEndpoint.class);
+
+    @Inject
+    private UserManager manager;
 
     @POST
     @Path("/register")
@@ -72,11 +66,11 @@ public class AuthenticationEndpoint {
 
         LOGGER.debug("My pretty registered user: " + authcRequest.getFirstName());
 
-        registerUser(authcRequest);
+        manager.registerUser(authcRequest);
 
-        if (userLogin(authcRequest)) return createResponse(authcRequest);
+        if (manager.userLogin(authcRequest)) return manager.createResponse(authcRequest);
 
-        return createResponse(authcRequest);
+        return manager.createResponse(authcRequest);
     }
 
     /**
@@ -93,96 +87,17 @@ public class AuthenticationEndpoint {
 
         LOGGER.debug("Logged in!");
 
-        if (userLogin(authcRequest)) return createResponse(authcRequest);
+        if (manager.userLogin(authcRequest)) return manager.createResponse(authcRequest);
 
-        return createResponse(authcRequest);
+        return manager.createResponse(authcRequest);
     }
 
     @POST
     @Path("/logout")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public void logout(final AuthenticationRequest authcRequest) {
-        LOGGER.debug("See ya!");
-        if (this.identity.isLoggedIn()) {
-            this.identity.logout();
-        }
-    }
-
-    //TODO point of huge refactoring here
-    //TODO Make use of entities instead of DTOs
-    private void registerUser(AuthenticationRequest authenticationRequest){
-        User user = this.identityManager.createUser(authenticationRequest.getUserId());
-
-        user.setEmail(authenticationRequest.getEmail());
-        user.setFirstName(authenticationRequest.getFirstName());
-        user.setLastName(authenticationRequest.getLastName());
-
-        //TODO must be encrypted
-        this.identityManager.updatePassword(user, authenticationRequest.getPassword());
-
-        Role roleDeveloper = this.identityManager.createRole("developer");
-        Role roleAdmin = this.identityManager.createRole("admin");
-
-        Group groupCoreDeveloper = identityManager.createGroup("Core Developers");
-
-        identityManager.grantRole(roleDeveloper, user, groupCoreDeveloper);
-        identityManager.grantRole(roleAdmin, user, groupCoreDeveloper);
-    }
-    /**
-     * <p>Loads some users during the first construction.</p>
-     */
-    @PostConstruct
-    public void loadUsers() {
-        User john = this.identityManager.createUser("john");
-
-        john.setEmail("john@doe.org");
-        john.setFirstName("John");
-        john.setLastName("Doe");
-
-        this.identityManager.updatePassword(john, "123");
-
-        Role roleDeveloper = this.identityManager.createRole("developer");
-        Role roleAdmin = this.identityManager.createRole("admin");
-
-        Group groupCoreDeveloper = identityManager.createGroup("Core Developers");
-
-        identityManager.grantRole(roleDeveloper, john, groupCoreDeveloper);
-        identityManager.grantRole(roleAdmin, john, groupCoreDeveloper);
-
-    }
-
-    private AuthenticationResponse createResponse(AuthenticationRequest authcRequest) {
-        AuthenticationResponse response = new AuthenticationResponse();
-
-        response.setUserId(authcRequest.getUserId());
-        response.setLoggedIn(this.identity.isLoggedIn());
-
-        if (response.isLoggedIn()) {
-            PicketBoxUser user = (PicketBoxUser) this.identity.getUser();
-
-            response.setToken(user.getSubject().getSession().getId().getId().toString());
-        }
-
-        return response;
-    }
-
-    private boolean userLogin(final AuthenticationRequest authcRequest) {
-        if (this.identity.isLoggedIn()) {
-            return true;
-        }
-
-        credential.setUserId(authcRequest.getUserId());
-        credential.setCredential(new Credential<UsernamePasswordCredential>() {
-
-            @Override
-            public UsernamePasswordCredential getValue() {
-                return new UsernamePasswordCredential(authcRequest.getUserId(), authcRequest.getPassword());
-            }
-        });
-
-        this.identity.login();
-        return false;
+    public void logout() {
+        manager.logout();
     }
 
 }
