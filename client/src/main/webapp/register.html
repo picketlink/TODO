@@ -56,40 +56,40 @@
 			</div>
 		</div>
 		<div class="row todo-app">
-			<div id="register-title-box" class="register-title-box">
-				<h2>Register</h2>
-			</div>
 			<div id="register-box" class="register-box">
 				<form name="theForm">
 					<div id="register-msg" style="color: red"></div>
 					<fieldset>
-						<label for="firstname" id="firstname_label">User Name</label> 
-						<input
-							name="firstname" id="firstname" type="text" required
-              placeholder="" class="medium-text"/> 
-              
-            <label for="lastname" id="lastname_label">User Name</label> 
-            <input
-						  name="lastname" id="lastname" type="text" required
-              placeholder="" class="medium-text"/> 
-              
-            <label for="email" id="email_label">User Name</label> 
-						<input
-							name="email" id="email" type="text" required
-              placeholder="" class="medium-text"/> 
-              
-            <label for="username" id="username_label">User Name</label> 
-            <input
-						  name="username" id="username" type="text" required
-							placeholder="" class="medium-text"/> 
-              
-            <label for="password"
-							id="password_label">Password</label> 
-						<input name="password" 
-							id="password" type="password" required placeholder="" class="medium-text"/>
-						<br/>
-						<input type="submit" id="register-btn" value="Register" class="register-button"/><span
-							id="result"></span>
+						              
+           <fieldset>
+              <legend>Registration:</legend>
+              <div>
+                <label for="firstname" id="firstname_label">First name</label> 
+                <input name="firstname" id="firstname" type="text" required placeholder="Your first name" class="medium-text"/> 
+              </div>
+              <div>
+                <label for="lastname" id="lastname_label">Last name</label> 
+                <input  name="lastname" id="lastname" type="text" required placeholder="Your last name" class="medium-text"/> 
+              </div>
+              <div>
+                <label for="email" id="email_label">E-mail</label> 
+                <input name="email" id="email" type="text" required placeholder="Your e-mail" class="medium-text"/> 
+              </div>
+              <div>
+                <label for="username" id="username_label">User Name</label> 
+                <input name="username" id="username" type="text" required placeholder="Your user name" class="medium-text"/> 
+              </div>
+              <div>
+                <label for="password" id="password_label">Password</label> 
+                <input name="password" id="password" type="password" required placeholder="" class="medium-text"/>
+              </div>
+              <div data-role="controlgroup" data-type="horizontal">
+                <input type="submit" id="register-btn" value="Register"/>
+                <input type="button" name="cancel" id="cancel" value="Cancel"/>
+              </div>
+              <div id="result"></div>
+            </fieldset>
+
 					</fieldset>
 				</form>
 			</div>
