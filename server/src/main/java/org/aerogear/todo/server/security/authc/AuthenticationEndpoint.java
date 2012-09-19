@@ -85,24 +85,13 @@ public class AuthenticationEndpoint {
         identityManager.grantRole(roleDeveloper, john, groupCoreDeveloper);
         identityManager.grantRole(roleAdmin, john, groupCoreDeveloper);
 
-        User guest = this.identityManager.createUser("guest");
-
-        guest.setEmail("guest@aerogear.com");
-        guest.setFirstName("Guest");
-        guest.setLastName("User");
-
-        this.identityManager.updatePassword(guest, "123");
-
-        Role roleGuest = this.identityManager.createRole("guest");
-
-        identityManager.grantRole(roleGuest, guest, groupCoreDeveloper);
     }
 
     @POST
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
-    public AuthenticationResponse register(User user) {
-        System.out.println("User: " + user.getFirstName());
+    public AuthenticationResponse register(final AuthenticationRequest authcRequest) {
+
         return null;
     }
 

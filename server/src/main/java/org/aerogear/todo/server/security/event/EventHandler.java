@@ -28,6 +28,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 
+import org.jboss.logging.Logger;
 import org.picketbox.core.authentication.AuthenticationManager;
 import org.picketbox.core.authentication.AuthenticationStatus;
 import org.picketbox.core.authentication.event.AuthenticationEvent;
@@ -44,6 +45,8 @@ import org.picketbox.core.authentication.event.UserAuthenticatedEvent;
 @ApplicationScoped
 public class EventHandler {
 
+    private static final Logger LOGGER = Logger.getLogger(EventHandler.class);
+
     /**
      * <p>
      * Method that observes PicketBox {@link AuthenticationEvent} events.
@@ -53,6 +56,7 @@ public class EventHandler {
      */
     @SuppressWarnings("rawtypes")
     public void onAnyAuthenticationEvent(@Observes AuthenticationEvent event) {
+        LOGGER.debug("Yay, the user was authenticated and onAnyAuthenticationEvent was triggered");
     }
 
     /**
@@ -64,6 +68,9 @@ public class EventHandler {
      * @param event
      */
     public void onUserAuthenticatedEvent(@Observes UserAuthenticatedEvent event) {
+
+        LOGGER.debug("Yay, the user was authenticated and onUserAuthenticatedEvent was triggered");
+
         AuthenticationStatus status = event.getResult().getStatus();
 
         // list of messages gathered during the authentication
