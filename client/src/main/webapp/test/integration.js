@@ -154,3 +154,21 @@ asyncTest( "create, modify and delete", function() {
 });
 
 })( jQuery );
+
+module( "TODO Authentication" );
+
+test('User login', function() {
+    ok(1==1,"TODO");
+});
+
+test('User logout', function() {
+    ok(1==1,"TODO");
+});
+
+test('User registration', function() {
+    ok(1==1,"TODO");
+});
+
+test('TODO', function() {
+    ok(1==1,"TODO");
+});

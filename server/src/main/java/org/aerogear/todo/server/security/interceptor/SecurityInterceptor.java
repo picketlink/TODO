@@ -76,7 +76,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
                     try {
                         isLoggedIn = identity.restoreSession(token);
                     } catch (AuthenticationException e) {
-
+                        LOGGER.error("Fail: ", e);
                     }
                 }
 
@@ -87,7 +87,8 @@ public class SecurityInterceptor implements PreProcessInterceptor {
 
                     response = new ServerResponse();
                     response.setEntity(authcResponse);
-                    response.setStatus(HttpStatus.SC_FORBIDDEN);
+                    //TODO won' work when you need public pages like registration page, must to be fixed or moved
+//                    response.setStatus(HttpStatus.SC_FORBIDDEN);
                 }
             }
         } catch (Exception e) {
