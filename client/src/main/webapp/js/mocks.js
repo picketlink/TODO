@@ -1,7 +1,7 @@
 // Use mockjax to intercept the rest calls and return data to the app
 // read mocks
-/*$.mockjax({
-    url: "tasks",
+$.mockjax({
+    url: "/todo-server/tasks",
     type: "GET",
     responseTime: 3000,
     responseText: [
@@ -33,7 +33,7 @@
 });
 
 $.mockjax({
-    url: "projects",
+    url: "/todo-server/projects",
     type: "GET",
     responseTime: 2000,
     responseText: [
@@ -56,7 +56,7 @@ $.mockjax({
 });
 
 $.mockjax({
-    url: "tags",
+    url: "/todo-server/tags",
     type: "GET",
     responseTime: 1000,
     responseText: [
@@ -71,4 +71,4 @@ $.mockjax({
             class: "tag-0-0-255"
         }
     ]
-});*/
+});

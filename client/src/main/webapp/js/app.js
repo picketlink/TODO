@@ -39,7 +39,10 @@ $( function() {
         Tags = todo.pipes[ "tags" ],
         taskContainer = $( "#task-container" ),
         projectContainer = $( "#project-list" ),
-        tagContainer = $( "#tag-list" );
+        tagContainer = $( "#tag-list" ),
+        TasksValve = aerogear.dataManager( "tasks" ).valves.tasks,
+        ProjectsValve = aerogear.dataManager( "projects" ).valves.projects,
+        TagsValve = aerogear.dataManager( "tags" ).valves.tags;
 
     // Loading overlays
     $( "#task-overlay" ).height( taskContainer.outerHeight() ).width( taskContainer.outerWidth() );
@@ -339,7 +342,8 @@ $( function() {
             success: function( data, textStatus, jqXHR ) {
                 $( "#project-loader" ).hide();
                 updateProjectList();
-            }
+            },
+        	valves: ProjectsValve
         });
 
         tagGet = Tags.read({
@@ -349,7 +353,8 @@ $( function() {
                 }
                 $( "#tag-loader" ).hide();
                 updateTagList();
-            }
+            },
+        	valves: TagsValve
         });
 
         // When both the available projects and available tags have returned, get the task data
