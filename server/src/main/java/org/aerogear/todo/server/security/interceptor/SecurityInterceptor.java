@@ -22,14 +22,8 @@
 
 package org.aerogear.todo.server.security.interceptor;
 
-import java.util.List;
-
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.ws.rs.WebApplicationException;
-
+import org.aerogear.todo.server.security.authc.AuthenticationEndpoint;
 import org.aerogear.todo.server.security.authc.AuthenticationResponse;
-import org.aerogear.todo.server.security.authc.SignInEndpoint;
 import org.apache.http.HttpStatus;
 import org.jboss.logging.Logger;
 import org.jboss.picketlink.cdi.authentication.AuthenticationException;
@@ -41,15 +35,19 @@ import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import org.picketbox.cdi.PicketBoxIdentity;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
+import javax.ws.rs.WebApplicationException;
+import java.util.List;
+
 /**
  * <p>
  * Implementation of {@link PreProcessInterceptor} that checks the existence of the authentication token before invoking the
  * destination endpoint.
  * </p>
  * <p>If the token is valid, the {@link PicketBoxIdentity} will restored with the all user information.</p>
- * 
+ *
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- * 
  */
 @ApplicationScoped
 @ServerInterceptor
@@ -101,30 +99,30 @@ public class SecurityInterceptor implements PreProcessInterceptor {
 
     /**
      * <p>Retrieve the token from the request, if present.</p>
-     * 
+     *
      * @param request
      * @return
      */
     private String getToken(HttpRequest request) {
-        LOGGER.debug("REQUEST ========= " + request);
         List<String> tokenHeader = request.getHttpHeaders().getRequestHeader(AUTH_TOKEN_HEADER_NAME);
         String token = null;
-        
+
         if (!tokenHeader.isEmpty()) {
             token = tokenHeader.get(0);
         }
-        
+
         return token;
     }
 
     /**
      * <p>Checks if the {@link ResourceMethod} requires authentication.</p>
-     * 
+     *
      * @param method
      * @return
      */
+    //TODO must be removed
     private boolean requiresAuthentication(ResourceMethod method) {
-        return !method.getMethod().getDeclaringClass().equals(SignInEndpoint.class);
+        return !method.getMethod().getDeclaringClass().equals(AuthenticationEndpoint.class);
     }
 
 }

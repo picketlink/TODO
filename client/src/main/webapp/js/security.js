@@ -43,7 +43,7 @@ $(document).ready(function() {
 	}
 	
 	$('#login-btn').click(function() {
-		var jqxhr = $.ajax('/todo-server/signin', {
+		var jqxhr = $.ajax('/todo-server/auth/login', {
 			contentType: "application/json",
             dataType:'json',
             data:JSON.stringify({userId:$('#username').val(),password:$('#password').val()}),
@@ -67,7 +67,7 @@ $(document).ready(function() {
 	}
 	
 	$('#logout-btn').click(function() {
-		var jqxhr = $.ajax('/todo-server/logout', {
+		var jqxhr = $.ajax('/todo-server/auth/logout', {
             data:{},
             type:'GET', 
             success:function (data) {
