@@ -64,6 +64,49 @@ public class AuthenticationEndpoint {
 
     private static final Logger LOGGER = Logger.getLogger(AuthenticationEndpoint.class);
 
+    @POST
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public AuthenticationResponse register(final AuthenticationRequest authcRequest) {
+
+        LOGGER.debug("My pretty registered user: " + authcRequest.getFirstName());
+
+        if (userLogin(authcRequest)) return createResponse(authcRequest);
+
+        return createResponse(authcRequest);
+    }
+
+    /**
+     * <p>Performs the authentication using the informations provided by the {@link AuthenticationRequest}</p>
+     *
+     * @param authcRequest
+     * @return
+     */
+    @POST
+    @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public AuthenticationResponse login(final AuthenticationRequest authcRequest) {
+
+        LOGGER.debug("Logged in!");
+
+        if (userLogin(authcRequest)) return createResponse(authcRequest);
+
+        return createResponse(authcRequest);
+    }
+
+    @POST
+    @Path("/logout")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public void logout(final AuthenticationRequest authcRequest) {
+        LOGGER.debug("See ya!");
+        if (this.identity.isLoggedIn()) {
+            this.identity.logout();
+        }
+    }
+
     /**
      * <p>Loads some users during the first construction.</p>
      */
@@ -87,59 +130,6 @@ public class AuthenticationEndpoint {
 
     }
 
-    @POST
-    @Path("/register")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public AuthenticationResponse register(final AuthenticationRequest authcRequest) {
-
-        LOGGER.debug("My pretty registered user: " + authcRequest.getFirstName());
-        return createResponse(authcRequest);
-    }
-
-    /**
-     * <p>Performs the authentication using the informations provided by the {@link AuthenticationRequest}</p>
-     *
-     * @param authcRequest
-     * @return
-     */
-    @POST
-    @Path("/login")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public AuthenticationResponse login(final AuthenticationRequest authcRequest) {
-
-        LOGGER.debug("Logged in!");
-
-        if (this.identity.isLoggedIn()) {
-            return createResponse(authcRequest);
-        }
-
-        credential.setUserId(authcRequest.getUserId());
-        credential.setCredential(new Credential<UsernamePasswordCredential>() {
-
-            @Override
-            public UsernamePasswordCredential getValue() {
-                return new UsernamePasswordCredential(authcRequest.getUserId(), authcRequest.getPassword());
-            }
-        });
-
-        this.identity.login();
-
-        return createResponse(authcRequest);
-    }
-
-    @POST
-    @Path("/logout")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public void logout(final AuthenticationRequest authcRequest) {
-        LOGGER.debug("See ya!");
-        if (this.identity.isLoggedIn()) {
-            this.identity.logout();
-        }
-    }
-
     private AuthenticationResponse createResponse(AuthenticationRequest authcRequest) {
         AuthenticationResponse response = new AuthenticationResponse();
 
@@ -153,6 +143,24 @@ public class AuthenticationEndpoint {
         }
 
         return response;
+    }
+
+    private boolean userLogin(final AuthenticationRequest authcRequest) {
+        if (this.identity.isLoggedIn()) {
+            return true;
+        }
+
+        credential.setUserId(authcRequest.getUserId());
+        credential.setCredential(new Credential<UsernamePasswordCredential>() {
+
+            @Override
+            public UsernamePasswordCredential getValue() {
+                return new UsernamePasswordCredential(authcRequest.getUserId(), authcRequest.getPassword());
+            }
+        });
+
+        this.identity.login();
+        return false;
     }
 
 }

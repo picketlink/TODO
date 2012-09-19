@@ -38,6 +38,36 @@ $.ajaxSetup({
 });
 
 $(document).ready(function() {
+	if (!$('#register-btn')) {
+		return;
+	}
+	
+	$('#register-btn').click(function() {
+		var jqxhr = $.ajax('/todo-server/auth/register', {
+			contentType: "application/json",
+            dataType:'json',
+            data:JSON.stringify({
+                firstName:$('#firstname').val(),
+                lastName:$('#lastname').val(),
+                email:$('#email').val(),
+                userId:$('#username').val(),
+                password:$('#password').val()
+            }),
+            type:'POST', 
+            success:function (data) {
+                if (data.loggedIn) {
+                	storeToken(data.token);
+					window.location = getHost() + "/index.html";
+                } else {
+                	$('#register-msg').text("Registration failed. Try again ...");
+                }
+            }
+        });
+		return false; // prevents submit of the form
+	});
+});
+
+$(document).ready(function() {
 	if (!$('#login-btn')) {
 		return;
 	}
