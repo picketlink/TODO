@@ -1,6 +1,6 @@
 var getHost = function() {
 	var port = '8080';
-	return 'http://' + window.location.hostname + ":" + port + "/todo-www";
+	return 'http://' + window.location.hostname + ":" + port + "/todo";
 };
 
 function storeToken(token) {
