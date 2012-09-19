@@ -62,7 +62,7 @@ public class PicketBoxConfigurer {
             .authentication()
                 .idmAuthentication()
             .identityManager()
-                .jpaStore()
+                .providedStore()
             .sessionManager()
                 .inMemorySessionStore();
         

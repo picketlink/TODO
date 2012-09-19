@@ -67,7 +67,7 @@ public class SignInEndpoint {
      */
     @PostConstruct
     public void loadUsers() {
-        User john = this.identityManager.createUser("abstractj");
+        User john = this.identityManager.createUser("john");
 
         john.setEmail("john@doe.org");
         john.setFirstName("John");
