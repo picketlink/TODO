@@ -56,23 +56,39 @@
 			</div>
 		</div>
 		<div class="row todo-app">
-			<div id="login-title-box" class="login-title-box">
+			<div id="register-title-box" class="register-title-box">
 				<h2>Register</h2>
 			</div>
-			<div id="login-box" class="login-box">
+			<div id="register-box" class="register-box">
 				<form name="theForm">
-					<div id="login-msg" style="color: red"></div>
+					<div id="register-msg" style="color: red"></div>
 					<fieldset>
-						<label for="username" id="username_label">User Name</label> 
+						<label for="firstname" id="firstname_label">User Name</label> 
 						<input
-							name="username" id="username" type="text" required
+							name="firstname" id="firstname" type="text" required
+              placeholder="" class="medium-text"/> 
+              
+            <label for="lastname" id="lastname_label">User Name</label> 
+            <input
+						  name="lastname" id="lastname" type="text" required
+              placeholder="" class="medium-text"/> 
+              
+            <label for="email" id="email_label">User Name</label> 
+						<input
+							name="email" id="email" type="text" required
+              placeholder="" class="medium-text"/> 
+              
+            <label for="username" id="username_label">User Name</label> 
+            <input
+						  name="username" id="username" type="text" required
 							placeholder="" class="medium-text"/> 
-						<label for="password"
+              
+            <label for="password"
 							id="password_label">Password</label> 
 						<input name="password" 
 							id="password" type="password" required placeholder="" class="medium-text"/>
 						<br/>
-						<input type="submit" id="login-btn" value="Sign in" class="login-button"/><span
+						<input type="submit" id="register-btn" value="Register" class="register-button"/><span
 							id="result"></span>
 					</fieldset>
 				</form>

@@ -92,6 +92,7 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public AuthenticationResponse register(final AuthenticationRequest authcRequest) {
 
+        LOGGER.debug("My pretty registered user: " + authcRequest.getFirstName());
         return null;
     }
 
