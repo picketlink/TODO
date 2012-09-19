@@ -5,17 +5,17 @@ var getHost = function() {
 
 function storeToken(token) {
 	try {
-		localStorage.setItem("AUTH_TOKEN", token);
+		sessionStorage.setItem("AUTH_TOKEN", token);
 	} catch (e) {
-		alert('Your browser does not support HTML5 localStorage. Try upgrading.');
+		alert('Your browser does not support HTML5 sessionStorage. Try upgrading.');
 	}
 }
 
 function getToken() {
 	try {
-		return localStorage.getItem("AUTH_TOKEN");
+		return sessionStorage.getItem("AUTH_TOKEN");
 	} catch (e) {
-		alert('Your browser does not support HTML5 localStorage. Try upgrading.');
+		alert('Your browser does not support HTML5 sessionStorage. Try upgrading.');
 	}
 }
 
