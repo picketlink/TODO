@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.aerogear.todo.server.security;
+package org.aerogear.todo.server.security.interceptor;
 
 import java.util.List;
 
@@ -31,6 +31,7 @@ import javax.ws.rs.WebApplicationException;
 import org.aerogear.todo.server.security.authc.AuthenticationResponse;
 import org.aerogear.todo.server.security.authc.SignInEndpoint;
 import org.apache.http.HttpStatus;
+import org.jboss.logging.Logger;
 import org.jboss.picketlink.cdi.authentication.AuthenticationException;
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.core.ResourceMethod;
@@ -55,6 +56,9 @@ import org.picketbox.cdi.PicketBoxIdentity;
 public class SecurityInterceptor implements PreProcessInterceptor {
 
     private static final String AUTH_TOKEN_HEADER_NAME = "Auth-Token";
+
+    private static final Logger LOGGER = Logger.getLogger(SecurityInterceptor.class);
+
     @Inject
     private PicketBoxIdentity identity;
 
@@ -65,27 +69,31 @@ public class SecurityInterceptor implements PreProcessInterceptor {
     public ServerResponse preProcess(HttpRequest request, ResourceMethod method) throws Failure, WebApplicationException {
         ServerResponse response = null;
 
-        if (requiresAuthentication(method)) {
-            boolean isLoggedIn = false;
-            String token = getToken(request);
-            
-            if (token != null) {
-                try {
-                    isLoggedIn = identity.restoreSession(token);
-                } catch (AuthenticationException e) {
+        try {
+            if (requiresAuthentication(method)) {
+                boolean isLoggedIn = false;
+                String token = getToken(request);
 
+                if (token != null) {
+                    try {
+                        isLoggedIn = identity.restoreSession(token);
+                    } catch (AuthenticationException e) {
+
+                    }
+                }
+
+                if (!isLoggedIn) {
+                    AuthenticationResponse authcResponse = new AuthenticationResponse();
+
+                    authcResponse.setLoggedIn(false);
+
+                    response = new ServerResponse();
+                    response.setEntity(authcResponse);
+                    response.setStatus(HttpStatus.SC_FORBIDDEN);
                 }
             }
-
-            if (!isLoggedIn) {
-                AuthenticationResponse authcResponse = new AuthenticationResponse();
-                
-                authcResponse.setLoggedIn(false);
-                
-                response = new ServerResponse();
-                response.setEntity(authcResponse);
-                response.setStatus(HttpStatus.SC_FORBIDDEN);
-            }
+        } catch (Exception e) {
+            LOGGER.error("Fail: ", e);
         }
 
         return response;
@@ -98,6 +106,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
      * @return
      */
     private String getToken(HttpRequest request) {
+        LOGGER.debug("REQUEST ========= " + request);
         List<String> tokenHeader = request.getHttpHeaders().getRequestHeader(AUTH_TOKEN_HEADER_NAME);
         String token = null;
         

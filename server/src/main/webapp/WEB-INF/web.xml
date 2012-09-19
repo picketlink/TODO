@@ -17,6 +17,6 @@
 	<!-- Register the SecurityInterceptor, responsible for managing the tokens and users sessions -->
 	<context-param>
 		<param-name>resteasy.providers</param-name>
-		<param-value>org.aerogear.todo.server.security.SecurityInterceptor</param-value>
+		<param-value>org.aerogear.todo.server.security.interceptor.SecurityInterceptor</param-value>
 	</context-param>
 </web-app>
