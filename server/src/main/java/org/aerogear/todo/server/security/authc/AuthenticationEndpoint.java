@@ -72,6 +72,8 @@ public class AuthenticationEndpoint {
 
         LOGGER.debug("My pretty registered user: " + authcRequest.getFirstName());
 
+        registerUser(authcRequest);
+
         if (userLogin(authcRequest)) return createResponse(authcRequest);
 
         return createResponse(authcRequest);
@@ -107,6 +109,26 @@ public class AuthenticationEndpoint {
         }
     }
 
+    //TODO point of huge refactoring here
+    //TODO Make use of entities instead of DTOs
+    private void registerUser(AuthenticationRequest authenticationRequest){
+        User user = this.identityManager.createUser(authenticationRequest.getUserId());
+
+        user.setEmail(authenticationRequest.getEmail());
+        user.setFirstName(authenticationRequest.getFirstName());
+        user.setLastName(authenticationRequest.getLastName());
+
+        //TODO must be encrypted
+        this.identityManager.updatePassword(user, authenticationRequest.getPassword());
+
+        Role roleDeveloper = this.identityManager.createRole("developer");
+        Role roleAdmin = this.identityManager.createRole("admin");
+
+        Group groupCoreDeveloper = identityManager.createGroup("Core Developers");
+
+        identityManager.grantRole(roleDeveloper, user, groupCoreDeveloper);
+        identityManager.grantRole(roleAdmin, user, groupCoreDeveloper);
+    }
     /**
      * <p>Loads some users during the first construction.</p>
      */
