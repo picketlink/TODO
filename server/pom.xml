@@ -195,6 +195,13 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
         	<version>1.0.1.Final</version>
         	<scope>provided</scope>
         </dependency>
+        
+      <dependency>
+         <groupId>org.json</groupId>
+         <artifactId>json</artifactId>
+         <version>20090211</version>
+      </dependency>
+
     </dependencies>
 
     <build>
@@ -210,6 +217,7 @@ given to the generated war, and hence the context root) -->
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                    <debug>true</debug>
                 </configuration>
             </plugin>
             <plugin>
