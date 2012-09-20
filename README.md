@@ -57,3 +57,8 @@ For example
     $JBOSS_HOME/bin/standalone.sh -b 0.0.0.0 
 
 The client application will be running at the following URL <http://localhost:8080/todo-www/>.
+
+Notes
+------
+
+This is a working progress using picketbox timed releases, for this reason add this configuration file https://gist.github.com/b8359b1b824ff8dfcf0c at your $HOME/.m2 folder. 
