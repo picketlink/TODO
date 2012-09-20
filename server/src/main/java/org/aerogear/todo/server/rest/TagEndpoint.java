@@ -18,6 +18,7 @@ package org.aerogear.todo.server.rest;
 
 import org.aerogear.todo.server.model.Tag;
 import org.aerogear.todo.server.model.Task;
+import org.picketbox.cdi.authorization.RolesAllowed;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -38,6 +39,7 @@ import java.util.List;
 @Stateless
 @Path("/tags")
 @TransactionAttribute
+@RolesAllowed({"admin"})
 public class TagEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;

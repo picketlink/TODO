@@ -35,10 +35,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.aerogear.todo.server.model.Task;
+import org.picketbox.cdi.authorization.RolesAllowed;
 
 @Stateless
 @Path("/tasks")
 @TransactionAttribute
+@RolesAllowed({"admin"})
 public class TaskEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;

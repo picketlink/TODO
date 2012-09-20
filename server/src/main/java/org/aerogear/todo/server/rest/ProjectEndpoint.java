@@ -41,6 +41,7 @@ import java.util.List;
 @Stateless
 @Path("/projects")
 @TransactionAttribute
+@RolesAllowed ({"admin"})
 public class ProjectEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;
@@ -48,7 +49,6 @@ public class ProjectEndpoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed ({"admin"})
     public Project create(Project entity) {
         em.joinTransaction();
         em.persist(entity);
