@@ -29,6 +29,7 @@ import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 
 import org.aerogear.todo.server.security.authc.AuthenticationResponse;
+import org.aerogear.todo.server.security.authc.FacebookSignInEndpoint;
 import org.aerogear.todo.server.security.authc.SignInEndpoint;
 import org.apache.http.HttpStatus;
 import org.jboss.picketlink.cdi.authentication.AuthenticationException;
@@ -115,7 +116,8 @@ public class SecurityInterceptor implements PreProcessInterceptor {
      * @return
      */
     private boolean requiresAuthentication(ResourceMethod method) {
-        return !method.getMethod().getDeclaringClass().equals(SignInEndpoint.class);
+        Class<?> declaringClass =method.getMethod().getDeclaringClass(); 
+        return !(declaringClass.equals(SignInEndpoint.class) || declaringClass.equals(FacebookSignInEndpoint.class) );
     }
 
 }
