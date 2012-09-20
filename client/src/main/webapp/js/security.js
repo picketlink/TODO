@@ -69,19 +69,17 @@ $(document).ready(function() {
 
 	//Facebook signin
 	$('#facebook-sign').click(function(e) {
-		alert("Click");
         e.preventDefault();
         popup = window.open("/todo-server/facebook", "name", "height=512, width=512");
         popup.focus();
         
-        $(this.popup.document).ready(function(){
-            if(popup.document.body.text.indexOf("true") > -1){
+        popup.onload = function(){
+            if(popup.document.body.innerHTML.indexOf("true") > -1){
             	popup.close();
     			window.location = getHost() + "/index.html";
             }
-        })
-
- 
+        };
+        
 		return false; // prevents submit of the form
 	});
 });
