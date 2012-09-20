@@ -66,7 +66,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
     public ServerResponse preProcess(HttpRequest request, ResourceMethod method) throws Failure, WebApplicationException {
         ServerResponse response = null;
 
-        if (requiresAuthentication(method)) {
+        if (requiresAuthentication(method) && !this.identity.isLoggedIn()) {
             boolean isLoggedIn = false;
             String token = getToken(request);
             

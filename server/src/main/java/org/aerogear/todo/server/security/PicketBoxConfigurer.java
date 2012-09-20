@@ -27,6 +27,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
+import org.aerogear.todo.server.security.authc.oauth.OAuthAuthenticationMechanism;
 import org.jboss.picketlink.idm.IdentityManager;
 import org.jboss.picketlink.idm.internal.JPAIdentityStore;
 import org.jboss.picketlink.idm.internal.jpa.JPATemplate;
@@ -46,6 +47,9 @@ public class PicketBoxConfigurer {
 
     @Inject
     private BeanManager beanManager;
+
+    @Inject
+    private OAuthAuthenticationMechanism oAuthAuthenticationMechanism;
     
     /**
      * <p>Produces the {@link ConfigurationBuilder}.</p>
@@ -55,6 +59,8 @@ public class PicketBoxConfigurer {
     @Produces
     public ConfigurationBuilder produceConfiguration() {
         CDIConfigurationBuilder builder = new CDIConfigurationBuilder(this.beanManager);
+
+        builder.authentication().mechanism(this.oAuthAuthenticationMechanism);
         
         builder
             .authentication()
