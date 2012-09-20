@@ -52,18 +52,6 @@ public class UserManager {
 
     private static final Logger LOGGER = Logger.getLogger(UserManager.class);
 
-    public boolean userLogin(final String username, final String password) {
-
-        return authenticationManager.login(username, password);
-    }
-
-    public void logout() {
-        LOGGER.info("See ya!");
-        if (identity.isLoggedIn()) {
-            identity.logout();
-        }
-    }
-
     public AuthenticationResponse createResponse(String username) {
         AuthenticationResponse response = new AuthenticationResponse();
 
@@ -100,7 +88,7 @@ public class UserManager {
         identityManager.grantRole(roleAdmin, user, groupCoreDeveloper);
 
         //TODO to be refactored
-        userLogin(authenticationRequest.getUserId(), authenticationRequest.getPassword());
+        authenticationManager.login(authenticationRequest.getUserId(), authenticationRequest.getPassword());
     }
 
 

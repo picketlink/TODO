@@ -54,7 +54,7 @@ public class AuthenticationEndpoint {
 
         LOGGER.debug("My pretty registered user: " + authcRequest.getFirstName());
 
-        authenticationManager.login(authcRequest.getUserId(), authcRequest.getPassword());
+        manager.registerUser(authcRequest);
 
         return manager.createResponse(authcRequest.getUserId());
     }
@@ -67,7 +67,7 @@ public class AuthenticationEndpoint {
 
         LOGGER.debug("Logged in!");
 
-        manager.userLogin(username, password);
+        authenticationManager.login(username, password);
 
         return manager.createResponse(username);
     }
@@ -77,7 +77,7 @@ public class AuthenticationEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public void logout() {
-        manager.logout();
+        authenticationManager.logout();
     }
 
 }

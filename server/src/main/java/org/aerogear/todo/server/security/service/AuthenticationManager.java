@@ -50,6 +50,12 @@ public class AuthenticationManager implements Credential {
         return false;
     }
 
+    public void logout() {
+        if (identity.isLoggedIn()) {
+            identity.logout();
+        }
+    }
+
     @Override
     public Object getValue() {
         return new UsernamePasswordCredential(username, password);
