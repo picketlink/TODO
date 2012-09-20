@@ -17,11 +17,8 @@
 package org.aerogear.todo.server.rest;
 
 import org.aerogear.todo.server.model.Project;
-import org.aerogear.todo.server.model.Tag;
-import org.aerogear.todo.server.model.Task;
 import org.picketbox.cdi.authorization.RolesAllowed;
 
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
@@ -41,7 +38,7 @@ import java.util.List;
 @Stateless
 @Path("/projects")
 @TransactionAttribute
-@RolesAllowed ({"admin"})
+@RolesAllowed({"admin"})
 public class ProjectEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;
