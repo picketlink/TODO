@@ -51,17 +51,17 @@ public class UserManager {
 
     private static final Logger LOGGER = Logger.getLogger(UserManager.class);
 
-    public boolean userLogin(final AuthenticationRequest authcRequest) {
+    public boolean userLogin(final String username, final String password) {
         if (identity.isLoggedIn()) {
             return true;
         }
 
-        credential.setUserId(authcRequest.getUserId());
+        credential.setUserId(username);
         credential.setCredential(new Credential<UsernamePasswordCredential>() {
 
             @Override
             public UsernamePasswordCredential getValue() {
-                return new UsernamePasswordCredential(authcRequest.getUserId(), authcRequest.getPassword());
+                return new UsernamePasswordCredential(username, password);
             }
         });
 
@@ -71,16 +71,15 @@ public class UserManager {
 
     public void logout() {
         LOGGER.info("See ya!");
-        System.out.println("========== See ya! ===========");
         if (identity.isLoggedIn()) {
             identity.logout();
         }
     }
 
-    public AuthenticationResponse createResponse(AuthenticationRequest authcRequest) {
+    public AuthenticationResponse createResponse(String username) {
         AuthenticationResponse response = new AuthenticationResponse();
 
-        response.setUserId(authcRequest.getUserId());
+        response.setUserId(username);
         response.setLoggedIn(identity.isLoggedIn());
 
         if (response.isLoggedIn()) {
@@ -111,6 +110,9 @@ public class UserManager {
 
         identityManager.grantRole(roleDeveloper, user, groupCoreDeveloper);
         identityManager.grantRole(roleAdmin, user, groupCoreDeveloper);
+
+        //TODO to be refactored
+        userLogin(authenticationRequest.getUserId(), authenticationRequest.getPassword());
     }
 
 

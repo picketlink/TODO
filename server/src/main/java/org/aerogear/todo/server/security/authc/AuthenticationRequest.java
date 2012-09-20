@@ -29,11 +29,8 @@ public class AuthenticationRequest implements Serializable {
 
     private static final long serialVersionUID = 2637023097272776078L;
 
-    @HeaderParam("Auth-Credential")
     private String userId;
-    @HeaderParam("Auth-Password")
     private String password;
-
     private String email;
     private String firstName;
     private String lastName;

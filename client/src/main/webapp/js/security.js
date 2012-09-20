@@ -31,7 +31,7 @@ function removeToken() {
 
 $.ajaxSetup({
 	headers : {
-		"Auth-Token" : getToken()
+		"Auth-Token" : getToken(),
 	},
 	error : function(xhr, textStatus, errorThrown) {
 		if (window.location.pathname.indexOf("login.html", 0) == -1) {
@@ -84,9 +84,11 @@ $(document).ready(function() {
 	
 	$('#login-btn').click(function() {
 		var jqxhr = $.ajax('/todo-server/auth/login', {
-			contentType: "application/json",
+            headers : {
+                "Auth-Credential": $('#username').val(),
+                "Auth-Password": $('#password').val()
+            },
             dataType:'json',
-            data:JSON.stringify({userId:$('#username').val(),password:$('#password').val()}),
             type:'POST', 
             success:function (data) {
                 if (data.loggedIn) {
