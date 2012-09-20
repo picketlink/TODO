@@ -18,6 +18,7 @@ package org.aerogear.todo.server.security.authc;
 
 import java.io.Serializable;
 
+import javax.ws.rs.HeaderParam;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
@@ -27,8 +28,10 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 public class AuthenticationRequest implements Serializable {
 
     private static final long serialVersionUID = 2637023097272776078L;
-    
+
+    @HeaderParam("Auth-Credential")
     private String userId;
+    @HeaderParam("Auth-Password")
     private String password;
 
     private String email;
