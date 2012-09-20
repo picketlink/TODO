@@ -20,25 +20,21 @@ package org.aerogear.todo.server.security.service;
 import org.jboss.picketlink.idm.model.Group;
 import org.jboss.picketlink.idm.model.User;
 
-public class UserBuilderImpl implements UserBuilder{
+public interface IDMHelper {
 
-    @Override
-    public AddMethods add(User user) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    AddMethods add(User user);
+
+    GrantMethods grant(String... roles);
+
+    public static interface AddMethods {
+        TargetEntity to(Group... groups);
     }
 
-    @Override
-    public GrantMethods grant(String... roles) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    public static interface GrantMethods {
+        TargetEntity to(User user);
     }
 
-    public static void main(String[] args) {
-        User user = null;
-        Group group = null;
-        new UserBuilderImpl().add(user).to(group);
-
-        new UserBuilderImpl().grant("role").to(user);
+    public static interface TargetEntity {
+        <T> T to(Class<T> clazz);
     }
-
-
 }
