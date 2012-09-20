@@ -39,10 +39,13 @@ $( function() {
         Tags = todo.pipes[ "tags" ],
         taskContainer = $( "#task-container" ),
         projectContainer = $( "#project-list" ),
-        tagContainer = $( "#tag-list" ),
-        TasksValve = aerogear.dataManager( "tasks" ).valves.tasks,
-        ProjectsValve = aerogear.dataManager( "projects" ).valves.projects,
-        TagsValve = aerogear.dataManager( "tags" ).valves.tags;
+        tagContainer = $( "#tag-list" );
+
+        //Creating the DataManagers:
+        var dm = aerogear.dataManager([ "tasks", "tags", "projects"]),
+        TasksValve = dm.valves[ "tasks" ],
+        ProjectsValve = dm.valves[ "projects" ],
+        TagsValve = dm.valves[ "tags" ];
 
     // Loading overlays
     $( "#task-overlay" ).height( taskContainer.outerHeight() ).width( taskContainer.outerWidth() );
@@ -343,6 +346,7 @@ $( function() {
                 $( "#project-loader" ).hide();
                 updateProjectList();
             },
+            //setting the valve
         	valves: ProjectsValve
         });
 
@@ -354,6 +358,7 @@ $( function() {
                 $( "#tag-loader" ).hide();
                 updateTagList();
             },
+            //setting the valve
         	valves: TagsValve
         });
 
