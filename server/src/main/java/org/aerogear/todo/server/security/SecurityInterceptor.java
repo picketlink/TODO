@@ -72,6 +72,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
             
             if (token != null) {
                 try {
+                    //Check for facebook usage - WE NEED TO FIX THIS
                     isLoggedIn = identity.restoreSession(token);
                 } catch (AuthenticationException e) {
 

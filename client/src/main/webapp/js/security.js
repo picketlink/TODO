@@ -76,22 +76,25 @@ $(document).ready(function() {
         popup.onload = function(){
             if(popup.document.body.innerHTML.indexOf("true") > -1){
             	popup.close();
-    			window.location = getHost() + "/index.html";
+            	var jqxhr = $.ajax('/todo-server/facebook', {
+        			contentType: "application/json",
+                    dataType:'json',
+                    type:'POST', 
+                    success:function (data) {
+                        if (data.loggedIn) {
+                        	storeToken(data.token);
+        					window.location = getHost() + "/index.html";
+                        } else {
+                        	$('#login-msg').text("Authentication failed. Try again ...");
+                        }
+                    }
+                });
+    			//window.location = getHost() + "/index.html";
             }
         };
         
 		return false; // prevents submit of the form
 	});
-});
-
-$(document).ready(function() {
-	if(popup != null){
-		alert("popup not null");
-		if(popup.document.body.text.indexOf("true") > -1){
-        	popup.close();
-			window.location = getHost() + "/index.html";
-        }
-	}
 });
 
 $(document).ready(function() {
