@@ -56,7 +56,6 @@ public class UserManager {
             return true;
         }
 
-        credential.setUserId(username);
         credential.setCredential(new Credential<UsernamePasswordCredential>() {
 
             @Override

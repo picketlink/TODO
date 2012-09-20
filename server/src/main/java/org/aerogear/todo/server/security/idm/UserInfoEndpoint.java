@@ -42,7 +42,7 @@ public class UserInfoEndpoint {
     private Identity identity;
     
     @GET
-    @Produces (MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
     public UserInfo getInfo() {
         UserInfo userInfo = new UserInfo();
         

@@ -26,6 +26,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
+
 @Provider
 public class HttpExceptionMapper implements ExceptionMapper<Throwable> {
 
@@ -38,13 +40,12 @@ public class HttpExceptionMapper implements ExceptionMapper<Throwable> {
         Throwable exceptionCause = exception.getCause();
 
         if (exceptionCause instanceof AccessDeniedException) {
-            return Response.status(Response.Status.UNAUTHORIZED).entity(createMessage("User authentication failed")).build();
+            return Response.status(UNAUTHORIZED)
+                    .entity(ExceptionMessage.AUTHENTICATION_FAILED.toString())
+                    .build();
+
         } else {
             return Response.ok().build();
         }
-    }
-
-    private String createMessage(String message){
-        return String.format("{message : %s }", message);
     }
 }
