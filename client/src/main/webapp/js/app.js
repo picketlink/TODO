@@ -232,7 +232,7 @@ $( function() {
             current,
             success = function( data ) {
                 for ( var item in data ) {
-                    current = filterData( data[ item ], Tasks.data )[ 0 ];
+                    current = filterData( data[ item ], TasksValve.data )[ 0 ];
                     if ( type == "project" ) {
                         current.project = null;
                     } else if ( type == "tag" ) {
@@ -280,7 +280,7 @@ $( function() {
 
         switch( target.data( "type" ) ) {
             case "project":
-                toEdit = filterData( target, Projects.data )[ 0 ];
+                toEdit = filterData( target, ProjectsValve.data )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -294,7 +294,7 @@ $( function() {
                 $( ".add-project" ).click();
                 break;
             case "tag":
-                toEdit = filterData( target, Tags.data )[ 0 ];
+                toEdit = filterData( target, TagsValve.data )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -308,7 +308,7 @@ $( function() {
                 $( ".add-tag" ).click();
                 break;
             case "task":
-                toEdit = filterData( target, Tasks.data )[ 0 ];
+                toEdit = filterData( target, TasksValve.data )[ 0 ];
 
                 $( "#task-id" ).val( toEdit.id );
                 $( "#task-title" ).val( toEdit.title );
@@ -363,7 +363,7 @@ $( function() {
         });
 
         // When both the available projects and available tags have returned, get the task data
-        $.when( projectGet, tagGet, Tasks.read() ).done( function( g1, g2, g3 ) {
+        $.when( projectGet, tagGet, Tasks.read( { valves: TasksValve } ) ).done( function( g1, g2, g3 ) {
             $( "#task-loader" ).hide();
             updateTaskList();
         })
@@ -374,7 +374,7 @@ $( function() {
     }
 
     function updateTaskList() {
-        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: Tasks.data, tags: Tags.data, projects: Projects.data } );
+        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: TasksValve.data, tags: TagsValve.data, projects: ProjectsValve.data } );
 
         $( "#task-list-container" ).html( taskList );
 
@@ -387,11 +387,11 @@ $( function() {
             projectSelect = "",
             styleList = "";
 
-        styleList = parseClasses( Projects.data );
+        styleList = parseClasses( ProjectsValve.data );
         $( "#project-styles" ).html( styleList );
 
-        projectList = _.template( $( "#project-tmpl" ).html(), { projects: Projects.data } );
-        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: Projects.data } );
+        projectList = _.template( $( "#project-tmpl" ).html(), { projects: ProjectsValve.data } );
+        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: ProjectsValve.data } );
         $( "#project-container" ).html( projectList );
         projectSelect = '<option value="">No Project</option>' + projectSelect;
         $( "#task-project-select" ).html( projectSelect );
@@ -403,14 +403,14 @@ $( function() {
             tagSelect = "",
             styleList = "";
 
-        styleList = parseClasses( Tags.data, "1" );
+        styleList = parseClasses( TagsValve.data, "1" );
         $( "#tag-styles" ).html( styleList );
 
-        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: Tags.data } );
+        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: TagsValve.data } );
         tagSelect = "";
-        if ( Tags.data && Tags.data.length ) {
-            for ( i = 0; i < Tags.data.length; i += 3 ) {
-                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: Tags.data.slice( i, i+3 ) } );
+        if ( TagsValve.data && TagsValve.data.length ) {
+            for ( i = 0; i < TagsValve.data.length; i += 3 ) {
+                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: TagsValve.data.slice( i, i+3 ) } );
             }
         }
         $( "#tag-container" ).html( tagList );
