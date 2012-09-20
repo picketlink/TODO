@@ -20,14 +20,12 @@ import org.aerogear.todo.server.security.authc.AuthenticationRequest;
 import org.aerogear.todo.server.security.authc.AuthenticationResponse;
 import org.jboss.logging.Logger;
 import org.jboss.picketlink.cdi.Identity;
-import org.jboss.picketlink.cdi.credential.Credential;
 import org.jboss.picketlink.cdi.credential.LoginCredentials;
 import org.jboss.picketlink.idm.IdentityManager;
 import org.jboss.picketlink.idm.model.Group;
 import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
 import org.picketbox.cdi.PicketBoxUser;
-import org.picketbox.core.authentication.credential.UsernamePasswordCredential;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.TransactionAttribute;
@@ -47,25 +45,16 @@ public class UserManager {
     private IdentityManager identityManager;
 
     @Inject
+    private AuthenticationManager authenticationManager;
+
+    @Inject
     private Identity identity;
 
     private static final Logger LOGGER = Logger.getLogger(UserManager.class);
 
     public boolean userLogin(final String username, final String password) {
-        if (identity.isLoggedIn()) {
-            return true;
-        }
 
-        credential.setCredential(new Credential<UsernamePasswordCredential>() {
-
-            @Override
-            public UsernamePasswordCredential getValue() {
-                return new UsernamePasswordCredential(username, password);
-            }
-        });
-
-        this.identity.login();
-        return false;
+        return authenticationManager.login(username, password);
     }
 
     public void logout() {

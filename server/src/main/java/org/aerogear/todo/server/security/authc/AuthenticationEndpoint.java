@@ -16,6 +16,7 @@
  */
 package org.aerogear.todo.server.security.authc;
 
+import org.aerogear.todo.server.security.service.AuthenticationManager;
 import org.aerogear.todo.server.security.service.UserManager;
 import org.jboss.logging.Logger;
 
@@ -42,6 +43,9 @@ public class AuthenticationEndpoint {
     @Inject
     private UserManager manager;
 
+    @Inject
+    private AuthenticationManager authenticationManager;
+
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -50,17 +54,11 @@ public class AuthenticationEndpoint {
 
         LOGGER.debug("My pretty registered user: " + authcRequest.getFirstName());
 
-        manager.registerUser(authcRequest);
+        authenticationManager.login(authcRequest.getUserId(), authcRequest.getPassword());
 
         return manager.createResponse(authcRequest.getUserId());
     }
 
-    /**
-     * <p>Performs the authentication using the informations provided by the {@link AuthenticationRequest}</p>
-     *
-     * @param authcRequest
-     * @return
-     */
     @POST
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
