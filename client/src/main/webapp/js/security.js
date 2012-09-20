@@ -19,6 +19,16 @@ function getToken() {
 	}
 }
 
+function removeToken() {
+	try {
+		return sessionStorage.clear();
+        } catch (e) {
+		alert('Your browser does not support HTML5 sessionStorage. Try upgrading.');
+	}
+}
+
+
+
 $.ajaxSetup({
 	headers : {
 		"Auth-Token" : getToken()
@@ -97,11 +107,13 @@ $(document).ready(function() {
 	}
 	
 	$('#logout-btn').click(function() {
+    alert("Logout");
 		var jqxhr = $.ajax('/todo-server/auth/logout', {
             data:{},
             type:'GET', 
             success:function (data) {
-            	window.location = getHost() + "/login.html";
+                removeToken();
+                window.location = getHost() + "/login.html";
             }
         });
 		return false; // prevents submit of the form
