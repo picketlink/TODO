@@ -101,7 +101,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
         List<String> tokenHeader = request.getHttpHeaders().getRequestHeader(AUTH_TOKEN_HEADER_NAME);
         String token = null;
         
-        if (!tokenHeader.isEmpty()) {
+        if (tokenHeader != null && !tokenHeader.isEmpty()) {
             token = tokenHeader.get(0);
         }
         
