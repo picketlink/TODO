@@ -18,6 +18,7 @@ package org.aerogear.todo.server.security.service;
 
 import org.aerogear.todo.server.security.authc.AuthenticationRequest;
 import org.aerogear.todo.server.security.authc.AuthenticationResponse;
+import org.aerogear.todo.server.util.PasswordHashing;
 import org.jboss.logging.Logger;
 import org.jboss.picketlink.cdi.Identity;
 import org.jboss.picketlink.cdi.credential.LoginCredentials;
@@ -103,7 +104,7 @@ public class UserManager {
         john.setFirstName("John");
         john.setLastName("Doe");
 
-        identityManager.updatePassword(john, "123");
+        identityManager.updatePassword(john, PasswordHashing.digest("123"));
 
         Role roleDeveloper = identityManager.createRole("developer");
         Role roleAdmin = identityManager.createRole("admin");

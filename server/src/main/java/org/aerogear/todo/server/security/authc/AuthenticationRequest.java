@@ -21,6 +21,7 @@ import java.io.Serializable;
 import javax.ws.rs.HeaderParam;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.aerogear.todo.server.util.PasswordHashing;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @XmlRootElement
@@ -57,7 +58,7 @@ public class AuthenticationRequest implements Serializable {
      * @param password the password to set
      */
     public void setPassword(String password) {
-        this.password = password;
+        this.password = PasswordHashing.digest(password);
     }
 
     public String getEmail() {
