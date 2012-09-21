@@ -31,6 +31,7 @@ import javax.ws.rs.WebApplicationException;
 import org.aerogear.todo.server.security.authc.AuthenticationResponse;
 import org.aerogear.todo.server.security.authc.FacebookSignInEndpoint;
 import org.aerogear.todo.server.security.authc.SignInEndpoint;
+import org.aerogear.todo.server.security.register.RegistrationEndpoint;
 import org.apache.http.HttpStatus;
 import org.jboss.picketlink.cdi.authentication.AuthenticationException;
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
@@ -72,7 +73,6 @@ public class SecurityInterceptor implements PreProcessInterceptor {
             
             if (token != null) {
                 try {
-                    //Check for facebook usage - WE NEED TO FIX THIS
                     isLoggedIn = identity.restoreSession(token);
                 } catch (AuthenticationException e) {
 
@@ -118,7 +118,9 @@ public class SecurityInterceptor implements PreProcessInterceptor {
      */
     private boolean requiresAuthentication(ResourceMethod method) {
         Class<?> declaringClass =method.getMethod().getDeclaringClass(); 
-        return !(declaringClass.equals(SignInEndpoint.class) || declaringClass.equals(FacebookSignInEndpoint.class) );
+        return !(declaringClass.equals(SignInEndpoint.class) || 
+                declaringClass.equals(FacebookSignInEndpoint.class) ||
+                declaringClass.equals(RegistrationEndpoint.class));
     }
 
 }
