@@ -347,7 +347,7 @@ $( function() {
                 updateProjectList();
             },
             //setting the valve
-        	valves: ProjectsValve
+            valves: ProjectsValve
         });
 
         tagGet = Tags.read({
@@ -359,7 +359,7 @@ $( function() {
                 updateTagList();
             },
             //setting the valve
-        	valves: TagsValve
+            valves: TagsValve
         });
 
         // When both the available projects and available tags have returned, get the task data
