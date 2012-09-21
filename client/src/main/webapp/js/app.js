@@ -137,7 +137,7 @@ $( function() {
             }
             switch ( formType ) {
                 case "project":
-                    Projects.save( JSON.stringify( data ), {
+                    Projects.save( data, {
                         success: function( data ) {
                             updateProjectList();
                             if ( isUpdate ) {
@@ -145,18 +145,20 @@ $( function() {
                             }
 
                             $( "#add-project" ).find( ".submit-btn" ).html( plus + " Add Project" );
-                        }
+                        },
+                        valves: ProjectsValve
                     } );
                     break;
                 case "tag":
-                    Tags.save( JSON.stringify( data ), {
+                    Tags.save( data, {
                         success: function( data ) {
                             updateTagList();
                             if ( isUpdate ) {
                                 updateTaskList();
                             }
                             $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Add Tag" );
-                        }
+                        },
+                        valves: TagsValve
                     } );
                     break;
                 case "task":
@@ -169,11 +171,12 @@ $( function() {
                         }
                     });
                     data.tags = tags;
-                    Tasks.save( JSON.stringify( data ), {
+                    Tasks.save( data, {
                         success: function( data ) {
                             updateTaskList();
                             $( "#add-task" ).find( ".submit-btn" ).html( plus + " Add Task" );
-                        }
+                        },
+                        valves: TasksValve
                     });
                     break;
                 case "login":
@@ -256,12 +259,15 @@ $( function() {
         }
         switch( type ) {
             case "project":
+                options.valves = ProjectsValve;
                 Projects.remove( options );
                 break;
             case "tag":
+                options.valves = TagsValve;
                 Tags.remove( options );
                 break;
             case "task":
+                options.valves = TasksValve;
                 Tasks.remove( options );
                 break;
         }
