@@ -19,7 +19,6 @@ package org.aerogear.todo.server.security.rest;
 import org.aerogear.todo.server.security.idm.AerogearUser;
 import org.aerogear.todo.server.security.service.AuthenticationManager;
 import org.aerogear.todo.server.security.service.IDMHelper;
-import org.aerogear.todo.server.security.config.PicketBoxLoadUsers;
 import org.aerogear.todo.server.util.HttpResponseBuilder;
 import org.jboss.logging.Logger;
 
@@ -47,13 +46,10 @@ public class AuthenticationEndpoint {
     public static final String DEFAULT_GRANT = "admin";
 
     @Inject
-    private PicketBoxLoadUsers manager;
-
-    @Inject
     private AuthenticationManager authenticationManager;
 
     @Inject
-    private IDMHelper idmHelper;
+    private IDMHelper idm;
 
     @Inject
     private HttpResponseBuilder builder;
@@ -63,7 +59,7 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public AerogearUser register(final AerogearUser user) {
 
-        idmHelper.grant(DEFAULT_GRANT).to(user);
+        idm.grant(DEFAULT_GRANT).to(user);
 
         authenticationManager.login(user.getUsername(), user.getPassword());
 
@@ -74,7 +70,7 @@ public class AuthenticationEndpoint {
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
     public AerogearUser login(@HeaderParam("Auth-Credential") String username,
-                                        @HeaderParam("Auth-Password") String password) {
+                              @HeaderParam("Auth-Password") String password) {
 
         LOGGER.debug("Logged in!");
 
