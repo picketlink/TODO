@@ -48,13 +48,14 @@ public class AuthenticationEndpoint {
 
     @POST
     @Path("/register")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public AuthenticationResponse register(final AuthenticationRequest authcRequest) {
 
         LOGGER.debug("My pretty registered user: " + authcRequest.getFirstName());
 
         manager.registerUser(authcRequest);
+
+        authenticationManager.login(authcRequest.getUserId(), authcRequest.getPassword());
 
         return manager.createResponse(authcRequest.getUserId());
     }

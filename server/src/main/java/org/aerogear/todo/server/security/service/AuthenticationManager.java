@@ -41,12 +41,12 @@ public class AuthenticationManager implements Credential {
 
     public void login(String username, String password) {
         this.username = username;
-        this.password = PasswordHashing.digest(password);
+        this.password = password;
 
         credential.setCredential(this);
         this.identity.login();
 
-        if(!this.identity.isLoggedIn())
+        if (!this.identity.isLoggedIn())
             HttpSecurityException.violation("Invalid credentials");
 
     }

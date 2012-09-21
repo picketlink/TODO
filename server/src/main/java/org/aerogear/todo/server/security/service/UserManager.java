@@ -46,9 +46,6 @@ public class UserManager {
     private IdentityManager identityManager;
 
     @Inject
-    private AuthenticationManager authenticationManager;
-
-    @Inject
     private Identity identity;
 
     private static final Logger LOGGER = Logger.getLogger(UserManager.class);
@@ -77,7 +74,6 @@ public class UserManager {
         user.setFirstName(authenticationRequest.getFirstName());
         user.setLastName(authenticationRequest.getLastName());
 
-        //TODO must be encrypted
         identityManager.updatePassword(user, authenticationRequest.getPassword());
 
         Role roleDeveloper = identityManager.createRole("developer");
@@ -87,9 +83,6 @@ public class UserManager {
 
         identityManager.grantRole(roleDeveloper, user, groupCoreDeveloper);
         identityManager.grantRole(roleAdmin, user, groupCoreDeveloper);
-
-        //TODO to be refactored
-        authenticationManager.login(authenticationRequest.getUserId(), authenticationRequest.getPassword());
     }
 
 
