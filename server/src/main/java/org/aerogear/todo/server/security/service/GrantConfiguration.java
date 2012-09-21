@@ -54,8 +54,8 @@ public class GrantConfiguration implements IDMHelper.GrantMethods {
 
         User picketLinkUser = identityManager.createUser(user.getUsername());
         user.setEmail(picketLinkUser.getEmail());
-        user.setFirstName(picketLinkUser.getFirstName());
-        user.setLastName(picketLinkUser.getLastName());
+        user.setFirstname(picketLinkUser.getFirstName());
+        user.setLastname(picketLinkUser.getLastName());
 
         identityManager.updatePassword(picketLinkUser, user.getPassword());
 

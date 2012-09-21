@@ -34,9 +34,9 @@ public class HttpResponseBuilder {
         AerogearUser response = new AerogearUser();
 
         response.setUsername(username);
-        response.setLoggedIn(identity.isLoggedIn());
+        response.setLogged(identity.isLoggedIn());
 
-        if (response.isLoggedIn()) {
+        if (response.isLogged()) {
             PicketBoxUser user = (PicketBoxUser) identity.getUser();
 
             response.setToken(user.getSubject().getSession().getId().getId().toString());
