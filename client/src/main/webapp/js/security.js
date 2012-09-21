@@ -1,6 +1,12 @@
 var getHost = function() {
 	var port = '8080';
-	return 'http://' + window.location.hostname + ":" + port + "/todo";
+	var hname = window.location.hostname;
+	
+	if(hname.indexOf("rhcloud.com") == -1){
+		return 'http://' + hname + ":" + port + "/todo";	
+	} else {
+		return 'http://' + hname + "/todo";	
+	}
 };
 
 function storeToken(token) {
