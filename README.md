@@ -56,4 +56,4 @@ For example
 
     $JBOSS_HOME/bin/standalone.sh -b 0.0.0.0 
 
-The client application will be running at the following URL <http://localhost:8080/todo-www/>.
+The client application will be running at the following URL <http://localhost:8080/todo/>.
