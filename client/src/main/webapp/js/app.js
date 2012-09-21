@@ -1,24 +1,36 @@
 $( function() {
-    var projectGet, tagGet, overlayTimer;
+    var overlayTimer;
+
+    // Instantiate our authenticator
+    var restAuth = aerogear.auth({
+        name: "auth",
+        settings: {
+            agAuth: true,
+            baseURL: "/todo-server/"
+        }
+    }).modules.auth;
 
     // Instantiate our pipeline
     var todo = aerogear.pipeline([
             {
                 name: "tasks",
                 settings: {
-                    url: "/todo-server/tasks"
+                    url: "/todo-server/tasks",
+                    authenticator: restAuth
                 }
             },
             {
                 name: "projects",
                 settings: {
-                    url: "/todo-server/projects"
+                    url: "/todo-server/projects",
+                    authenticator: restAuth
                 }
             },
             {
                 name: "tags",
                 settings: {
-                    url: "/todo-server/tags"
+                    url: "/todo-server/tags",
+                    authenticator: restAuth
                 }
             }
         ]),
@@ -34,32 +46,8 @@ $( function() {
     $( "#project-overlay" ).height( projectContainer.outerHeight() ).width( projectContainer.outerWidth() );
     $( "#tag-overlay" ).height( tagContainer.outerHeight() ).width( tagContainer.outerWidth() );
 
-    projectGet = Projects.read({
-        ajax: {
-            success: function( data, textStatus, jqXHR ) {
-                $( "#project-loader" ).hide();
-                updateProjectList();
-            }
-        }
-    });
-
-    tagGet = Tags.read({
-        ajax: {
-            success: function( data, textStatus, jqXHR ) {
-                if ( data.length ) {
-                    $( "#task-tag-column" ).empty();
-                }
-                $( "#tag-loader" ).hide();
-                updateTagList();
-            }
-        }
-    });
-
-    // When both the available projects and available tags have returned, get the task data
-    $.when( projectGet, tagGet, Tasks.read() ).done( function( g1, g2, g3 ) {
-        $( "#task-loader" ).hide();
-        updateTaskList();
-    });
+    // Initializes all sections of the TODO app
+    loadAllData();
 
     // Initialize Color pickers
     $( ".color-picker" ).miniColors();
@@ -105,7 +93,6 @@ $( function() {
 
         // Validate form
         var form = $( this ),
-            // all form id's start with add
             formType = form.attr( "name" ),
             formValid = true,
             // 0 - add items
@@ -144,29 +131,25 @@ $( function() {
             }
             switch ( formType ) {
                 case "project":
-                    Projects.save( data, {
-                        ajax: {
-                            success: function( data ) {
-                                updateProjectList();
-                                if ( isUpdate ) {
-                                    updateTaskList();
-                                }
-
-                                $( "#add-project" ).find( ".submit-btn" ).html( plus + " Add Project" );
+                    Projects.save( JSON.stringify( data ), {
+                        success: function( data ) {
+                            updateProjectList();
+                            if ( isUpdate ) {
+                                updateTaskList();
                             }
+
+                            $( "#add-project" ).find( ".submit-btn" ).html( plus + " Add Project" );
                         }
                     } );
                     break;
                 case "tag":
-                    Tags.save( data, {
-                        ajax: {
-                            success: function( data ) {
-                                updateTagList();
-                                if ( isUpdate ) {
-                                    updateTaskList();
-                                }
-                                $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Add Tag" );
+                    Tags.save( JSON.stringify( data ), {
+                        success: function( data ) {
+                            updateTagList();
+                            if ( isUpdate ) {
+                                updateTaskList();
                             }
+                            $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Add Tag" );
                         }
                     } );
                     break;
@@ -180,12 +163,21 @@ $( function() {
                         }
                     });
                     data.tags = tags;
-                    Tasks.save( data, {
-                        ajax: {
-                            success: function( data ) {
-                                updateTaskList();
-                                $( "#add-task" ).find( ".submit-btn" ).html( plus + " Add Task" );
-                            }
+                    Tasks.save( JSON.stringify( data ), {
+                        success: function( data ) {
+                            updateTaskList();
+                            $( "#add-task" ).find( ".submit-btn" ).html( plus + " Add Task" );
+                        }
+                    });
+                    break;
+                case "login":
+                    restAuth.login( data, {
+                        success: function() {
+                            $( "#login-box" ).modal( "hide" );
+                            loadAllData();
+                        },
+                        error: function() {
+                            console.log('error');
                         }
                     });
                     break;
@@ -250,9 +242,7 @@ $( function() {
             },
             options = {
                 record: dataTarget.data( "id" ),
-                ajax: {
-                    success: success
-                }
+                success: success
             };
         if ( !dataTarget.data( "clickable" ) ) {
             event.preventDefault();
@@ -325,7 +315,7 @@ $( function() {
                 // Reset tag checkboxes
                 $( "#add-task input:checkbox" ).prop( "checked", false );
 
-                if ( toEdit.tags.length ) {
+                if ( toEdit.tags && toEdit.tags.length ) {
                     $.each( toEdit.tags, function( index, value ) {
                         $( "input[name='tag-" + value + "']" ).prop( "checked", true );
                     });
@@ -342,6 +332,37 @@ $( function() {
     }
 
     // Helper Functions
+    function loadAllData() {
+        var projectGet, tagGet;
+
+        projectGet = Projects.read({
+            success: function( data, textStatus, jqXHR ) {
+                $( "#project-loader" ).hide();
+                updateProjectList();
+            }
+        });
+
+        tagGet = Tags.read({
+            success: function( data, textStatus, jqXHR ) {
+                if ( data && data.length ) {
+                    $( "#task-tag-column" ).empty();
+                }
+                $( "#tag-loader" ).hide();
+                updateTagList();
+            }
+        });
+
+        // When both the available projects and available tags have returned, get the task data
+        $.when( projectGet, tagGet, Tasks.read() ).done( function( g1, g2, g3 ) {
+            $( "#task-loader" ).hide();
+            updateTaskList();
+        })
+        .fail( function() {
+            restAuth.deauthorize();
+            $( "#login-box" ).modal();
+        });
+    }
+
     function updateTaskList() {
         var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: Tasks.data, tags: Tags.data, projects: Projects.data } );
 
@@ -377,7 +398,7 @@ $( function() {
 
         tagList = _.template( $( "#tag-tmpl" ).html(), { tags: Tags.data } );
         tagSelect = "";
-        if ( Tags.data.length ) {
+        if ( Tags.data && Tags.data.length ) {
             for ( i = 0; i < Tags.data.length; i += 3 ) {
                 tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: Tags.data.slice( i, i+3 ) } );
             }
@@ -416,13 +437,15 @@ $( function() {
         var styleList = "",
             rgb,
             fontColor;
-        $.each( data, function() {
-            if ( this.style ) {
-                rgb = this.style.substr( this.style.indexOf( "-" ) + 1 ).split( "-" );
-                fontColor = calcBrightness( rgb ) < 130 ? "#EEE" : "#222" ;
-                styleList += "#property-container ." + this.style + "," + "#task-container ." + this.style + "{background: rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ",1); color: " + fontColor + ";}";
-            }
-        });
+        if ( data ) {
+            $.each( data, function() {
+                if ( this.style ) {
+                    rgb = this.style.substr( this.style.indexOf( "-" ) + 1 ).split( "-" );
+                    fontColor = calcBrightness( rgb ) < 130 ? "#EEE" : "#222" ;
+                    styleList += "#property-container ." + this.style + "," + "#task-container ." + this.style + "{background: rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ",1); color: " + fontColor + ";}";
+                }
+            });
+        }
         return styleList;
     }
 
