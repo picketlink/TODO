@@ -16,7 +16,8 @@
  */
 package org.aerogear.todo.server.security.idm;
 
-import java.util.List;
+import org.jboss.picketlink.cdi.Identity;
+import org.picketbox.cdi.PicketBoxUser;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -24,9 +25,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import org.jboss.picketlink.cdi.Identity;
-import org.picketbox.cdi.PicketBoxUser;
+import java.util.List;
 
 /**
  * <p>JAX-RS Endpoint to authenticate users.</p>

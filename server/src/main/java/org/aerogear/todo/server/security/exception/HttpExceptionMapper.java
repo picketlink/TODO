@@ -37,15 +37,22 @@ public class HttpExceptionMapper implements ExceptionMapper<Throwable> {
     @Override
     public Response toResponse(Throwable exception) {
 
-        Throwable exceptionCause = exception.getCause();
+        ExceptionToCatchEvent exceptionToCatchEvent = new ExceptionToCatchEvent(exception);
+        try {
+            event.fire(exceptionToCatchEvent);
+        } catch (Throwable t) {
+            Throwable exceptionCause = t.getCause();
+            if (exceptionCause instanceof AccessDeniedException) {
+                return Response.status(UNAUTHORIZED)
+                        .entity(ExceptionMessage.AUTHENTICATION_FAILED.toString())
+                        .build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
 
-        if (exceptionCause instanceof AccessDeniedException) {
-            return Response.status(UNAUTHORIZED)
-                    .entity(ExceptionMessage.AUTHENTICATION_FAILED.toString())
-                    .build();
-
-        } else {
-            return Response.ok().build();
         }
+
+
+        return Response.ok().build();
     }
 }

@@ -16,18 +16,16 @@
  */
 package org.aerogear.todo.server.security;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.BeanManager;
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-
 import org.jboss.picketlink.idm.IdentityManager;
 import org.jboss.picketlink.idm.internal.JPAIdentityStore;
 import org.jboss.picketlink.idm.internal.jpa.JPATemplate;
 import org.picketbox.cdi.config.CDIConfigurationBuilder;
 import org.picketbox.core.config.ConfigurationBuilder;
-import org.picketbox.core.config.PicketBoxConfiguration;
+
+import javax.enterprise.inject.Produces;
+import javax.enterprise.inject.spi.BeanManager;
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 /**
  * <p>Bean responsible for producing the {@link CDIConfigurationBuilder}.</p>

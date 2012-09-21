@@ -16,13 +16,11 @@
  */
 package org.aerogear.todo.server.security.authc;
 
-import java.io.Serializable;
-
-import javax.ws.rs.HeaderParam;
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.aerogear.todo.server.util.PasswordHashing;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.Serializable;
 
 @XmlRootElement
 @JsonSerialize

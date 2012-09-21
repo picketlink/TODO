@@ -17,6 +17,7 @@
 
 package org.aerogear.todo.server.security.service;
 
+import org.aerogear.todo.server.security.exception.HttpSecurityException;
 import org.aerogear.todo.server.util.PasswordHashing;
 import org.jboss.picketlink.cdi.Identity;
 import org.jboss.picketlink.cdi.credential.Credential;
@@ -38,17 +39,16 @@ public class AuthenticationManager implements Credential {
     @Inject
     private Identity identity;
 
-    public boolean login(String username, String password) {
+    public void login(String username, String password) {
         this.username = username;
         this.password = PasswordHashing.digest(password);
 
-        if (this.identity.isLoggedIn()) {
-            return true;
-        } else {
-            credential.setCredential(this);
-            this.identity.login();
-        }
-        return false;
+        credential.setCredential(this);
+        this.identity.login();
+
+        if(!this.identity.isLoggedIn())
+            HttpSecurityException.violation("Invalid credentials");
+
     }
 
     public void logout() {

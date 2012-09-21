@@ -17,7 +17,6 @@
 package org.aerogear.todo.server.serializer;
 
 import org.aerogear.todo.server.model.Project;
-import org.aerogear.todo.server.model.Tag;
 import org.aerogear.todo.server.model.Task;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonProcessingException;
