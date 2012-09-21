@@ -17,7 +17,7 @@
 
 package org.aerogear.todo.server.security.service;
 
-import org.aerogear.todo.server.security.authc.AuthenticationRequest;
+import org.aerogear.todo.server.security.idm.AerogearUser;
 import org.jboss.picketlink.idm.IdentityManager;
 import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
@@ -50,17 +50,17 @@ public class GrantConfiguration implements IDMHelper.GrantMethods {
      * @param user
      */
     @Override
-    public void to(AuthenticationRequest authenticationRequest) {
+    public void to(AerogearUser user) {
 
-        User user = identityManager.createUser(authenticationRequest.getUserId());
-        user.setEmail(authenticationRequest.getEmail());
-        user.setFirstName(authenticationRequest.getFirstName());
-        user.setLastName(authenticationRequest.getLastName());
+        User picketLinkUser = identityManager.createUser(user.getUserId());
+        user.setEmail(picketLinkUser.getEmail());
+        user.setFirstName(picketLinkUser.getFirstName());
+        user.setLastName(picketLinkUser.getLastName());
 
-        identityManager.updatePassword(user, authenticationRequest.getPassword());
+        identityManager.updatePassword(picketLinkUser, user.getPassword());
 
         for (Role role : list) {
-            identityManager.grantRole(role, user, null);
+            identityManager.grantRole(role, picketLinkUser, null);
         }
 
     }

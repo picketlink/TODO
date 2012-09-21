@@ -15,15 +15,33 @@
  * limitations under the License.
  */
 
-package org.aerogear.todo.server.security.service;
+package org.aerogear.todo.server.util;
 
 import org.aerogear.todo.server.security.idm.AerogearUser;
+import org.jboss.picketlink.cdi.Identity;
+import org.picketbox.cdi.PicketBoxUser;
 
-public interface IDMHelper {
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 
-    GrantMethods grant(String... roles);
+@ApplicationScoped
+public class HttpResponseBuilder {
 
-    public static interface GrantMethods {
-        void to(AerogearUser user);
+    @Inject
+    private Identity identity;
+
+    public AerogearUser createResponse(String username) {
+        AerogearUser response = new AerogearUser();
+
+        response.setUserId(username);
+        response.setLoggedIn(identity.isLoggedIn());
+
+        if (response.isLoggedIn()) {
+            PicketBoxUser user = (PicketBoxUser) identity.getUser();
+
+            response.setToken(user.getSubject().getSession().getId().getId().toString());
+        }
+
+        return response;
     }
 }

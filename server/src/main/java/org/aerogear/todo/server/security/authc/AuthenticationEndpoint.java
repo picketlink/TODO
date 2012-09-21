@@ -16,9 +16,11 @@
  */
 package org.aerogear.todo.server.security.authc;
 
+import org.aerogear.todo.server.security.idm.AerogearUser;
 import org.aerogear.todo.server.security.service.AuthenticationManager;
 import org.aerogear.todo.server.security.service.IDMHelper;
-import org.aerogear.todo.server.security.service.UserManager;
+import org.aerogear.todo.server.security.config.PicketBoxLoadUsers;
+import org.aerogear.todo.server.util.HttpResponseBuilder;
 import org.jboss.logging.Logger;
 
 import javax.ejb.Stateless;
@@ -45,7 +47,7 @@ public class AuthenticationEndpoint {
     public static final String DEFAULT_GRANT = "admin";
 
     @Inject
-    private UserManager manager;
+    private PicketBoxLoadUsers manager;
 
     @Inject
     private AuthenticationManager authenticationManager;
@@ -53,29 +55,32 @@ public class AuthenticationEndpoint {
     @Inject
     private IDMHelper idmHelper;
 
+    @Inject
+    private HttpResponseBuilder builder;
+
     @POST
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
-    public AuthenticationResponse register(final AuthenticationRequest authcRequest) {
+    public AerogearUser register(final AerogearUser user) {
 
-        idmHelper.grant(DEFAULT_GRANT).to(authcRequest);
+        idmHelper.grant(DEFAULT_GRANT).to(user);
 
-        authenticationManager.login(authcRequest.getUserId(), authcRequest.getPassword());
+        authenticationManager.login(user.getUserId(), user.getPassword());
 
-        return manager.createResponse(authcRequest.getUserId());
+        return builder.createResponse(user.getUserId());
     }
 
     @POST
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
-    public AuthenticationResponse login(@HeaderParam("Auth-Credential") String username,
+    public AerogearUser login(@HeaderParam("Auth-Credential") String username,
                                         @HeaderParam("Auth-Password") String password) {
 
         LOGGER.debug("Logged in!");
 
         authenticationManager.login(username, password);
 
-        return manager.createResponse(username);
+        return builder.createResponse(username);
     }
 
     @POST
