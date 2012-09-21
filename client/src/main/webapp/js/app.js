@@ -259,13 +259,16 @@ $( function() {
         }
         switch( type ) {
             case "project":
-                Projects.remove( options, { valves: ProjectsValve } );
+                options.valves = ProjectsValve;
+                Projects.remove( options );
                 break;
             case "tag":
-                Tags.remove( options, { valves: TagsValve } );
+                options.valves = TagsValve;
+                Tags.remove( options );
                 break;
             case "task":
-                Tasks.remove( options, { valves: TasksValve } );
+                options.valves = TasksValve;
+                Tasks.remove( options );
                 break;
         }
     });
