@@ -65,27 +65,6 @@ public class UserManager {
         return response;
     }
 
-    //TODO point of huge refactoring here
-    //TODO Make use of entities instead of DTOs
-    public void registerUser(AuthenticationRequest authenticationRequest) {
-        User user = identityManager.createUser(authenticationRequest.getUserId());
-
-        user.setEmail(authenticationRequest.getEmail());
-        user.setFirstName(authenticationRequest.getFirstName());
-        user.setLastName(authenticationRequest.getLastName());
-
-        identityManager.updatePassword(user, authenticationRequest.getPassword());
-
-        Role roleDeveloper = identityManager.createRole("developer");
-        Role roleAdmin = identityManager.createRole("admin");
-
-        Group groupCoreDeveloper = identityManager.createGroup("Core Developers");
-
-        identityManager.grantRole(roleDeveloper, user, groupCoreDeveloper);
-        identityManager.grantRole(roleAdmin, user, groupCoreDeveloper);
-    }
-
-
     /**
      * <p>Loads some users during the first construction.</p>
      */

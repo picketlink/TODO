@@ -17,6 +17,7 @@
 package org.aerogear.todo.server.security.authc;
 
 import org.aerogear.todo.server.security.service.AuthenticationManager;
+import org.aerogear.todo.server.security.service.IDMHelper;
 import org.aerogear.todo.server.security.service.UserManager;
 import org.jboss.logging.Logger;
 
@@ -40,20 +41,24 @@ public class AuthenticationEndpoint {
 
     private static final Logger LOGGER = Logger.getLogger(AuthenticationEndpoint.class);
 
+    //TODO it must be assigned into admin screen
+    public static final String DEFAULT_GRANT = "admin";
+
     @Inject
     private UserManager manager;
 
     @Inject
     private AuthenticationManager authenticationManager;
 
+    @Inject
+    private IDMHelper idmHelper;
+
     @POST
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
     public AuthenticationResponse register(final AuthenticationRequest authcRequest) {
 
-        LOGGER.debug("My pretty registered user: " + authcRequest.getFirstName());
-
-        manager.registerUser(authcRequest);
+        idmHelper.grant(DEFAULT_GRANT).to(authcRequest);
 
         authenticationManager.login(authcRequest.getUserId(), authcRequest.getPassword());
 

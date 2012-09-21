@@ -17,24 +17,18 @@
 
 package org.aerogear.todo.server.security.service;
 
+import org.aerogear.todo.server.security.authc.AuthenticationRequest;
 import org.jboss.picketlink.idm.model.Group;
+import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
+
+import java.util.List;
 
 public interface IDMHelper {
 
-    AddMethods add(User user);
-
     GrantMethods grant(String... roles);
 
-    public static interface AddMethods {
-        TargetEntity to(Group... groups);
-    }
-
     public static interface GrantMethods {
-        TargetEntity to(User user);
-    }
-
-    public static interface TargetEntity {
-        <T> T to(Class<T> clazz);
+        void to(AuthenticationRequest authenticationRequest);
     }
 }
