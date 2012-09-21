@@ -121,7 +121,7 @@
 
             var ajaxSettings = $.extend( {}, settings, {
                 success: function( data, textStatus, jqXHR ) {
-                    that.resolve( data, textStatus, jqXHR );
+                    that.resolve( typeof data === "string" && ajaxSettings.dataType === "json" ? JSON.parse( data ) : data, textStatus, jqXHR );
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     that.reject( jqXHR, textStatus, errorThrown );
@@ -130,6 +130,10 @@
                     that.resolve( jqXHR, textStatus );
                 }
             });
+
+            if ( ajaxSettings.contentType === "application/json" && ajaxSettings.data && ajaxSettings.type === "POST" ) {
+                ajaxSettings.data = JSON.stringify( ajaxSettings.data );
+            }
 
             if ( aerogear.auth && !caller.isAuthenticated() ) {
                 this.reject( "auth", "Error: Authentication Required" );
@@ -435,10 +439,6 @@
                 }
 
                 var success = function( data ) {
-                    if ( typeof data !== "string" ) {
-                        data = JSON.stringify( data );
-                    }
-
                     var valves = aerogear.isArray( options.valves ) ? options.valves : [ options.valves ],
                         item;
 
@@ -733,7 +733,7 @@
                     if ( this.data ) {
                         for ( var i = 0; i < data.length; i++ ) {
                             for( var item in this.data ) {
-                                if ( this.data[ item ].id === data[ i ].id ) {
+                                if ( this.data[ item ][ this.recordId ] === data[ i ][ this.recordId ] ) {
                                     this.data[ item ] = data[ i ];
                                     itemFound = true;
                                     break;
@@ -779,7 +779,7 @@
                     }
 
                     for( item in this.data ) {
-                        if ( this.data[ item ].id === delId ) {
+                        if ( this.data[ item ][ this.recordId ] === delId ) {
                             this.data.splice( item, 1 );
                         }
                     }
