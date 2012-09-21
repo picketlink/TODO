@@ -17,6 +17,7 @@
 
 package org.aerogear.todo.server.security.service;
 
+import org.aerogear.todo.server.util.PasswordHashing;
 import org.jboss.picketlink.cdi.Identity;
 import org.jboss.picketlink.cdi.credential.Credential;
 import org.jboss.picketlink.cdi.credential.LoginCredentials;
@@ -39,7 +40,7 @@ public class AuthenticationManager implements Credential {
 
     public boolean login(String username, String password) {
         this.username = username;
-        this.password = password;
+        this.password = PasswordHashing.digest(password);
 
         if (this.identity.isLoggedIn()) {
             return true;
