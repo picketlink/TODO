@@ -27,7 +27,7 @@ import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
-import org.aerogear.todo.server.security.authc.oauth.FacebookAuthenticationMechanism;
+import org.aerogear.todo.server.security.authc.fb.FacebookAuthenticationMechanism;
 import org.jboss.picketlink.idm.IdentityManager;
 import org.jboss.picketlink.idm.internal.JPAIdentityStore;
 import org.jboss.picketlink.idm.internal.jpa.JPATemplate;
@@ -51,6 +51,10 @@ public class PicketBoxConfigurer {
     @Inject
     private FacebookAuthenticationMechanism fbAuthenticationMechanism;
     
+    @Inject
+    private IdentityManager identityManager;
+    
+    
     /**
      * <p>Produces the {@link ConfigurationBuilder}.</p>
      * 
@@ -58,6 +62,7 @@ public class PicketBoxConfigurer {
      */
     @Produces
     public ConfigurationBuilder produceConfiguration() {
+        fbAuthenticationMechanism.setIdentityManager(identityManager);
         CDIConfigurationBuilder builder = new CDIConfigurationBuilder(this.beanManager);
 
         builder.authentication().mechanism(this.fbAuthenticationMechanism);

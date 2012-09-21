@@ -90,13 +90,15 @@ $(document).ready(function() {
 		return;
 	}
 
-	var jqxhr = $.ajax('/todo-server/userinfo', {
-        data:{},
-        type:'GET', 
-        success:function (data) { 
-        	$('#userinfo-msg').text("Welcome " + data.fullName + ". Your roles are: " + data.roles);
-        }
-    });
+	if ($('#userinfo-msg')) {
+		var jqxhr = $.ajax('/todo-server/userinfo', {
+	        data:{},
+	        type:'GET', 
+	        success:function (data) { 
+	        	$('#userinfo-msg').text("Welcome " + data.fullName + ". Your roles are: " + data.roles);
+	        }
+	    });
+	}
 });
 
 var popup = null;
@@ -133,6 +135,11 @@ $(document).ready(function() {
         	}
         };
         
+		return false; // prevents submit of the form
+	});
+	
+	$('#signup-btn').click(function() {
+		window.location = getHost() + "/register.html";
 		return false; // prevents submit of the form
 	});
 });
