@@ -33,7 +33,7 @@ public class HttpResponseBuilder {
     public AerogearUser createResponse(String username) {
         AerogearUser response = new AerogearUser();
 
-        response.setUserId(username);
+        response.setUsername(username);
         response.setLoggedIn(identity.isLoggedIn());
 
         if (response.isLoggedIn()) {

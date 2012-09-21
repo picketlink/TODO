@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.aerogear.todo.server.security.authc;
+package org.aerogear.todo.server.security.rest;
 
 import org.aerogear.todo.server.security.idm.AerogearUser;
 import org.aerogear.todo.server.security.service.AuthenticationManager;
@@ -65,9 +65,9 @@ public class AuthenticationEndpoint {
 
         idmHelper.grant(DEFAULT_GRANT).to(user);
 
-        authenticationManager.login(user.getUserId(), user.getPassword());
+        authenticationManager.login(user.getUsername(), user.getPassword());
 
-        return builder.createResponse(user.getUserId());
+        return builder.createResponse(user.getUsername());
     }
 
     @POST
