@@ -53,7 +53,7 @@ public class AuthenticationEndpoint {
     private AuthenticationManager authenticationManager;
 
     @Inject
-    private IDMHelper idmHelper;
+    private IDMHelper idm;
 
     @Inject
     private HttpResponseBuilder builder;
@@ -63,7 +63,7 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public AerogearUser register(final AerogearUser user) {
 
-        idmHelper.grant(DEFAULT_GRANT).to(user);
+        idm.grant(DEFAULT_GRANT).to(user);
 
         authenticationManager.login(user.getUsername(), user.getPassword());
 
