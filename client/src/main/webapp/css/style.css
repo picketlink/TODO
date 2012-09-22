@@ -41,6 +41,10 @@ body {
     margin-bottom: 100px;
 }
 
+.todo-app {
+    margin-top: 15px;
+}
+
 .todo-app .span2.navbar {
     color: #000;
 }
@@ -284,6 +288,10 @@ label {
     color: #ff0000;
 }
 
+#userinfo-msg, #login-btn {
+    display: none;
+}
+
 /* Footer styles */
 footer {
     width: 100%;
@@ -402,7 +410,7 @@ footer {
 
 /* Media Queries */
 @media (max-width: 1200px) {
-    
+
 }
 
 @media (max-width: 979px) {

@@ -41,7 +41,8 @@
                 <p><em><strong>**NOTE**</strong></em> - Currently, this application uses a shared database for all users. What this means is other users may be adding, editing and deleting items from the app at the same time as you. Until user sessions are put into place, have fun with it! Also, this app contains publicly entered data that others can see so please use it responsibly.</p>
             </div>
         </div>
-        <div id="userinfo-msg"></div>.: <a id="logout-btn" href="#" onclick="logout();">Logout</a> :.
+        <div id="userinfo-msg">Hello, <span id="userinfo-name"></span> <a id="logout-btn" href="#" class="btn">Logout</a></div>
+        <a id="login-btn" href="#" class="btn">Login</a>
         <div class="row todo-app">
             <div id="property-container" class="span2 navbar">
                 <h3>Projects
@@ -64,7 +65,7 @@
                             <a class="btn form-close"><i class="icon-remove"></i> Cancel</a>
                         </form>
                     </div>
-                    <div id="project-loader">
+                    <div id="project-loader" class="loader">
                         <div class="progress progress-striped active">
                             <div class="bar" style="width: 100%;"></div>
                         </div>
@@ -92,7 +93,7 @@
                             <a class="btn form-close"><i class="icon-remove"></i> Cancel</a>
                         </form>
                     </div>
-                    <div id="tag-loader">
+                    <div id="tag-loader" class="loader">
                         <div class="progress progress-striped active">
                             <div class="bar" style="width: 100%;"></div>
                         </div>
@@ -141,7 +142,7 @@
                         <a class="btn form-close"><i class="icon-remove"></i> Cancel</a>
                     </form>
                 </div>
-                <div id="task-loader">
+                <div id="task-loader" class="loader">
                     <div class="progress progress-striped active">
                         <div class="bar" style="width: 100%;"></div>
                     </div>
@@ -166,13 +167,13 @@
                     <input name="password" id="password" type="password" required />
                 </div>
                 <div data-role="controlgroup" data-type="horizontal">
-                    <input type="submit" id="login-btn" value="Login" />
-                    <input type="button" name="cancel" id="cancel" value="Cancel"/>
+                    <input type="submit" id="login-submit" value="Login" />
+                    <input type="button" name="cancel" id="login-cancel" value="Cancel"/>
                 </div>
                 <div id="result"></div>
             </fieldset>
         </form>
-        <a href="/todo/register.html">Register</a>
+        <a id="register-button" class="btn">Register</a>
     </div>
 
     <!-- Templates -->

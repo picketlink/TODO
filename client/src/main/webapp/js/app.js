@@ -181,12 +181,14 @@ $( function() {
                     break;
                 case "login":
                     restAuth.login( data, {
-                        success: function() {
+                        success: function( data ) {
+                            sessionStorage.setItem( "username", data.userId );
+
                             $( "#login-box" ).modal( "hide" );
                             loadAllData();
                         },
-                        error: function() {
-                            console.log('error');
+                        error: function( data ) {
+                            console.log( data );
                         }
                     });
                     break;
@@ -343,6 +345,35 @@ $( function() {
         $( "#project-list, #tag-list" ).css( "max-height", "none" );
     }
 
+    // Logout button
+    $( "#userinfo-msg" ).on( "click", ".btn", function( event ) {
+        event.preventDefault();
+
+        restAuth.logout({
+            success: function() {
+                $( "#userinfo-msg" ).hide();
+                loadAllData();
+            },
+            error: function() {
+                console.log('logout error');
+            }
+        });
+    });
+
+    // Login Cancel
+    $( "#login-cancel" ).click( function( event ) {
+        event.preventDefault();
+
+        $( ".loader" ).hide();
+        $( "#login-btn" ).show();
+        $( "#login-box" ).modal( "hide" );
+    });
+
+    // Login button
+    $( "#login-btn" ).click( function( event ) {
+        loadAllData();
+    });
+
     // Helper Functions
     function loadAllData() {
         var projectGet, tagGet;
@@ -370,12 +401,17 @@ $( function() {
 
         // When both the available projects and available tags have returned, get the task data
         $.when( projectGet, tagGet, Tasks.read( { valves: TasksValve } ) ).done( function( g1, g2, g3 ) {
-            $( "#task-loader" ).hide();
+            $( "#task-loader, #login-btn" ).hide();
+            $( "#userinfo-name" ).text( sessionStorage.getItem( "username" ) );
+            $( "#userinfo-msg" ).show();
             updateTaskList();
         })
         .fail( function() {
             restAuth.deauthorize();
-            $( "#login-box" ).modal();
+            $( "#login-box" ).modal({
+                backdrop: "static",
+                keyboard: false
+            });
         });
     }
 
