@@ -85,7 +85,6 @@ public class AuthenticationEndpoint {
 
     @POST
     @Path("/logout")
-    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public void logout() {
         authenticationManager.logout();
