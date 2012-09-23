@@ -17,7 +17,7 @@
 
 package org.aerogear.todo.server.security.service;
 
-import org.aerogear.todo.server.security.idm.AerogearUser;
+import org.aerogear.todo.server.security.idm.AeroGearUser;
 import org.jboss.picketlink.idm.IdentityManager;
 import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
@@ -50,7 +50,7 @@ public class GrantConfiguration implements IDMHelper.GrantMethods {
      * @param user
      */
     @Override
-    public void to(AerogearUser user) {
+    public void to(AeroGearUser user) {
 
         User picketLinkUser = identityManager.createUser(user.getUsername());
         user.setEmail(picketLinkUser.getEmail());

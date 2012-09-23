@@ -17,7 +17,7 @@
 
 package org.aerogear.todo.server.util;
 
-import org.aerogear.todo.server.security.idm.AerogearUser;
+import org.aerogear.todo.server.security.idm.AeroGearUser;
 import org.jboss.picketlink.cdi.Identity;
 import org.picketbox.cdi.PicketBoxUser;
 
@@ -30,8 +30,8 @@ public class HttpResponseBuilder {
     @Inject
     private Identity identity;
 
-    public AerogearUser createResponse(String username) {
-        AerogearUser response = new AerogearUser();
+    public AeroGearUser createResponse(String username) {
+        AeroGearUser response = new AeroGearUser();
 
         response.setUsername(username);
         response.setLogged(identity.isLoggedIn());

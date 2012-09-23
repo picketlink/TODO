@@ -15,15 +15,31 @@
  * limitations under the License.
  */
 
-package org.aerogear.todo.server.security.service;
+package org.aerogear.todo.server.security.idm;
 
-import org.aerogear.todo.server.security.idm.AeroGearUser;
+import java.io.Serializable;
 
-public interface IDMHelper {
+public class AeroGearCredential implements Serializable {
 
-    GrantMethods grant(String... roles);
+    private boolean isLogged;
+    private String token;
 
-    public static interface GrantMethods {
-        void to(AeroGearUser user);
+    public AeroGearCredential() {
+    }
+
+    public boolean isLogged() {
+        return isLogged;
+    }
+
+    public void setLogged(boolean logged) {
+        this.isLogged = logged;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

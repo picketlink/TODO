@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.aerogear.todo.server.security.idm;
 
 import org.aerogear.todo.server.util.PasswordHashing;
@@ -24,7 +25,7 @@ import java.io.Serializable;
 
 @XmlRootElement
 @JsonSerialize
-public class AerogearUser implements Serializable {
+public class AeroGearUser implements Serializable {
 
     private static final long serialVersionUID = 2637023097272776078L;
 
@@ -33,9 +34,6 @@ public class AerogearUser implements Serializable {
     private String email;
     private String firstname;
     private String lastname;
-
-    private boolean isLogged;
-    private String token;
 
     /**
      * @return the username
@@ -84,22 +82,6 @@ public class AerogearUser implements Serializable {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public boolean isLogged() {
-        return isLogged;
-    }
-
-    public void setLogged(boolean logged) {
-        this.isLogged = logged;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
 }
