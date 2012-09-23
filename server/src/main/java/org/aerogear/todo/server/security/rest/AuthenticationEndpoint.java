@@ -16,6 +16,7 @@
  */
 package org.aerogear.todo.server.security.rest;
 
+import org.aerogear.todo.server.security.idm.AeroGearCredential;
 import org.aerogear.todo.server.security.idm.AeroGearUser;
 import org.aerogear.todo.server.security.service.AuthenticationManager;
 import org.aerogear.todo.server.security.service.IDMHelper;
@@ -61,7 +62,7 @@ public class AuthenticationEndpoint {
     @POST
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
-    public AeroGearUser register(final AeroGearUser user) {
+    public AeroGearCredential register(final AeroGearUser user) {
 
         idm.grant(DEFAULT_GRANT).to(user);
 
@@ -73,8 +74,8 @@ public class AuthenticationEndpoint {
     @POST
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
-    public AeroGearUser login(@HeaderParam("Auth-Credential") String username,
-                                        @HeaderParam("Auth-Password") String password) {
+    public AeroGearCredential login(@HeaderParam("Auth-Credential") String username,
+                                    @HeaderParam("Auth-Password") String password) {
 
         LOGGER.debug("Logged in!");
 
