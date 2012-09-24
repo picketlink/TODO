@@ -42,7 +42,7 @@ $( function() {
         tagContainer = $( "#tag-list" );
 
         //Creating the DataManagers:
-        var dm = AeroGear.DataManager([ "tasks", "tags", "projects"]),
+        var dm = AeroGear.DataManager([ "tasks", "tags", "projects" ]),
         TasksStore = dm.stores[ "tasks" ],
         ProjectsStore = dm.stores[ "projects" ],
         TagsStore = dm.stores[ "tags" ];
@@ -199,7 +199,7 @@ $( function() {
                                 $( "#auth-error-box" ).modal();
                             }
                         },
-                        stores: TasksStore
+                        stores: [ TasksStore ]
                     });
                     break;
                 case "login":
@@ -296,7 +296,7 @@ $( function() {
             current,
             success = function( data ) {
                 for ( var item in data ) {
-                    current = filterData( data[ item ], TasksStore.getData() )[ 0 ];
+                    current = filterData( data[ item ], TasksStore.read() )[ 0 ];
                     if ( type == "project" ) {
                         current.project = null;
                     } else if ( type == "tag" ) {
@@ -352,7 +352,7 @@ $( function() {
 
         switch( target.data( "type" ) ) {
             case "project":
-                toEdit = filterData( target, ProjectsStore.getData() )[ 0 ];
+                toEdit = filterData( target, ProjectsStore.read() )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -366,7 +366,7 @@ $( function() {
                 $( ".add-project" ).click();
                 break;
             case "tag":
-                toEdit = filterData( target, TagsStore.getData() )[ 0 ];
+                toEdit = filterData( target, TagsStore.read() )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -380,7 +380,7 @@ $( function() {
                 $( ".add-tag" ).click();
                 break;
             case "task":
-                toEdit = filterData( target, TasksStore.getData() )[ 0 ];
+                toEdit = filterData( target, TasksStore.read() )[ 0 ];
 
                 $( "#task-id" ).val( toEdit.id );
                 $( "#task-title" ).val( toEdit.title );
@@ -402,6 +402,51 @@ $( function() {
                 $( ".add-task" ).click();
                 break;
         }
+    });
+
+    //Filter Buttons
+    $( ".todo-app" ).on( "click", ".btn.sort", function( event ) {
+        var target = $( event.target ).closest( ".sort" ),
+            targetType = $( target ).closest( ".option-overlay" ).parent(),
+            filteredData,
+            filteredProjects,
+            filteredTags;
+
+        if ( targetType.hasClass( "filtered" ) ) {
+            //Toggle Off
+            targetType.removeClass( "filtered" );
+            target.removeClass( "btn-info" );
+        } else {
+            //Toggle On
+            targetType.addClass( "filtered" );
+            target.addClass( "btn-info" );
+        }
+
+        filteredProjects = $( ".project.filtered" );
+        filteredTags = $( ".tag.filtered" );
+
+        if( filteredProjects.length && filteredTags.length ) {
+            //Filter Both
+            filteredData = TasksStore.filter({
+                "project" : {
+                    data: getTargetIds( filteredProjects ),
+                    matchAny: true },
+                 "tags" : {
+                    data: getTargetIds( filteredTags ),
+                    matchAny: true }
+            }, false);
+        } else if ( filteredProjects.length && filteredTags.length < 1 ) {
+            //Just Projects
+            filteredData = TasksStore.filter( { "project" : { data: getTargetIds( filteredProjects ), matchAny: true } } );
+        } else if ( filteredProjects.length < 1 && filteredTags.length ) {
+            //Just Tags
+            filteredData = TasksStore.filter( { "tags" : { data: getTargetIds( filteredTags ), matchAny: true } } );
+        } else {
+            //Nothing Selected. Restore the Original View
+        }
+
+        updateTaskList( filteredData );
+
     });
 
     // Show all tags and projects on touch devices
@@ -496,7 +541,8 @@ $( function() {
         });
 
         // When both the available projects and available tags have returned, get the task data
-        $.when( projectGet, tagGet, Tasks.read( { stores: TasksStore } ) ).done( function( g1, g2, g3 ) {
+        $.when( projectGet, tagGet, Tasks.read( { stores: [ TasksStore ] } ) ).done( function( g1, g2, g3 ) {
+
             $( "#userinfo-name" ).text( sessionStorage.getItem( "username" ) );
             $( "#userinfo-msg" ).show();
         })
@@ -513,8 +559,10 @@ $( function() {
         });
     }
 
-    function updateTaskList() {
-        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: TasksStore.getData(), tags: TagsStore.getData(), projects: ProjectsStore.getData() } );
+
+    function updateTaskList( filtered ) {
+
+        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: filtered || TasksStore.read(), tags: TagsStore.read(), projects: ProjectsStore.read() } );
 
         $( "#task-list-container" ).html( taskList );
 
@@ -527,11 +575,11 @@ $( function() {
             projectSelect = "",
             styleList = "";
 
-        styleList = parseClasses( ProjectsStore.getData() );
+        styleList = parseClasses( ProjectsStore.read() );
         $( "#project-styles" ).html( styleList );
 
-        projectList = _.template( $( "#project-tmpl" ).html(), { projects: ProjectsStore.getData() } );
-        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: ProjectsStore.getData() } );
+        projectList = _.template( $( "#project-tmpl" ).html(), { projects: ProjectsStore.read() } );
+        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: ProjectsStore.read() } );
         $( "#project-container" ).html( projectList );
         projectSelect = '<option value="">No Project</option>' + projectSelect;
         $( "#task-project-select" ).html( projectSelect );
@@ -543,14 +591,14 @@ $( function() {
             tagSelect = "",
             styleList = "";
 
-        styleList = parseClasses( TagsStore.getData(), "1" );
+        styleList = parseClasses( TagsStore.read(), "1" );
         $( "#tag-styles" ).html( styleList );
 
-        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: TagsStore.getData()} );
+        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: TagsStore.read()} );
         tagSelect = "";
-        if ( TagsStore.getData() && TagsStore.getData().length ) {
-            for ( i = 0; i < TagsStore.getData().length; i += 3 ) {
-                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: TagsStore.getData().slice( i, i+3 ) } );
+        if ( TagsStore.read() && TagsStore.read().length ) {
+            for ( i = 0; i < TagsStore.read().length; i += 3 ) {
+                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: TagsStore.read().slice( i, i+3 ) } );
             }
         }
         $( "#tag-container" ).html( tagList );
@@ -631,6 +679,14 @@ $( function() {
             green: parseInt( triplets[ 1 ], 16 ),
             blue:  parseInt( triplets[ 2 ], 16 )
         };
+    }
+
+    function getTargetIds( values ) {
+        var valueList = [];
+        _.each( values, function( value ) {
+            valueList.push( $( value ).find( "div[data-id]" ).data( "id" ) );
+        });
+        return valueList;
     }
 
     function rgb2hex( r, g, b ) {
