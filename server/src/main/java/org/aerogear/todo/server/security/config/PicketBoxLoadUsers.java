@@ -16,11 +16,9 @@
  */
 package org.aerogear.todo.server.security.config;
 
-import org.aerogear.todo.server.util.PasswordHashing;
 import org.jboss.logging.Logger;
 import org.jboss.picketlink.cdi.credential.LoginCredentials;
 import org.jboss.picketlink.idm.IdentityManager;
-import org.jboss.picketlink.idm.model.Group;
 import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
 
@@ -46,34 +44,23 @@ public class PicketBoxLoadUsers {
     /**
      * <p>Loads some users during the first construction.</p>
      */
-    //TODO this entire initialization code must be removed
+    //TODO this entire initialization code will be removed
     @PostConstruct
     public void create() {
+        buildNewUser("john", "john@doe.org", "John", "Doe", "123", "admin");
+        buildNewUser("jane", "jane@doe.org", "Jane", "Doe", "123", "simple");
+    }
 
+    private void buildNewUser(String username, String email, String firstname, String lastname, String password, String role) {
+        User jane = this.identityManager.createUser(username);
+        jane.setEmail(email);
+        jane.setFirstName(firstname);
+        jane.setLastName(lastname);
 
-        User john = this.identityManager.createUser("john");
+        identityManager.updatePassword(jane, password);
 
-        john.setEmail("john@doe.org");
-        john.setFirstName("John");
-        john.setLastName("Doe");
-
-        identityManager.updatePassword(john, "123");
-
-        Role roleAdmin = identityManager.createRole("admin");
-        identityManager.grantRole(roleAdmin, john, null);
-
-
-        User jane = this.identityManager.createUser("jane");
-        jane.setEmail("jane@doe.org");
-        jane.setFirstName("Jane");
-        jane.setLastName("Doe");
-
-        identityManager.updatePassword(jane, "123");
-
-        Role roleSimple = identityManager.createRole("simple");
+        Role roleSimple = identityManager.createRole(role);
         identityManager.grantRole(roleSimple, jane, null);
-
-
     }
 
 
