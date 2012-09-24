@@ -17,22 +17,33 @@
 
 package org.aerogear.todo.server.security.idm;
 
+import org.jboss.picketlink.idm.model.Role;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class AeroGearCredential implements Serializable {
 
-    private boolean isLogged;
-    private String token;
 
-    public AeroGearCredential() {
+    //TODO yep it's duplicated and must be refactored
+    private String username;
+    private String isLogged;
+    private String token;
+    private List<String> roles;
+
+    public AeroGearCredential(String id, String token, String isLogged, List<String> roles) {
+        this.username = id;
+        this.token = token;
+        this.isLogged = isLogged;
+        this.roles = roles;
     }
 
-    public boolean isLogged() {
+    public String getLogged() {
         return isLogged;
     }
 
-    public void setLogged(boolean logged) {
-        this.isLogged = logged;
+    public void setLogged(String logged) {
+        isLogged = logged;
     }
 
     public String getToken() {
@@ -42,4 +53,21 @@ public class AeroGearCredential implements Serializable {
     public void setToken(String token) {
         this.token = token;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
 }
