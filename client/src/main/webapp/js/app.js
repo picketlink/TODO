@@ -63,10 +63,14 @@ $( function() {
 
     // Event Bindings
     $( ".add-project, .add-tag, .add-task" ).on( "click", function( event ) {
-        var target = $( event.currentTarget );
-        target.parent().height( "100%" );
-        target.slideUp( "slow" );
-        target.next().slideDown( "slow" );
+        if ( restAuth.isAuthenticated() ) {
+            var target = $( event.currentTarget );
+            target.parent().height( "100%" );
+            target.slideUp( "slow" );
+            target.next().slideDown( "slow" );
+        } else {
+            loadAllData();
+        }
     });
 
     $( ".form-close" ).on( "click", function( event ) {
@@ -182,7 +186,7 @@ $( function() {
                 case "login":
                     restAuth.login( data, {
                         success: function( data ) {
-                            sessionStorage.setItem( "username", data.userId );
+                            sessionStorage.setItem( "username", data.username );
 
                             $( "#login-box" ).modal( "hide" );
                             loadAllData();
@@ -352,6 +356,7 @@ $( function() {
         restAuth.logout({
             success: function() {
                 $( "#userinfo-msg" ).hide();
+                $( ".form-close:visible" ).click();
                 loadAllData();
             },
             error: function() {
@@ -379,7 +384,7 @@ $( function() {
         var projectGet, tagGet;
 
         projectGet = Projects.read({
-            success: function( data, textStatus, jqXHR ) {
+            complete: function() {
                 $( "#project-loader" ).hide();
                 updateProjectList();
             },
@@ -388,7 +393,7 @@ $( function() {
         });
 
         tagGet = Tags.read({
-            success: function( data, textStatus, jqXHR ) {
+            complete: function( data, textStatus, jqXHR ) {
                 if ( data && data.length ) {
                     $( "#task-tag-column" ).empty();
                 }
@@ -401,10 +406,8 @@ $( function() {
 
         // When both the available projects and available tags have returned, get the task data
         $.when( projectGet, tagGet, Tasks.read( { valves: TasksValve } ) ).done( function( g1, g2, g3 ) {
-            $( "#task-loader, #login-btn" ).hide();
             $( "#userinfo-name" ).text( sessionStorage.getItem( "username" ) );
             $( "#userinfo-msg" ).show();
-            updateTaskList();
         })
         .fail( function() {
             restAuth.deauthorize();
@@ -412,6 +415,10 @@ $( function() {
                 backdrop: "static",
                 keyboard: false
             });
+        })
+        .always( function() {
+            $( "#task-loader, #login-btn" ).hide();
+            updateTaskList();
         });
     }
 
