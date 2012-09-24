@@ -61,19 +61,31 @@ The client application will be running at the following URL <http://localhost:80
 Login instructions
 ------------------
 
-This application aims to show different authorization rules.
+This application aims to show role authorization control based on PicketBox and DeltaSpike integration.
 
-For demo purposes:
+### Admin
 
-Role: admin
+**username**: john
 
-username: john
-password: 123
+**password**: 123
 
-Role: simple
+**role**: admin
 
-username: jane
-password: 123
+**grants**: CRUD (*Create, read, update and delete*) Projects, Tags and Tasks
+
+### Simple
+
+**username**: jane
+
+**password**: 123
+
+**role**: simple
+
+**grants**: 
+
+* CRUD (*Create, read, update and delete*) Tasks
+* R (*Read*)  Projects and Tags
+
 
 Notes
 ------
