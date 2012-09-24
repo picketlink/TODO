@@ -38,7 +38,7 @@ import java.util.List;
 @Stateless
 @Path("/tasks")
 @TransactionAttribute
-@RolesAllowed({"admin"})
+@RolesAllowed({"simple","admin"})
 public class TaskEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;

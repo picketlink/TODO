@@ -60,6 +60,9 @@ The client application will be running at the following URL <http://localhost:80
 
 Login instructions
 ------------------
+
+This application aims to show different
+
 For demo purposes:
 
 username: john

@@ -80,6 +80,7 @@ public class TagEndpoint {
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin","simple"})
     public Tag findById(@PathParam("id")
                         Long id) {
         return em.find(Tag.class, id);
@@ -87,6 +88,7 @@ public class TagEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin","simple"})
     public List<Tag> listAll() {
         @SuppressWarnings("unchecked")
         final List<Tag> results = em.createQuery("SELECT x FROM Tag x").getResultList();

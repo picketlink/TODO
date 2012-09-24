@@ -80,6 +80,7 @@ public class ProjectEndpoint {
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin","simple"})
     public Project findById(@PathParam("id")
                             Long id) {
         return em.find(Project.class, id);
@@ -87,6 +88,7 @@ public class ProjectEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin","simple"})
     public List<Project> listAll() {
         @SuppressWarnings("unchecked")
         final List<Project> results = em.createQuery("SELECT x FROM Project x").getResultList();

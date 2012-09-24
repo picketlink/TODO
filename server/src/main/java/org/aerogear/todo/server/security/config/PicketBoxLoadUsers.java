@@ -46,8 +46,10 @@ public class PicketBoxLoadUsers {
     /**
      * <p>Loads some users during the first construction.</p>
      */
+    //TODO this entire initialization code must be removed
     @PostConstruct
     public void create() {
+
 
         User john = this.identityManager.createUser("john");
 
@@ -57,13 +59,20 @@ public class PicketBoxLoadUsers {
 
         identityManager.updatePassword(john, "123");
 
-        Role roleDeveloper = identityManager.createRole("developer");
         Role roleAdmin = identityManager.createRole("admin");
+        identityManager.grantRole(roleAdmin, john, null);
 
-        Group groupCoreDeveloper = identityManager.createGroup("Core Developers");
 
-        identityManager.grantRole(roleDeveloper, john, groupCoreDeveloper);
-        identityManager.grantRole(roleAdmin, john, groupCoreDeveloper);
+        User jane = this.identityManager.createUser("jane");
+        jane.setEmail("jane@doe.org");
+        jane.setFirstName("Jane");
+        jane.setLastName("Doe");
+
+        identityManager.updatePassword(jane, "123");
+
+        Role roleSimple = identityManager.createRole("simple");
+        identityManager.grantRole(roleSimple, jane, null);
+
 
     }
 
