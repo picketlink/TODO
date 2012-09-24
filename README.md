@@ -28,6 +28,8 @@ With the prerequisites out of the way, you're ready to build and deploy.
 System requirements
 -------------------
 
+This application make use of PicketBox "timed releases" hosted on JBoss Maven repository, follow the configuration instructions [here](https://community.jboss.org/wiki/MavenSettings) for getting PicketBox dependencies working with our TODO application.
+
 To build the projects simply run the following command from the root directory:
 
     mvn clean install
