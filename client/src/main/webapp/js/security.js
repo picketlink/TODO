@@ -137,9 +137,42 @@ $(document).ready(function() {
         
 		return false; // prevents submit of the form
 	});
-	
+});
+
+$(document).ready(function() {
 	$('#signup-btn').click(function() {
 		window.location = getHost() + "/register.html";
+		return false; // prevents submit of the form
+	});
+});
+
+$(document).ready(function() {
+
+	//Google signin
+	$('#google-sign').click(function(e) {
+        e.preventDefault();
+        popup = window.open("/todo-server/google", "name", "height=512, width=512");
+        popup.focus();
+        popup.window.reload = function(){
+        	if(popup.document.body.innerHTML.indexOf("true") > -1){
+            	popup.close();
+            	var jqxhr = $.ajax('/todo-server/google', {
+        			contentType: "application/json",
+                    dataType:'json',
+                    type:'POST', 
+                    success:function (data) {
+                        if (data.loggedIn) {
+                        	storeToken(data.token);
+        					window.location = getHost() + "/index.html";
+                        } else {
+                        	$('#login-msg').text("Authentication failed. Try again ...");
+                        }
+                    }
+                });
+    			//window.location = getHost() + "/index.html";
+        	}
+        };
+        
 		return false; // prevents submit of the form
 	});
 });
