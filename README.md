@@ -61,11 +61,18 @@ The client application will be running at the following URL <http://localhost:80
 Login instructions
 ------------------
 
-This application aims to show different
+This application aims to show different authorization rules.
 
 For demo purposes:
 
+Role: admin
+
 username: john
+password: 123
+
+Role: simple
+
+username: jane
 password: 123
 
 Notes
