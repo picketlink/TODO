@@ -16,22 +16,21 @@
  */
 package org.aerogear.todo.server.security.rest;
 
-import org.aerogear.todo.server.security.idm.AeroGearCredential;
+import org.aerogear.todo.server.security.config.PicketBoxLoadUsers;
 import org.aerogear.todo.server.security.idm.AeroGearUser;
 import org.aerogear.todo.server.security.service.AuthenticationManager;
 import org.aerogear.todo.server.security.service.IDMHelper;
-import org.aerogear.todo.server.security.config.PicketBoxLoadUsers;
 import org.aerogear.todo.server.util.HttpResponseBuilder;
 import org.jboss.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * <p>JAX-RS Endpoint to authenticate users.</p>
@@ -62,26 +61,26 @@ public class AuthenticationEndpoint {
     @POST
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
-    public AeroGearCredential register(final AeroGearUser user) {
+    public Response register(final AeroGearUser user) {
 
         idm.grant(DEFAULT_GRANT).to(user);
 
         authenticationManager.login(user.getUsername(), user.getPassword());
 
-        return builder.createResponse(user.getUsername());
+        return builder.createResponse();
     }
 
     @POST
     @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
-    public AeroGearCredential login(@HeaderParam("Auth-Credential") String username,
-                                    @HeaderParam("Auth-Password") String password) {
+    public Response login(@HeaderParam("Auth-Credential") String username,
+                          @HeaderParam("Auth-Password") String password) {
 
         LOGGER.debug("Logged in!");
 
         authenticationManager.login(username, password);
 
-        return builder.createResponse(username);
+        return builder.createResponse();
     }
 
     @POST

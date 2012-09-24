@@ -17,31 +17,34 @@
 
 package org.aerogear.todo.server.util;
 
-import org.aerogear.todo.server.security.idm.AeroGearCredential;
-import org.aerogear.todo.server.security.idm.AeroGearUser;
 import org.jboss.picketlink.cdi.Identity;
 import org.picketbox.cdi.PicketBoxUser;
 
-import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
-@ApplicationScoped
+@RequestScoped
 public class HttpResponseBuilder {
 
     @Inject
     private Identity identity;
 
-    public AeroGearCredential createResponse(String username) {
-        AeroGearCredential response = new AeroGearCredential();
+    public Response createResponse() {
 
-        response.setLogged(identity.isLoggedIn());
+        Response response = null;
 
-        if (response.isLogged()) {
+        if (identity.isLoggedIn()) {
             PicketBoxUser user = (PicketBoxUser) identity.getUser();
-
-            response.setToken(user.getSubject().getSession().getId().getId().toString());
+            String token = user.getSubject().getSession().getId().getId().toString();
+            response = Response.ok(formatMessage(user.getId(), token, true)).build();
         }
 
         return response;
+    }
+
+
+    private String formatMessage(String username, String token, boolean logged) {
+        return String.format("{\"username\": \"%s\", \"token\": \"%s\", \"logged\": \"%b\"}", username, token, logged);
     }
 }
