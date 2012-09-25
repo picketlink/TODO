@@ -18,7 +18,6 @@
 package org.aerogear.todo.server.security.service;
 
 import org.aerogear.todo.server.security.exception.HttpSecurityException;
-import org.aerogear.todo.server.util.PasswordHashing;
 import org.jboss.picketlink.cdi.Identity;
 import org.jboss.picketlink.cdi.credential.Credential;
 import org.jboss.picketlink.cdi.credential.LoginCredentials;

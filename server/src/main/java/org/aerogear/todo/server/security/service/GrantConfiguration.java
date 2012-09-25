@@ -58,7 +58,7 @@ public class GrantConfiguration implements IDMHelper.GrantMethods {
         user.setFirstname(picketLinkUser.getFirstName());
         user.setLastname(picketLinkUser.getLastName());
 
-        identityManager.updatePassword(picketLinkUser, PasswordHashing.digest(user.getPassword()));
+        identityManager.updatePassword(picketLinkUser, user.getPassword());
 
         for (Role role : list) {
             identityManager.grantRole(role, picketLinkUser, null);
