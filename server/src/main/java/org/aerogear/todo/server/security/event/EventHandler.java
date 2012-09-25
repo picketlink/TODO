@@ -76,5 +76,4 @@ public class EventHandler {
             // handle a failed authentication
         }
     }
-
 }
