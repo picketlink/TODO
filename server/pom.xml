@@ -207,6 +207,11 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
          <artifactId>openid4java-nodeps</artifactId>
          <version>0.9.6</version>
       </dependency>
+      <dependency>
+         <groupId>org.picketlink</groupId>
+         <artifactId>picketlink-social-standalone</artifactId>
+         <version>2.0.0.2012sep25</version>
+      </dependency>
    <!--
       <dependency>
          <groupId>commons-httpclient</groupId>
