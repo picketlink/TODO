@@ -160,11 +160,11 @@
                 <legend>Login:</legend>
                 <div>
                     <label for="username" id="username_label">Username</label>
-                    <input name="credential" id="username" type="text" required placeholder="Your username" />
+                    <input name="username" id="login-username" type="text" required placeholder="Your username" />
                 </div>
                 <div>
                     <label for="password" id="password_label">Password</label>
-                    <input name="password" id="password" type="password" required />
+                    <input name="password" id="login-password" type="password" required />
                 </div>
                 <div data-role="controlgroup" data-type="horizontal">
                     <input type="submit" id="login-submit" value="Login" />
@@ -175,10 +175,55 @@
         </form>
         <a id="register-button" class="btn">Register</a>
     </div>
+    <div id="register-box" class="modal hide">
+        <form name="register">
+            <div id="register-msg"></div>
+            <fieldset>
+                <legend>Registration:</legend>
+                <div>
+                    <label for="firstname" id="firstname_label">First name</label>
+                    <input name="firstname" id="firstname" type="text" required placeholder="Your first name" />
+                </div>
+                <div>
+                    <label for="lastname" id="lastname_label">Last name</label>
+                    <input  name="lastname" id="lastname" type="text" required placeholder="Your last name" />
+                </div>
+                <div>
+                    <label for="email" id="email_label">E-mail</label>
+                    <input name="email" id="email" type="text" required placeholder="Your e-mail" />
+                </div>
+                <div>
+                    <label for="username" id="username_label">Username</label>
+                    <input name="username" id="reg-username" type="text" required placeholder="Your username" />
+                </div>
+                <div>
+                    <label for="password" id="password_label">Password</label>
+                    <input name="password" id="reg-password" type="password" required />
+                </div>
+                <div>
+                    <label for="role" id="role_label">Role</label>
+                    <select name="role" id="reg-role">
+                        <option value="simple" selected>simple</option>
+                        <option value="admin">admin</option>
+                    </select>
+                </div>
+                <div data-role="controlgroup" data-type="horizontal">
+                    <input type="submit" id="register-btn" value="Register"/>
+                    <input type="button" name="cancel" id="cancel" value="Cancel"/>
+                </div>
+                <div id="result"></div>
+            </fieldset>
+        </form>
+    </div>
+    <div id="auth-error-box" class="modal hide">
+        <a href="#" class="close" style="float: right;">&times;</a>
+        <h3>Authorization Error</h3>
+        <p>That function is limited to administrators. Please, login as an administrator</p>
+    </div>
 
     <!-- Templates -->
     <script type="text/template" id="task-tmpl">
-        <% _.each( tasks, function( task ) { 
+        <% _.each( tasks, function( task ) {
             var project = _.find( projects, function(project) { return project.id == task.project; }); %>
             <div class="task <%= project ? project.style : "" %>">
                 <div class="task-upper">

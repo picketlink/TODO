@@ -292,6 +292,10 @@ label {
     display: none;
 }
 
+#login-msg, #register-msg {
+    color: #F00;
+}
+
 /* Footer styles */
 footer {
     width: 100%;

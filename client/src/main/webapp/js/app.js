@@ -63,11 +63,19 @@ $( function() {
 
     // Event Bindings
     $( ".add-project, .add-tag, .add-task" ).on( "click", function( event ) {
-        if ( restAuth.isAuthenticated() ) {
-            var target = $( event.currentTarget );
+        var isAdmin = sessionStorage.getItem( "access" ) === "1" ? true : false;
+        if ( restAuth.isAuthenticated() && ( isAdmin || $( this ).is( ".add-task" ) ) ) {
+            var target = $( event.currentTarget ),
+                today = new Date();
+
+            // Initialize the date field in the task form
+            $( "#task-date" ).val( today.getFullYear() + "-" + ( "0" + ( today.getMonth() + 1 ) ).slice( -2 ) + "-" + ( "0" + today.getDate() ).slice( -2 ) );
+
             target.parent().height( "100%" );
             target.slideUp( "slow" );
             target.next().slideDown( "slow" );
+        } else if ( restAuth.isAuthenticated() && !isAdmin ) {
+            $( "#auth-error-box" ).modal();
         } else {
             loadAllData();
         }
@@ -150,6 +158,11 @@ $( function() {
 
                             $( "#add-project" ).find( ".submit-btn" ).html( plus + " Add Project" );
                         },
+                        statusCode: {
+                            401: function( jqXHR ) {
+                                $( "#auth-error-box" ).modal();
+                            }
+                        },
                         valves: ProjectsValve
                     } );
                     break;
@@ -161,6 +174,11 @@ $( function() {
                                 updateTaskList();
                             }
                             $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Add Tag" );
+                        },
+                        statusCode: {
+                            401: function( jqXHR ) {
+                                $( "#auth-error-box" ).modal();
+                            }
                         },
                         valves: TagsValve
                     } );
@@ -180,15 +198,49 @@ $( function() {
                             updateTaskList();
                             $( "#add-task" ).find( ".submit-btn" ).html( plus + " Add Task" );
                         },
+                        statusCode: {
+                            401: function( jqXHR ) {
+                                $( "#auth-error-box" ).modal();
+                            }
+                        },
                         valves: TasksValve
                     });
                     break;
                 case "login":
-                    restAuth.login( data, {
+                    // Reset session storage
+                    sessionStorage.removeItem( "username" );
+                    sessionStorage.removeItem( "access" );
+
+                    restAuth.login( JSON.stringify( data ), {
+                        contentType: "application/json",
+                        dataType: "json",
                         success: function( data ) {
+                            var role = $.inArray( "admin", data.roles ) >= 0 ? 1 : 0;
                             sessionStorage.setItem( "username", data.username );
+                            sessionStorage.setItem( "access", role );
 
                             $( "#login-box" ).modal( "hide" );
+                            loadAllData();
+                        },
+                        error: function( data ) {
+                            console.log( data );
+                        }
+                    });
+                    break;
+                case "register":
+                    // Reset session storage
+                    sessionStorage.removeItem( "username" );
+                    sessionStorage.removeItem( "access" );
+
+                    restAuth.register( JSON.stringify( data ), {
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function( data ) {
+                            var role = $.inArray( "admin", data.roles ) >= 0 ? 1 : 0;
+                            sessionStorage.setItem( "username", data.username );
+                            sessionStorage.setItem( "access", role );
+
+                            $( "#register-box" ).modal( "hide" );
                             loadAllData();
                         },
                         error: function( data ) {
@@ -211,24 +263,28 @@ $( function() {
     // Item Hover Menus
     $( ".todo-app" )
         .on( "mouseenter", ".project, .tag, .task", function( event ) {
-            var overlay = $( event.target ).children( ".option-overlay" ).eq( 0 );
+            if ( sessionStorage.getItem( "access" ) === "1" || $( this ).is( ".task" ) ) {
+                var overlay = $( event.target ).children( ".option-overlay" ).eq( 0 );
 
-            // Delay clicking of buttons in the overlay to prevent accidental clicks on touch devices
-            overlay.data( "clickable", false );
-            setTimeout( function() { overlay.data( "clickable", true ); }, 500 );
+                // Delay clicking of buttons in the overlay to prevent accidental clicks on touch devices
+                overlay.data( "clickable", false );
+                setTimeout( function() { overlay.data( "clickable", true ); }, 500 );
 
-            // Show the overlay if not already visible
-            if ( !overlay.is( ":visible" ) ) {
-                overlay.show();
+                // Show the overlay if not already visible
+                if ( !overlay.is( ":visible" ) ) {
+                    overlay.show();
+                }
             }
         })
         .on( "mouseleave", ".project, .tag, .task", function( event ) {
-            var overlay = $( event.target ).closest( ".project, .tag, .task" ).children( ".option-overlay" ).eq( 0 );
-            // Add a delay for touch devices to allow clicking of buttons before the overlay disappears
-            if ( Modernizr.touch ) {
-                setTimeout( function() { overlay.hide(); }, 500 );
-            } else {
-                overlay.hide();
+            if ( sessionStorage.getItem( "access" ) === "1" || $( this ).is( ".task" ) ) {
+                var overlay = $( event.target ).closest( ".project, .tag, .task" ).children( ".option-overlay" ).eq( 0 );
+                // Add a delay for touch devices to allow clicking of buttons before the overlay disappears
+                if ( Modernizr.touch ) {
+                    setTimeout( function() { overlay.hide(); }, 500 );
+                } else {
+                    overlay.hide();
+                }
             }
         });
 
@@ -255,9 +311,15 @@ $( function() {
                 }
                 updateTaskList();
             },
+            statusCode = {
+                401: function( jqXHR ) {
+                    $( "#auth-error-box" ).modal();
+                }
+            },
             options = {
                 record: dataTarget.data( "id" ),
-                success: success
+                success: success,
+                statusCode: statusCode
             };
         if ( !dataTarget.data( "clickable" ) ) {
             event.preventDefault();
@@ -349,6 +411,17 @@ $( function() {
         $( "#project-list, #tag-list" ).css( "max-height", "none" );
     }
 
+    // Register Button
+    $( "#register-button" ).click( function( event ) {
+        event.preventDefault();
+
+        var regBox = $( "#register-box" );
+
+        $( "#login-box" ).modal( "hide" );
+        regBox.find( "form" )[ 0 ].reset();
+        regBox.modal();
+    });
+
     // Logout button
     $( "#userinfo-msg" ).on( "click", ".btn", function( event ) {
         event.preventDefault();
@@ -377,6 +450,13 @@ $( function() {
     // Login button
     $( "#login-btn" ).click( function( event ) {
         loadAllData();
+    });
+
+    // Auth Error Close button
+    $( "#auth-error-box" ).on( "click", ".close", function( event ) {
+        event.preventDefault();
+
+        $( "#auth-error-box" ).modal( "hide" );
     });
 
     // Helper Functions
