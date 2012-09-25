@@ -43,9 +43,6 @@ public class AuthenticationEndpoint {
 
     private static final Logger LOGGER = Logger.getLogger(AuthenticationEndpoint.class);
 
-    //TODO it must be assigned into admin screen
-    public static final String DEFAULT_GRANT = "admin";
-
     @Inject
     private PicketBoxLoadUsers manager;
 
@@ -63,7 +60,8 @@ public class AuthenticationEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     public Response register(final AeroGearUser user) {
 
-        idm.grant(DEFAULT_GRANT).to(user);
+        //TODO it should be done by admin screen
+        idm.grant(user.getRole()).to(user);
 
         authenticationManager.login(user.getUsername(), user.getPassword());
 

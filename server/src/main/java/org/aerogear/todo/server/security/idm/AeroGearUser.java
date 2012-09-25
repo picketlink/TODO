@@ -34,6 +34,7 @@ public class AeroGearUser implements Serializable {
     private String email;
     private String firstname;
     private String lastname;
+    private String role = "simple";
 
     /**
      * @return the username
@@ -82,6 +83,14 @@ public class AeroGearUser implements Serializable {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
 }
