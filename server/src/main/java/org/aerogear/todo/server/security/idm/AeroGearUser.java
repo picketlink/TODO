@@ -58,7 +58,7 @@ public class AeroGearUser implements Serializable {
      * @param password the password to set
      */
     public void setPassword(String password) {
-        this.password = PasswordHashing.digest(password);
+        this.password = password;
     }
 
     public String getEmail() {

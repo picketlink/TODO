@@ -17,6 +17,7 @@
 package org.aerogear.todo.server.security.rest;
 
 import org.aerogear.todo.server.security.config.PicketBoxLoadUsers;
+import org.aerogear.todo.server.security.idm.AeroGearCredential;
 import org.aerogear.todo.server.security.idm.AeroGearUser;
 import org.aerogear.todo.server.security.service.AuthenticationManager;
 import org.aerogear.todo.server.security.service.IDMHelper;
@@ -25,9 +26,11 @@ import org.jboss.logging.Logger;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -58,7 +61,7 @@ public class AuthenticationEndpoint {
     @POST
     @Path("/register")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response register(final AeroGearUser user) {
+    public AeroGearCredential register(final AeroGearUser user) {
 
         //TODO it should be done by admin screen
         idm.grant(user.getRole()).to(user);
@@ -70,13 +73,13 @@ public class AuthenticationEndpoint {
 
     @POST
     @Path("/login")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response login(@HeaderParam("Auth-Credential") String username,
-                          @HeaderParam("Auth-Password") String password) {
+    public AeroGearCredential login(AeroGearUser user) {
 
         LOGGER.debug("Logged in!");
 
-        authenticationManager.login(username, password);
+        authenticationManager.login(user.getUsername(), user.getPassword());
 
         return builder.createResponse();
     }

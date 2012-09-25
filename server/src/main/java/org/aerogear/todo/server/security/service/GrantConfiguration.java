@@ -18,6 +18,7 @@
 package org.aerogear.todo.server.security.service;
 
 import org.aerogear.todo.server.security.idm.AeroGearUser;
+import org.aerogear.todo.server.util.PasswordHashing;
 import org.jboss.picketlink.idm.IdentityManager;
 import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
@@ -57,7 +58,7 @@ public class GrantConfiguration implements IDMHelper.GrantMethods {
         user.setFirstname(picketLinkUser.getFirstName());
         user.setLastname(picketLinkUser.getLastName());
 
-        identityManager.updatePassword(picketLinkUser, user.getPassword());
+        identityManager.updatePassword(picketLinkUser, PasswordHashing.digest(user.getPassword()));
 
         for (Role role : list) {
             identityManager.grantRole(role, picketLinkUser, null);

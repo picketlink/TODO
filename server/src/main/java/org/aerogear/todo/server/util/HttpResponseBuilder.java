@@ -37,19 +37,18 @@ public class HttpResponseBuilder {
      * It will be discussed on M7
      * @return
      */
-    public Response createResponse() {
+    public AeroGearCredential createResponse() {
 
-        Response response = null;
+        AeroGearCredential aeroGearCredential = null;
 
         if (identity.isLoggedIn()) {
             PicketBoxUser user = (PicketBoxUser) identity.getUser();
             String token = user.getSubject().getSession().getId().getId().toString();
             List<String> roles = user.getSubject().getRoleNames();
-            AeroGearCredential aeroGearCredential = new AeroGearCredential(user.getId(), token, "true", roles);
-            response = Response.ok(aeroGearCredential).build();
+            aeroGearCredential = new AeroGearCredential(user.getId(), token, "true", roles);
         }
 
-        return response;
+        return aeroGearCredential;
     }
 
 }
