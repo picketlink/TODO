@@ -61,8 +61,6 @@ public class TokenServletFilter implements Filter {
 
         if (!path.contains(AUTH_PATH) && !tokenIsValid(token)) {
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        } else {
-            filterChain.doFilter(servletRequest, servletResponse);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);
