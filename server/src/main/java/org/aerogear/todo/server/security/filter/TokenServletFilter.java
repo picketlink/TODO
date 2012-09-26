@@ -31,7 +31,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.ResponseWrapper;
 import java.io.IOException;
 
 @WebFilter
@@ -39,7 +38,7 @@ import java.io.IOException;
 public class TokenServletFilter implements Filter {
 
     private static final String AUTH_PATH = "/auth/";
-    public static final String AUTH_TOKEN = "Auth-Token";
+    private static final String AUTH_TOKEN = "Auth-Token";
 
     private FilterConfig config;
 
@@ -54,23 +53,23 @@ public class TokenServletFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String path = ((HttpServletRequest) servletRequest).getRequestURI();
-        if (path.contains(AUTH_PATH)) {
-            filterChain.doFilter(servletRequest, servletResponse);
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
+
+        String path = httpServletRequest.getRequestURI();
+        String token = httpServletRequest.getHeader(AUTH_TOKEN);
+
+        if (!path.contains(AUTH_PATH) && !tokenIsValid(token)) {
+            httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         } else {
-
-            String token = ((HttpServletRequest) servletRequest).getHeader(AUTH_TOKEN);
-
-            if (tokenIsValid(token)) {
-                filterChain.doFilter(servletRequest, servletResponse);
-            } else {
-                ((HttpServletResponse) servletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            }
-
+            filterChain.doFilter(servletRequest, servletResponse);
         }
+
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
-    private boolean tokenIsValid(String token){
+    //TODO maybe provide a class for it don't hurt
+    private boolean tokenIsValid(String token) {
 
         boolean valid = false;
 
