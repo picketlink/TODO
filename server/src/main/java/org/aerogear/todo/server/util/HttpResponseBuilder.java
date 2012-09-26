@@ -57,6 +57,7 @@ public class HttpResponseBuilder {
         return Response.ok(aeroGearCredential).build();
     }
 
+    //TODO it could be addressed by HttpSecurityException, but currently we have an issue with PicketLink
     public Response unauthorized() {
         return Response.status(UNAUTHORIZED)
                 .entity(ExceptionMessage.AUTHENTICATION_FAILED.toString())
