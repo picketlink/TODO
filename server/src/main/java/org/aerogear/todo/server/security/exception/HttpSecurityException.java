@@ -23,6 +23,7 @@ import org.apache.deltaspike.security.api.authorization.SecurityViolation;
 import java.util.HashSet;
 import java.util.Set;
 
+@Deprecated
 public class HttpSecurityException {
 
     public static void violation(final String message) {

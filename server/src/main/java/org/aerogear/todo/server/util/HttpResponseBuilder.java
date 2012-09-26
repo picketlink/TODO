@@ -32,6 +32,8 @@ import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 @RequestScoped
 public class HttpResponseBuilder {
 
+    private static final String LOGGED = "true";
+
     @Inject
     private Identity identity;
 
@@ -49,7 +51,7 @@ public class HttpResponseBuilder {
             PicketBoxUser user = (PicketBoxUser) identity.getUser();
             String token = user.getSubject().getSession().getId().getId().toString();
             List<String> roles = user.getSubject().getRoleNames();
-            aeroGearCredential = new AeroGearCredential(user.getId(), token, "true", roles);
+            aeroGearCredential = new AeroGearCredential(user.getId(), token, LOGGED, roles);
         }
 
         return Response.ok(aeroGearCredential).build();
