@@ -17,18 +17,32 @@
 
 package org.aerogear.todo.server.security.exception;
 
+import javax.ws.rs.core.Response;
+
 public enum ExceptionMessage {
 
-    AUTHENTICATION_FAILED("User authentication failed");
+    AUTHENTICATION_FAILED("User authentication failed", Response.Status.UNAUTHORIZED);
 
     private String message;
 
+    private Response.Status status;
+
     ExceptionMessage(String message) {
         this.message = message;
+    }
+
+    ExceptionMessage(String message, Response.Status status) {
+        this.message = message;
+        this.status = status;
+    }
+
+    public Response.Status getStatus() {
+        return status;
     }
 
     @Override
     public String toString() {
         return String.format("{message : %s }", message);
     }
+
 }

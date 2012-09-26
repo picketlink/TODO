@@ -58,9 +58,9 @@ public class HttpResponseBuilder {
     }
 
     //TODO it could be addressed by HttpSecurityException, but currently we have an issue with PicketLink
-    public Response unauthorized() {
-        return Response.status(UNAUTHORIZED)
-                .entity(ExceptionMessage.AUTHENTICATION_FAILED.toString())
+    public Response message(ExceptionMessage message) {
+        return Response.status(message.getStatus())
+                .entity(message.toString())
                 .build();
 
     }
