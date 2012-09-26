@@ -46,15 +46,16 @@ public class HttpResponseBuilder {
     public Response createResponse() {
 
         AeroGearCredential aeroGearCredential = null;
+        String token = null;
 
         if (identity.isLoggedIn()) {
             PicketBoxUser user = (PicketBoxUser) identity.getUser();
-            String token = user.getSubject().getSession().getId().getId().toString();
+            token = user.getSubject().getSession().getId().getId().toString();
             List<String> roles = user.getSubject().getRoleNames();
-            aeroGearCredential = new AeroGearCredential(user.getId(), token, LOGGED, roles);
+            aeroGearCredential = new AeroGearCredential(user.getId(), LOGGED, roles);
         }
 
-        return Response.ok(aeroGearCredential).build();
+        return Response.ok(aeroGearCredential).header("Auth-Token", token).build();
     }
 
     //TODO it could be addressed by HttpSecurityException, but currently we have an issue with PicketLink
@@ -62,7 +63,5 @@ public class HttpResponseBuilder {
         return Response.status(message.getStatus())
                 .entity(message.toString())
                 .build();
-
     }
-
 }
