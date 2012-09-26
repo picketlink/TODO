@@ -17,6 +17,7 @@
 
 package org.aerogear.todo.server.util;
 
+import org.aerogear.todo.server.security.exception.ExceptionMessage;
 import org.aerogear.todo.server.security.idm.AeroGearCredential;
 import org.jboss.picketlink.cdi.Identity;
 import org.picketbox.cdi.PicketBoxUser;
@@ -25,6 +26,8 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.List;
+
+import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 @RequestScoped
 public class HttpResponseBuilder {
@@ -35,9 +38,10 @@ public class HttpResponseBuilder {
     /**
      * Note: is not recommendable to return username and roles here
      * It will be discussed on M7
+     *
      * @return
      */
-    public AeroGearCredential createResponse() {
+    public Response createResponse() {
 
         AeroGearCredential aeroGearCredential = null;
 
@@ -48,7 +52,14 @@ public class HttpResponseBuilder {
             aeroGearCredential = new AeroGearCredential(user.getId(), token, "true", roles);
         }
 
-        return aeroGearCredential;
+        return Response.ok(aeroGearCredential).build();
+    }
+
+    public Response unauthorized() {
+        return Response.status(UNAUTHORIZED)
+                .entity(ExceptionMessage.AUTHENTICATION_FAILED.toString())
+                .build();
+
     }
 
 }

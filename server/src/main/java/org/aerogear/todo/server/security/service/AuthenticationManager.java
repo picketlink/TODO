@@ -18,6 +18,7 @@
 package org.aerogear.todo.server.security.service;
 
 import org.aerogear.todo.server.security.exception.HttpSecurityException;
+import org.aerogear.todo.server.util.HttpResponseBuilder;
 import org.jboss.picketlink.cdi.Identity;
 import org.jboss.picketlink.cdi.credential.Credential;
 import org.jboss.picketlink.cdi.credential.LoginCredentials;
@@ -25,6 +26,7 @@ import org.picketbox.core.authentication.credential.UsernamePasswordCredential;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 
 @ApplicationScoped
 public class AuthenticationManager implements Credential {
@@ -38,7 +40,10 @@ public class AuthenticationManager implements Credential {
     @Inject
     private Identity identity;
 
-    public void login(String username, String password) {
+    @Inject
+    private HttpResponseBuilder builder;
+
+    public Response login(String username, String password) {
         this.username = username;
         this.password = password;
 
@@ -46,7 +51,9 @@ public class AuthenticationManager implements Credential {
         this.identity.login();
 
         if (!this.identity.isLoggedIn())
-            HttpSecurityException.violation("Invalid credentials");
+            return builder.unauthorized();
+
+        return builder.createResponse();
 
     }
 
