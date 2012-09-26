@@ -223,7 +223,7 @@ $( function() {
                             loadAllData();
                         },
                         error: function( data ) {
-                            console.log( data );
+                            $( "#login-msg" ).text( "Login failed, please try again" );
                         }
                     });
                     break;
@@ -241,6 +241,7 @@ $( function() {
                             sessionStorage.setItem( "access", role );
 
                             $( "#register-box" ).modal( "hide" );
+                            $( "#login-btn" ).show();
                             loadAllData();
                         },
                         error: function( data ) {
@@ -251,7 +252,9 @@ $( function() {
             }
 
             // Close the add form
-            hideForm( $( this ).closest( "div" ) );
+            if ( !form.is( ".auth-form" ) ) {
+                hideForm( form.closest( "div" ) );
+            }
         }
     });
 
@@ -317,7 +320,6 @@ $( function() {
                 }
             },
             options = {
-                record: dataTarget.data( "id" ),
                 success: success,
                 statusCode: statusCode
             };
@@ -328,15 +330,15 @@ $( function() {
         switch( type ) {
             case "project":
                 options.valves = ProjectsValve;
-                Projects.remove( options );
+                Projects.remove( dataTarget.data( "id" ), options );
                 break;
             case "tag":
                 options.valves = TagsValve;
-                Tags.remove( options );
+                Tags.remove( dataTarget.data( "id" ), options );
                 break;
             case "task":
                 options.valves = TasksValve;
-                Tasks.remove( options );
+                Tasks.remove( dataTarget.data( "id" ), options );
                 break;
         }
     });
@@ -419,7 +421,11 @@ $( function() {
 
         $( "#login-box" ).modal( "hide" );
         regBox.find( "form" )[ 0 ].reset();
-        regBox.modal();
+        regBox.modal({
+            backdrop: "static",
+            keyboard: false
+        });
+        $( "#login-btn" ).show();
     });
 
     // Logout button
@@ -445,6 +451,15 @@ $( function() {
         $( ".loader" ).hide();
         $( "#login-btn" ).show();
         $( "#login-box" ).modal( "hide" );
+    });
+
+    // Login Cancel
+    $( "#register-cancel" ).click( function( event ) {
+        event.preventDefault();
+
+        $( ".loader" ).hide();
+        $( "#login-btn" ).show();
+        $( "#register-box" ).modal( "hide" );
     });
 
     // Login button

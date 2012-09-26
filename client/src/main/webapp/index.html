@@ -154,7 +154,7 @@
     </div>
     <footer class="navbar navbar-fixed-bottom"></footer>
     <div id="login-box" class="modal hide">
-        <form name="login" id="login-form">
+        <form name="login" id="login-form" class="auth-form">
             <div id="login-msg"></div>
             <fieldset>
                 <legend>Login:</legend>
@@ -176,7 +176,7 @@
         <a id="register-button" class="btn">Register</a>
     </div>
     <div id="register-box" class="modal hide">
-        <form name="register">
+        <form name="register" class="auth-form">
             <div id="register-msg"></div>
             <fieldset>
                 <legend>Registration:</legend>
@@ -208,8 +208,8 @@
                     </select>
                 </div>
                 <div data-role="controlgroup" data-type="horizontal">
-                    <input type="submit" id="register-btn" value="Register"/>
-                    <input type="button" name="cancel" id="cancel" value="Cancel"/>
+                    <input type="submit" id="register-login" value="Register"/>
+                    <input type="button" name="cancel" id="register-cancel" value="Cancel"/>
                 </div>
                 <div id="result"></div>
             </fieldset>
