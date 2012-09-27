@@ -60,7 +60,7 @@ public class TokenServletFilterTest {
 
     @Test
     public void testIgnoreTokenValidationOnAuthPaths() throws Exception {
-        when(servletRequest.getRequestURI()).thenReturn("/mysweetapp/auth/projects");
+        when(servletRequest.getRequestURI()).thenReturn("/mysweetapp/auth/login");
         tokenServletFilter.doFilter(servletRequest, servletResponse, filterChain);
         verify(filterChain).doFilter(servletRequest, servletResponse);
     }
@@ -72,6 +72,16 @@ public class TokenServletFilterTest {
         when(servletRequest.getRequestURI()).thenReturn("/mysweetapp/projects");
         when(servletRequest.getHeader(AUTH_TOKEN)).thenReturn(token);
         when(identity.restoreSession(token)).thenReturn(true);
+        tokenServletFilter.doFilter(servletRequest, servletResponse, filterChain);
+        verify(filterChain).doFilter(servletRequest, servletResponse);
+    }
+
+    @Test
+    public void testDoNotValidateTokenOnLogin() throws AuthenticationException, Exception {
+        String token = null;
+
+        when(servletRequest.getRequestURI()).thenReturn("/mysweetapp/auth/login");
+        when(identity.restoreSession(token)).thenReturn(false);
         tokenServletFilter.doFilter(servletRequest, servletResponse, filterChain);
         verify(filterChain).doFilter(servletRequest, servletResponse);
     }
@@ -94,6 +104,16 @@ public class TokenServletFilterTest {
         when(servletRequest.getRequestURI()).thenReturn("/mysweetapp/projects");
         when(servletRequest.getHeader(AUTH_TOKEN)).thenReturn(token);
         when(identity.restoreSession(token)).thenReturn(true);
+        tokenServletFilter.doFilter(servletRequest, servletResponse, filterChain);
+        verify(servletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    }
+
+    @Test
+    public void testInvalidTokenOnLogout() throws AuthenticationException, Exception {
+        String token = null;
+
+        when(servletRequest.getRequestURI()).thenReturn("/mysweetapp/auth/logout");
+        when(servletRequest.getHeader(AUTH_TOKEN)).thenReturn(token);
         tokenServletFilter.doFilter(servletRequest, servletResponse, filterChain);
         verify(servletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
     }

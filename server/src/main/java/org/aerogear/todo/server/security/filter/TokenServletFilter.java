@@ -39,6 +39,7 @@ public class TokenServletFilter implements Filter {
 
     private static final String AUTH_PATH = "/auth/";
     private static final String AUTH_TOKEN = "Auth-Token";
+    private static final String LOGOUT_PATH = "/auth/logout";
 
     private FilterConfig config;
 
@@ -59,11 +60,13 @@ public class TokenServletFilter implements Filter {
         String path = httpServletRequest.getRequestURI();
         String token = httpServletRequest.getHeader(AUTH_TOKEN);
 
-        if (!path.contains(AUTH_PATH) && !tokenIsValid(token)) {
+        if (!tokenIsValid(token) && (path.contains(LOGOUT_PATH) || !path.contains(AUTH_PATH))) {
             httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        } else {
+            filterChain.doFilter(servletRequest, servletResponse);
         }
 
-        filterChain.doFilter(servletRequest, servletResponse);
+
     }
 
     //TODO maybe provide a class for it don't hurt
