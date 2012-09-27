@@ -17,7 +17,6 @@
 
 package org.aerogear.todo.server.util;
 
-import org.aerogear.todo.server.security.exception.ExceptionMessage;
 import org.aerogear.todo.server.security.idm.AeroGearCredential;
 import org.jboss.picketlink.cdi.Identity;
 import org.picketbox.cdi.PicketBoxUser;
@@ -26,8 +25,6 @@ import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import java.util.List;
-
-import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 @RequestScoped
 public class HttpResponseBuilder {
@@ -56,12 +53,5 @@ public class HttpResponseBuilder {
         }
 
         return Response.ok(aeroGearCredential).header("Auth-Token", token).build();
-    }
-
-    //TODO it could be addressed by HttpSecurityException, but currently we have an issue with PicketLink
-    public Response message(ExceptionMessage message) {
-        return Response.status(message.getStatus())
-                .entity(message.toString())
-                .build();
     }
 }

@@ -18,6 +18,8 @@
 package org.aerogear.todo.server.security.service;
 
 import static org.aerogear.todo.server.security.exception.ExceptionMessage.*;
+
+import org.aerogear.todo.server.security.exception.HttpSecurityException;
 import org.aerogear.todo.server.util.HttpResponseBuilder;
 import org.jboss.picketlink.cdi.Identity;
 import org.jboss.picketlink.cdi.credential.Credential;
@@ -51,7 +53,7 @@ public class AuthenticationManager implements Credential {
         this.identity.login();
 
         if (!this.identity.isLoggedIn())
-            return builder.message(AUTHENTICATION_FAILED);
+            HttpSecurityException.violation("Invalid credentials");
 
         return builder.createResponse();
 

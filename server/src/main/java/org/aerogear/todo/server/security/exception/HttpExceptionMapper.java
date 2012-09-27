@@ -29,7 +29,6 @@ import javax.ws.rs.ext.Provider;
 import static javax.ws.rs.core.Response.Status.UNAUTHORIZED;
 
 @Provider
-@Deprecated
 public class HttpExceptionMapper implements ExceptionMapper<Throwable> {
 
     @Inject
