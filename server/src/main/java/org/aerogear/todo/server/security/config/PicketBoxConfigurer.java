@@ -35,6 +35,7 @@ import javax.persistence.EntityManager;
  */
 public class PicketBoxConfigurer {
 
+    public static final int TIMEOUT_IN_MINUTES = 30;
     @Inject
     private EntityManager entityManager;
 
@@ -56,6 +57,7 @@ public class PicketBoxConfigurer {
             .identityManager()
                 .providedStore()
             .sessionManager()
+                .sessionTimeout(TIMEOUT_IN_MINUTES)
                 .inMemorySessionStore();
         
         return builder;
