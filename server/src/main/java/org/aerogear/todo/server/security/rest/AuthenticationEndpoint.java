@@ -16,7 +16,6 @@
  */
 package org.aerogear.todo.server.security.rest;
 
-import org.aerogear.todo.server.security.config.PicketBoxLoadUsers;
 import org.aerogear.todo.server.security.idm.AeroGearUser;
 import org.aerogear.todo.server.security.service.AuthenticationManager;
 import org.aerogear.todo.server.security.service.IDMHelper;
@@ -41,9 +40,6 @@ import javax.ws.rs.core.Response;
 public class AuthenticationEndpoint {
 
     private static final Logger LOGGER = Logger.getLogger(AuthenticationEndpoint.class);
-
-    @Inject
-    private PicketBoxLoadUsers manager;
 
     @Inject
     private AuthenticationManager authenticationManager;

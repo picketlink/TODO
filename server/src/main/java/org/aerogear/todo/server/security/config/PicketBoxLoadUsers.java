@@ -17,29 +17,27 @@
 package org.aerogear.todo.server.security.config;
 
 import org.jboss.logging.Logger;
-import org.jboss.picketlink.cdi.credential.LoginCredentials;
-import org.jboss.picketlink.idm.IdentityManager;
+import org.jboss.picketlink.idm.internal.JPAIdentityStore;
+import org.jboss.picketlink.idm.internal.jpa.JPATemplate;
 import org.jboss.picketlink.idm.model.Role;
 import org.jboss.picketlink.idm.model.User;
+import org.jboss.picketlink.idm.spi.IdentityStore;
 
 import javax.annotation.PostConstruct;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.TransactionManagement;
-import javax.ejb.TransactionManagementType;
-import javax.inject.Inject;
+import javax.ejb.Singleton;
+import javax.ejb.Startup;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
-@TransactionManagement(value = TransactionManagementType.CONTAINER)
-@TransactionAttribute(value = TransactionAttributeType.REQUIRED)
+@Singleton
+@Startup
 public class PicketBoxLoadUsers {
 
-    @Inject
-    private LoginCredentials credential;
-
-    @Inject
-    private IdentityManager identityManager;
-
     private static final Logger LOGGER = Logger.getLogger(PicketBoxLoadUsers.class);
+
+    @PersistenceContext(type = PersistenceContextType.EXTENDED)
+    private EntityManager entityManager;
 
     /**
      * <p>Loads some users during the first construction.</p>
@@ -52,15 +50,36 @@ public class PicketBoxLoadUsers {
     }
 
     private void buildNewUser(String username, String email, String firstname, String lastname, String password, String role) {
-        User jane = this.identityManager.createUser(username);
+
+        IdentityStore identityStore = createIdentityStore();
+
+        User jane = identityStore.createUser(username);
         jane.setEmail(email);
         jane.setFirstName(firstname);
         jane.setLastName(lastname);
 
-        identityManager.updatePassword(jane, password);
+        identityStore.updatePassword(jane, password);
 
-        Role roleSimple = identityManager.createRole(role);
-        identityManager.grantRole(roleSimple, jane, null);
+        Role roleSimple = identityStore.createRole(role);
+        identityStore.createMembership(roleSimple, jane, null);
+
+    }
+
+    /**
+     * Extracted from PicketLink test cases
+     *
+     * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
+     */
+    protected IdentityStore createIdentityStore() {
+        JPAIdentityStore identityStore = new JPAIdentityStore();
+
+        JPATemplate jpaTemplate = new JPATemplate();
+
+        jpaTemplate.setEntityManager(entityManager);
+
+        identityStore.setJpaTemplate(jpaTemplate);
+
+        return identityStore;
     }
 
 
