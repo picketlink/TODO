@@ -15,21 +15,21 @@ $( function() {
             {
                 name: "tasks",
                 settings: {
-                    url: "/todo-server/tasks",
+                    baseURL: "/todo-server/",
                     authenticator: restAuth
                 }
             },
             {
                 name: "projects",
                 settings: {
-                    url: "/todo-server/projects",
+                    baseURL: "/todo-server/",
                     authenticator: restAuth
                 }
             },
             {
                 name: "tags",
                 settings: {
-                    url: "/todo-server/tags",
+                    baseURL: "/todo-server/",
                     authenticator: restAuth
                 }
             }
