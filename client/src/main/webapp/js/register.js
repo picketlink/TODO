@@ -26,7 +26,8 @@ $(document).ready(function() {
             type:'POST', 
             success:function (data) {
                 if (data.status.indexOf('Success') > -1) {
-                	window.location = getHost() + "/index.html";
+                	alert("Registration Successful. Please login..");
+                	window.location = getHost() + "/login.html";
                 } else {
                 	$('#register-msg').text("Registration failed. Try again ...");
                 }
