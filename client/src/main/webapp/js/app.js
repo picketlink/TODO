@@ -43,9 +43,9 @@ $( function() {
 
         //Creating the DataManagers:
         var dm = aerogear.dataManager([ "tasks", "tags", "projects"]),
-        TasksValve = dm.valves[ "tasks" ],
-        ProjectsValve = dm.valves[ "projects" ],
-        TagsValve = dm.valves[ "tags" ];
+        TasksStore = dm.stores[ "tasks" ],
+        ProjectsStore = dm.stores[ "projects" ],
+        TagsStore = dm.stores[ "tags" ];
 
     // Loading overlays
     $( "#task-overlay" ).height( taskContainer.outerHeight() ).width( taskContainer.outerWidth() );
@@ -163,7 +163,7 @@ $( function() {
                                 $( "#auth-error-box" ).modal();
                             }
                         },
-                        valves: ProjectsValve
+                        stores: ProjectsStore
                     } );
                     break;
                 case "tag":
@@ -180,7 +180,7 @@ $( function() {
                                 $( "#auth-error-box" ).modal();
                             }
                         },
-                        valves: TagsValve
+                        stores: TagsStore
                     } );
                     break;
                 case "task":
@@ -203,7 +203,7 @@ $( function() {
                                 $( "#auth-error-box" ).modal();
                             }
                         },
-                        valves: TasksValve
+                        stores: TasksStore
                     });
                     break;
                 case "login":
@@ -300,7 +300,7 @@ $( function() {
             current,
             success = function( data ) {
                 for ( var item in data ) {
-                    current = filterData( data[ item ], TasksValve.data )[ 0 ];
+                    current = filterData( data[ item ], TasksStore.data )[ 0 ];
                     if ( type == "project" ) {
                         current.project = null;
                     } else if ( type == "tag" ) {
@@ -329,15 +329,15 @@ $( function() {
         }
         switch( type ) {
             case "project":
-                options.valves = ProjectsValve;
+                options.stores = ProjectsStore;
                 Projects.remove( dataTarget.data( "id" ), options );
                 break;
             case "tag":
-                options.valves = TagsValve;
+                options.stores = TagsStore;
                 Tags.remove( dataTarget.data( "id" ), options );
                 break;
             case "task":
-                options.valves = TasksValve;
+                options.stores = TasksStore;
                 Tasks.remove( dataTarget.data( "id" ), options );
                 break;
         }
@@ -356,7 +356,7 @@ $( function() {
 
         switch( target.data( "type" ) ) {
             case "project":
-                toEdit = filterData( target, ProjectsValve.data )[ 0 ];
+                toEdit = filterData( target, ProjectsStore.data )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -370,7 +370,7 @@ $( function() {
                 $( ".add-project" ).click();
                 break;
             case "tag":
-                toEdit = filterData( target, TagsValve.data )[ 0 ];
+                toEdit = filterData( target, TagsStore.data )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -384,7 +384,7 @@ $( function() {
                 $( ".add-tag" ).click();
                 break;
             case "task":
-                toEdit = filterData( target, TasksValve.data )[ 0 ];
+                toEdit = filterData( target, TasksStore.data )[ 0 ];
 
                 $( "#task-id" ).val( toEdit.id );
                 $( "#task-title" ).val( toEdit.title );
@@ -483,8 +483,8 @@ $( function() {
                 $( "#project-loader" ).hide();
                 updateProjectList();
             },
-            //setting the valve
-            valves: ProjectsValve
+            //setting the store
+            stores: ProjectsStore
         });
 
         tagGet = Tags.read({
@@ -495,12 +495,12 @@ $( function() {
                 $( "#tag-loader" ).hide();
                 updateTagList();
             },
-            //setting the valve
-            valves: TagsValve
+            //setting the store
+            stores: TagsStore
         });
 
         // When both the available projects and available tags have returned, get the task data
-        $.when( projectGet, tagGet, Tasks.read( { valves: TasksValve } ) ).done( function( g1, g2, g3 ) {
+        $.when( projectGet, tagGet, Tasks.read( { stores: TasksStore } ) ).done( function( g1, g2, g3 ) {
             $( "#userinfo-name" ).text( sessionStorage.getItem( "username" ) );
             $( "#userinfo-msg" ).show();
         })
@@ -518,7 +518,7 @@ $( function() {
     }
 
     function updateTaskList() {
-        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: TasksValve.data, tags: TagsValve.data, projects: ProjectsValve.data } );
+        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: TasksStore.data, tags: TagsStore.data, projects: ProjectsStore.data } );
 
         $( "#task-list-container" ).html( taskList );
 
@@ -531,11 +531,11 @@ $( function() {
             projectSelect = "",
             styleList = "";
 
-        styleList = parseClasses( ProjectsValve.data );
+        styleList = parseClasses( ProjectsStore.data );
         $( "#project-styles" ).html( styleList );
 
-        projectList = _.template( $( "#project-tmpl" ).html(), { projects: ProjectsValve.data } );
-        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: ProjectsValve.data } );
+        projectList = _.template( $( "#project-tmpl" ).html(), { projects: ProjectsStore.data } );
+        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: ProjectsStore.data } );
         $( "#project-container" ).html( projectList );
         projectSelect = '<option value="">No Project</option>' + projectSelect;
         $( "#task-project-select" ).html( projectSelect );
@@ -547,14 +547,14 @@ $( function() {
             tagSelect = "",
             styleList = "";
 
-        styleList = parseClasses( TagsValve.data, "1" );
+        styleList = parseClasses( TagsStore.data, "1" );
         $( "#tag-styles" ).html( styleList );
 
-        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: TagsValve.data } );
+        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: TagsStore.data } );
         tagSelect = "";
-        if ( TagsValve.data && TagsValve.data.length ) {
-            for ( i = 0; i < TagsValve.data.length; i += 3 ) {
-                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: TagsValve.data.slice( i, i+3 ) } );
+        if ( TagsStore.data && TagsStore.data.length ) {
+            for ( i = 0; i < TagsStore.data.length; i += 3 ) {
+                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: TagsStore.data.slice( i, i+3 ) } );
             }
         }
         $( "#tag-container" ).html( tagList );
