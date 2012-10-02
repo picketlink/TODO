@@ -21,7 +21,7 @@ import javax.ws.rs.core.Response;
 
 public enum ExceptionMessage {
 
-    AUTHENTICATION_FAILED("User authentication failed", Response.Status.UNAUTHORIZED);
+    AUTHENTICATION_FAILED("\"User authentication failed\"", Response.Status.UNAUTHORIZED);
 
     private String message;
 
