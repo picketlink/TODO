@@ -42,7 +42,7 @@ public enum ExceptionMessage {
 
     @Override
     public String toString() {
-        return String.format("{message: %s }", message);
+        return String.format("{\"message\": %s }", message);
     }
 
 }
