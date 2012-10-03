@@ -20,7 +20,7 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
 
-package org.aerogear.todo.server.security.authc.social.fb;
+package org.aerogear.todo.server.security.authc.social.twitter;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -46,14 +46,14 @@ import org.picketlink.social.standalone.fb.FacebookPrincipal;
 import org.picketlink.social.standalone.fb.FacebookProcessor;
 
 /**
- * An authentication mechanism for Facebook SignIn
+ * An authentication mechanism for Twitter SignIn
  * 
  * @author Anil Saldhana
  * @author Pedro Silva
  */
-public class FacebookAuthenticationMechanism extends AbstractAuthenticationMechanism {
+public class TwitterAuthenticationMechanism extends AbstractAuthenticationMechanism {
 
-    private static final String FB_AUTH_STATE_SESSION_ATTRIBUTE = "FB_AUTH_STATE_SESSION_ATTRIBUTE";
+    private static final String TWIT_AUTH_STATE_SESSION_ATTRIBUTE = "TWIT_AUTH_STATE_SESSION_ATTRIBUTE";
     protected String returnURL;
     protected String clientID;
     protected String clientSecret;
@@ -63,7 +63,7 @@ public class FacebookAuthenticationMechanism extends AbstractAuthenticationMecha
     
     protected IdentityManager identityManager;
 
-    public FacebookAuthenticationMechanism() {
+    public TwitterAuthenticationMechanism() {
         clientID = System.getProperty("FB_CLIENT_ID");
         clientSecret = System.getProperty("FB_CLIENT_SECRET");
         returnURL = System.getProperty("FB_RETURN_URL");
@@ -86,7 +86,7 @@ public class FacebookAuthenticationMechanism extends AbstractAuthenticationMecha
     public List<AuthenticationInfo> getAuthenticationInfo() {
         ArrayList<AuthenticationInfo> info = new ArrayList<AuthenticationInfo>();
 
-        info.add(new AuthenticationInfo("oAuth Authentication", "Provides oAuth authentication.", FacebookCredential.class));
+        info.add(new AuthenticationInfo("oAuth Authentication", "Provides oAuth authentication.", TwitterCredential.class));
 
         return info;
     }
@@ -97,7 +97,7 @@ public class FacebookAuthenticationMechanism extends AbstractAuthenticationMecha
     @Override
     protected Principal doAuthenticate(AuthenticationManager authenticationManager, Credential credential,
             AuthenticationResult result) throws AuthenticationException {
-        FacebookCredential oAuthCredential = (FacebookCredential) credential;
+        TwitterCredential oAuthCredential = (TwitterCredential) credential;
         
         HttpServletRequest request = oAuthCredential.getRequest();
         HttpServletResponse response = oAuthCredential.getResponse();
@@ -114,7 +114,7 @@ public class FacebookAuthenticationMechanism extends AbstractAuthenticationMecha
         } else if (isAuthenticationInteraction(session)) {
             getFacebookProcessor().handleAuthStage(request, response);
         } else if (isAuthorizationInteraction(session)) {
-            session.removeAttribute(FB_AUTH_STATE_SESSION_ATTRIBUTE);
+            session.removeAttribute(TWIT_AUTH_STATE_SESSION_ATTRIBUTE);
             principal = getFacebookProcessor().getPrincipal(request, response);
             checkUserInStore((FacebookPrincipal) principal);
         }
@@ -135,7 +135,7 @@ public class FacebookAuthenticationMechanism extends AbstractAuthenticationMecha
     }
 
     private String getCurrentAuthenticationState(HttpSession session) {
-        return (String) session.getAttribute(FB_AUTH_STATE_SESSION_ATTRIBUTE);
+        return (String) session.getAttribute(TWIT_AUTH_STATE_SESSION_ATTRIBUTE);
     }
 
     @SuppressWarnings("unchecked")

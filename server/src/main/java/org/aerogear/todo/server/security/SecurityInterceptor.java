@@ -29,9 +29,9 @@ import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 
 import org.aerogear.todo.server.security.authc.AuthenticationResponse;
-import org.aerogear.todo.server.security.authc.FacebookSignInEndpoint;
-import org.aerogear.todo.server.security.authc.OpenIDSignInEndpoint;
 import org.aerogear.todo.server.security.authc.SignInEndpoint;
+import org.aerogear.todo.server.security.authc.social.fb.FacebookSignInEndpoint;
+import org.aerogear.todo.server.security.authc.social.openid.OpenIDSignInEndpoint;
 import org.aerogear.todo.server.security.register.RegistrationEndpoint;
 import org.apache.http.HttpStatus;
 import org.jboss.picketlink.cdi.authentication.AuthenticationException;
