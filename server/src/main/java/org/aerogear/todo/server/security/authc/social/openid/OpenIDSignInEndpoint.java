@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.aerogear.todo.server.security.authc;
+package org.aerogear.todo.server.security.authc.social.openid;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
-import org.aerogear.todo.server.security.authc.social.openid.OpenIDCredential;
+import org.aerogear.todo.server.security.authc.AuthenticationResponse;
 import org.jboss.picketlink.cdi.Identity;
 import org.jboss.picketlink.cdi.credential.Credential;
 import org.jboss.picketlink.cdi.credential.LoginCredentials;
