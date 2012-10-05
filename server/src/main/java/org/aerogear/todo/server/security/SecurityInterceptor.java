@@ -32,6 +32,7 @@ import org.aerogear.todo.server.security.authc.AuthenticationResponse;
 import org.aerogear.todo.server.security.authc.SignInEndpoint;
 import org.aerogear.todo.server.security.authc.social.fb.FacebookSignInEndpoint;
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDSignInEndpoint;
+import org.aerogear.todo.server.security.authc.social.twitter.TwitterSignInEndpoint;
 import org.aerogear.todo.server.security.register.RegistrationEndpoint;
 import org.apache.http.HttpStatus;
 import org.jboss.picketlink.cdi.authentication.AuthenticationException;
@@ -122,6 +123,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
         return !(declaringClass.equals(SignInEndpoint.class) || 
                 declaringClass.equals(FacebookSignInEndpoint.class) ||
                 declaringClass.equals(OpenIDSignInEndpoint.class) ||
+                declaringClass.equals(TwitterSignInEndpoint.class) ||
                 declaringClass.equals(RegistrationEndpoint.class));
     }
 
