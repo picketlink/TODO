@@ -29,6 +29,7 @@ import javax.persistence.EntityManager;
 
 import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
+import org.aerogear.todo.server.security.authc.social.twitter.TwitterAuthenticationMechanism;
 import org.jboss.picketlink.idm.IdentityManager;
 import org.jboss.picketlink.idm.internal.JPAIdentityStore;
 import org.jboss.picketlink.idm.internal.jpa.JPATemplate;
@@ -56,6 +57,10 @@ public class PicketBoxConfigurer {
     @Inject
     private OpenIDAuthenticationMechanism openidAuthenticationMechanism;
     
+
+    @Inject
+    private TwitterAuthenticationMechanism twitterAuthenticationMechanism;
+    
     @Inject
     private IdentityManager identityManager;
     
@@ -69,10 +74,12 @@ public class PicketBoxConfigurer {
     public ConfigurationBuilder produceConfiguration() {
         fbAuthenticationMechanism.setIdentityManager(identityManager);
         openidAuthenticationMechanism.setIdentityManager(identityManager);
+        twitterAuthenticationMechanism.setIdentityManager(identityManager);
         
         CDIConfigurationBuilder builder = new CDIConfigurationBuilder(this.beanManager);
 
-        builder.authentication().mechanism(this.fbAuthenticationMechanism).mechanism(openidAuthenticationMechanism);
+        builder.authentication().mechanism(this.fbAuthenticationMechanism).mechanism(openidAuthenticationMechanism)
+        .mechanism(twitterAuthenticationMechanism);
         
         builder
             .authentication()
