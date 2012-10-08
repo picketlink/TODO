@@ -23,17 +23,15 @@
 package org.aerogear.todo.server.security;
 
 import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
-import org.jboss.picketlink.idm.IdentityManager;
-import org.jboss.picketlink.idm.internal.JPAIdentityStore;
-import org.jboss.picketlink.idm.internal.jpa.JPATemplate;
-import org.picketbox.cdi.config.CDIConfigurationBuilder;
 import org.picketbox.core.config.ConfigurationBuilder;
+import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.internal.JPAIdentityStore;
+import org.picketlink.idm.internal.jpa.JPATemplate;
 
 /**
  * <p>Bean responsible for producing the {@link CDIConfigurationBuilder}.</p>
@@ -47,11 +45,7 @@ public class PicketBoxConfigurer {
     private EntityManager entityManager;
 
     @Inject
-    private BeanManager beanManager;
-
-    @Inject
     private FacebookAuthenticationMechanism fbAuthenticationMechanism;
-    
 
     @Inject
     private OpenIDAuthenticationMechanism openidAuthenticationMechanism;
@@ -70,15 +64,12 @@ public class PicketBoxConfigurer {
         fbAuthenticationMechanism.setIdentityManager(identityManager);
         openidAuthenticationMechanism.setIdentityManager(identityManager);
         
-        CDIConfigurationBuilder builder = new CDIConfigurationBuilder(this.beanManager);
+        ConfigurationBuilder builder = new ConfigurationBuilder();
 
         builder.authentication().mechanism(this.fbAuthenticationMechanism).mechanism(openidAuthenticationMechanism);
         
         builder
-            .authentication()
-                .idmAuthentication()
-            .identityManager()
-                .providedStore()
+            .identityManager().jpaStore()
             .sessionManager()
                 .inMemorySessionStore();
         

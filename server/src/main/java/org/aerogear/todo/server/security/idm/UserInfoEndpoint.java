@@ -22,7 +22,7 @@
 
 package org.aerogear.todo.server.security.idm;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,8 +31,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.jboss.picketlink.cdi.Identity;
-import org.picketbox.cdi.PicketBoxUser;
+import org.picketbox.cdi.PicketBoxIdentity;
+import org.picketbox.cdi.idm.IdentityManagerBinding;
+import org.picketbox.core.PicketBoxSubject;
+import org.picketlink.idm.model.Role;
+import org.picketlink.idm.model.User;
 
 /**
  * <p>JAX-RS Endpoint to authenticate users.</p>
@@ -42,24 +45,34 @@ import org.picketbox.cdi.PicketBoxUser;
  */
 @Stateless
 @Path("/userinfo")
+@IdentityManagerBinding
 public class UserInfoEndpoint {
 
     @Inject
-    private Identity identity;
+    private PicketBoxIdentity identity;
     
     @GET
     @Produces (MediaType.APPLICATION_JSON)
     public UserInfo getInfo() {
         UserInfo userInfo = new UserInfo();
         
-        PicketBoxUser user = (PicketBoxUser) this.identity.getUser();
-        
-        userInfo.setUserId(user.getSubject().getUser().getName());
+        User user = this.identity.getUser();
+        userInfo.setUserId(user.getKey());
         userInfo.setFullName(user.getFullName());
         
-        List<String> roles = user.getSubject().getRoleNames();
+        PicketBoxSubject subject = this.identity.getSubject();
         
-        userInfo.setRoles(roles.toArray(new String[roles.size()]));
+        Collection<Role> roles = subject.getRoles();
+        String[] rolesArray = new String[roles.size()];
+        
+        int i = 0;
+        
+        for (Role role : roles) {
+            rolesArray[i] = role.getName();
+            i++;
+        }
+        
+        userInfo.setRoles(rolesArray);
         
         return userInfo;
     }
