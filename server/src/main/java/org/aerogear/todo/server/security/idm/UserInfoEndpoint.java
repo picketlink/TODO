@@ -33,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.picketbox.cdi.PicketBoxIdentity;
 import org.picketbox.cdi.idm.IdentityManagerBinding;
-import org.picketbox.core.PicketBoxSubject;
+import org.picketbox.core.UserContext;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.User;
 
@@ -60,7 +60,7 @@ public class UserInfoEndpoint {
         userInfo.setUserId(user.getKey());
         userInfo.setFullName(user.getFullName());
         
-        PicketBoxSubject subject = this.identity.getSubject();
+        UserContext subject = this.identity.getUserContext();
         
         Collection<Role> roles = subject.getRoles();
         String[] rolesArray = new String[roles.size()];

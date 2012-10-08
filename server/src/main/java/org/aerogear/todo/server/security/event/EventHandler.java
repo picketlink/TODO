@@ -28,7 +28,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 
-import org.picketbox.core.PicketBoxSubject;
+import org.picketbox.core.UserContext;
 import org.picketbox.core.authentication.AuthenticationResult;
 import org.picketbox.core.authentication.AuthenticationStatus;
 import org.picketbox.core.authentication.event.UserAuthenticatedEvent;
@@ -65,7 +65,7 @@ public class EventHandler {
      * @param event
      */
     public void onUserAuthenticatedEvent(@Observes UserAuthenticatedEvent event) {
-        PicketBoxSubject subject = event.getSubject();
+        UserContext subject = event.getUserContext();
         AuthenticationResult authenticationResult = subject.getAuthenticationResult();
         AuthenticationStatus status = authenticationResult.getStatus();
 
