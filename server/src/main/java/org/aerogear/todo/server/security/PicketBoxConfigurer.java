@@ -30,6 +30,7 @@ import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationM
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
 import org.picketbox.core.config.ConfigurationBuilder;
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.internal.jpa.JPATemplate;
 
 /**
  * <p>Bean responsible for producing the {@link CDIConfigurationBuilder}.</p>
@@ -40,7 +41,7 @@ import org.picketlink.idm.IdentityManager;
 public class PicketBoxConfigurer {
 
     @Inject
-    private EntityManager entityManager;
+    private JPATemplate jpaTemplate;
 
     @Inject
     private FacebookAuthenticationMechanism fbAuthenticationMechanism;
@@ -67,7 +68,7 @@ public class PicketBoxConfigurer {
         builder.authentication().mechanism(this.fbAuthenticationMechanism).mechanism(openidAuthenticationMechanism);
         
         builder
-            .identityManager().jpaStore()
+            .identityManager().jpaStore().template(this.jpaTemplate)
             .sessionManager()
                 .inMemorySessionStore();
         

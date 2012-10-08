@@ -32,7 +32,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.picketbox.cdi.PicketBoxIdentity;
-import org.picketbox.cdi.idm.IdentityManagerBinding;
 import org.picketbox.core.UserContext;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.User;
@@ -45,7 +44,6 @@ import org.picketlink.idm.model.User;
  */
 @Stateless
 @Path("/userinfo")
-@IdentityManagerBinding
 public class UserInfoEndpoint {
 
     @Inject

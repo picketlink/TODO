@@ -30,7 +30,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.picketbox.cdi.idm.IdentityManagerBinding;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.User;
@@ -43,7 +42,6 @@ import org.picketlink.idm.model.User;
  */
 @Stateless
 @Path("/register")
-@IdentityManagerBinding
 public class RegistrationEndpoint {
     
     @Inject
