@@ -24,22 +24,29 @@ package org.aerogear.todo.server.security;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
+import org.picketbox.cdi.idm.DefaultJPATemplate;
 import org.picketbox.core.config.ConfigurationBuilder;
-import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.internal.jpa.JPATemplate;
 
 /**
- * <p>Bean responsible for producing the {@link CDIConfigurationBuilder}.</p>
+ * <p>
+ * Bean responsible for producing the {@link ConfigurationBuilder}.
+ * </p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
+ * 
  */
 public class PicketBoxConfigurer {
 
+    /**
+     * <p>
+     * Injects a {@link JPATemplate} that should be used to execute IDM operations. PicketBox CDI provides a default
+     * implementation called {@link DefaultJPATemplate}.
+     * </p>
+     */
     @Inject
     private JPATemplate jpaTemplate;
 
@@ -48,31 +55,35 @@ public class PicketBoxConfigurer {
 
     @Inject
     private OpenIDAuthenticationMechanism openidAuthenticationMechanism;
-    
-    @Inject
-    private IdentityManager identityManager;
-    
-    
+
     /**
-     * <p>Produces the {@link ConfigurationBuilder}.</p>
+     * <p>
+     * Produces the {@link ConfigurationBuilder}.
+     * </p>
      * 
      * @return
      */
     @Produces
     public ConfigurationBuilder produceConfiguration() {
-        fbAuthenticationMechanism.setIdentityManager(identityManager);
-        openidAuthenticationMechanism.setIdentityManager(identityManager);
-        
         ConfigurationBuilder builder = new ConfigurationBuilder();
-
-        builder.authentication().mechanism(this.fbAuthenticationMechanism).mechanism(openidAuthenticationMechanism);
         
+        // configure the social authentication mechanisms
         builder
-            .identityManager().jpaStore().template(this.jpaTemplate)
+            .authentication()
+                .mechanism(this.fbAuthenticationMechanism)
+                .mechanism(openidAuthenticationMechanism);
+
+        // configure the identity manager using a JPA-based identity store.
+        builder
+            .identityManager()
+                .jpaStore().template(this.jpaTemplate);
+               
+        // session management configuration
+        builder
             .sessionManager()
                 .inMemorySessionStore();
-        
+
         return builder;
     }
-    
+
 }
