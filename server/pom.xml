@@ -75,6 +75,20 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
     		<artifactId>picketbox-cdi</artifactId>
     		<version>5.0.0-SNAPSHOT</version>
     	</dependency>
+    	<dependency>
+    		<groupId>org.picketlink</groupId>
+    		<artifactId>picketlink-idm-impl</artifactId>
+    		<!--<version>5.0.0-2012Sep18</version> -->
+    		<version>2.0.0-SNAPSHOT</version>
+    	</dependency>
+
+    <!--
+    	<dependency>
+    		<groupId>org.picketbox</groupId>
+    		<artifactId>picketbox-core</artifactId>
+    		<version>5.0.0-SNAPSHOT</version>
+    	</dependency>
+    -->
 		
         <!-- First declare the APIs we depend on and need for compilation.
  All of them are provided by JBoss -->

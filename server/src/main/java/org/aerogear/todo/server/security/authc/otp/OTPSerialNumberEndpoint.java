@@ -19,10 +19,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.aerogear.todo.server.security.idm;
+package org.aerogear.todo.server.security.authc.otp;
 
 import java.util.Collection;
+import java.util.UUID;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -31,34 +31,38 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.aerogear.todo.server.security.idm.UserInfo;
+import org.aerogear.todo.server.util.Base32;
 import org.picketbox.cdi.PicketBoxIdentity;
 import org.picketbox.core.UserContext;
+import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.User;
 
 /**
- * <p>JAX-RS Endpoint to authenticate users.</p>
- * 
- * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
+ * Obtain the serial number for OTP clients
+ * @author anil saldhana
+ * @since Oct 9, 2012
  */
 @Stateless
-@Path("/userinfo")
-public class UserInfoEndpoint {
-
+@Path("/otpserial")
+public class OTPSerialNumberEndpoint {
     @Inject
     private PicketBoxIdentity identity;
+    @Inject
+    private IdentityManager identityManager;
     
     @GET
     @Produces (MediaType.APPLICATION_JSON)
     public UserInfo getInfo() {
         UserInfo userInfo = new UserInfo();
         
-        User user = this.identity.getUser();
+        UserContext userContext = identity.getUserContext();
+        
+        User user = userContext.getUser();
+        
         userInfo.setUserId(user.getKey());
         userInfo.setFullName(user.getFullName());
-        
-        UserContext userContext = this.identity.getUserContext();
         
         Collection<Role> roles = userContext.getRoles();
         String[] rolesArray = new String[roles.size()];
@@ -72,7 +76,20 @@ public class UserInfoEndpoint {
         
         userInfo.setRoles(rolesArray);
         
+        User idmuser = identityManager.getUser(user.getKey());
+        String serialNumber = idmuser.getAttribute("serial");
+        if(serialNumber == null){
+            //Generate serial number
+            serialNumber = UUID.randomUUID().toString();
+            serialNumber = serialNumber.replace('-', 'c');
+            
+            //Just pick the first 10 characters
+            serialNumber = serialNumber.substring(0, 10);
+            idmuser.setAttribute("serial", serialNumber);
+        }
+        userInfo.setSerial(serialNumber);
+        userInfo.setB32(Base32.encode(serialNumber.getBytes()));
+        
         return userInfo;
     }
-    
 }
