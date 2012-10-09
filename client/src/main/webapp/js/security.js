@@ -205,3 +205,58 @@ $(document).ready(function() {
 		return false; // prevents submit of the form
 	});
 });
+
+$(document).ready(function() {
+
+	//Twitter signin
+	$('#get-serial').click(function(e) {
+        e.preventDefault();
+        popup = window.open(getHost() + "/otpserial.html", "name", "height=512, width=512");
+        popup.focus();
+        popup.window.reload = function(){
+        	if(popup.document.body.innerHTML.indexOf("true") > -1){
+            	popup.close();
+            	var jqxhr = $.ajax('/todo-server/otpserial', {
+        			contentType: "application/json",
+                    dataType:'json',
+                    type:'POST', 
+                    success:function (data) {
+                        if (data.loggedIn) {
+                        	storeToken(data.token);
+        					window.location = getHost() + "/index.html";
+                        } else {
+                        	$('#login-msg').text("Authentication failed. Try again ...");
+                        }
+                    }
+                });
+        	}
+        };
+        
+		return false; // prevents submit of the form
+	});
+});
+
+$(document).ready(function() {
+	if (!$('#otp-btn')) {
+		return;
+	}
+	
+	$('#otp-btn').click(function() {
+		var jqxhr = $.ajax('/todo-server/otp', {
+			contentType: "application/json",
+            dataType:'json',
+            data:JSON.stringify({userId:$('#username').val(),password:$('#password').val(),otp:$('#otp').val()}),
+            type:'POST', 
+            success:function (data) {
+                if (data.loggedIn) {
+                	storeToken(data.token);
+					window.location = getHost() + "/index.html";
+                } else {
+                	$('#login-msg').text("Authentication failed. Try again ...");
+                }
+            }
+        });
+		return false; // prevents submit of the form
+	});
+	
+});

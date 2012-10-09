@@ -25,6 +25,7 @@ package org.aerogear.todo.server.security;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
+import org.aerogear.todo.server.security.authc.otp.OTPAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.twitter.TwitterAuthenticationMechanism;
@@ -61,6 +62,10 @@ public class PicketBoxConfigurer {
     @Inject
     private TwitterAuthenticationMechanism twitterAuthenticationMechanism;
     
+
+    @Inject
+    private OTPAuthenticationMechanism otpAuthenticationMechanism;
+    
     @Inject
     private IdentityManager identityManager;
     
@@ -73,16 +78,17 @@ public class PicketBoxConfigurer {
      */
     @Produces
     public ConfigurationBuilder produceConfiguration() {
-        ConfigurationBuilder builder = new ConfigurationBuilder();
-        
-        builder.authentication().mechanism(this.fbAuthenticationMechanism).mechanism(openidAuthenticationMechanism)
-        .mechanism(twitterAuthenticationMechanism);
+        ConfigurationBuilder builder = new ConfigurationBuilder(); 
         
         // configure the social authentication mechanisms
         builder
             .authentication()
                 .mechanism(this.fbAuthenticationMechanism)
-                .mechanism(openidAuthenticationMechanism);
+                .mechanism(openidAuthenticationMechanism)
+                .mechanism(twitterAuthenticationMechanism);
+        
+        //Configure OTP
+        builder.authentication().mechanism(otpAuthenticationMechanism);
 
         // configure the identity manager using a JPA-based identity store.
         builder
