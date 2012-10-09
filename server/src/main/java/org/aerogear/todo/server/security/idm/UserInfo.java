@@ -32,6 +32,18 @@ public class UserInfo implements Serializable {
     private String[] roles;
 
     private String fullName;
+    
+    private String serial;
+    
+    private String b32;
+
+    public String getB32() {
+        return b32;
+    }
+
+    public void setB32(String b32) {
+        this.b32 = b32;
+    }
 
     /**
      * @return the userId
@@ -69,4 +81,11 @@ public class UserInfo implements Serializable {
         return fullName;
     }
 
+    public String getSerial() {
+        return serial;
+    }
+
+    public void setSerial(String serial) {
+        this.serial = serial;
+    }
 }
