@@ -36,15 +36,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.aerogear.todo.server.security.authc.AuthenticationResponse;
-import org.jboss.picketlink.cdi.Identity;
-import org.jboss.picketlink.cdi.credential.Credential;
-import org.jboss.picketlink.cdi.credential.LoginCredentials;
-import org.jboss.picketlink.idm.IdentityManager;
-import org.jboss.picketlink.idm.model.Role;
-import org.jboss.picketlink.idm.model.User;
-import org.picketbox.cdi.PicketBoxCDISubject;
-import org.picketbox.cdi.PicketBoxUser;
-import org.picketbox.core.PicketBoxSubject;
+import org.picketbox.cdi.PicketBoxIdentity;
+import org.picketbox.core.UserContext;
+import org.picketlink.cdi.credential.Credential;
+import org.picketlink.cdi.credential.LoginCredentials;
+import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.model.Role;
+import org.picketlink.idm.model.User;
 
 /**
  * Enables signin with facebook
@@ -57,7 +55,7 @@ import org.picketbox.core.PicketBoxSubject;
 public class TwitterSignInEndpoint {
 
     @Inject
-    private Identity identity;
+    private PicketBoxIdentity identity;
 
     @Inject
     private LoginCredentials credential;
@@ -99,6 +97,7 @@ public class TwitterSignInEndpoint {
         
         //Check if the user exists in DB
         User storedUser = identityManager.getUser(twitterPrincipal.getName());
+        
         if(storedUser == null){
             storedUser = identityManager.createUser(twitterPrincipal.getName());
             storedUser.setFirstName(twitterPrincipal.getName());
@@ -106,29 +105,23 @@ public class TwitterSignInEndpoint {
             Role guest = this.identityManager.createRole("guest");
 
             identityManager.grantRole(guest, storedUser, null);
+
+            UserContext subject = this.identity.getUserContext();
+
+            subject.setUser(storedUser);
+
+            ArrayList<Role> roles = new ArrayList<Role>();
+
+            roles.add(guest);
+
+            subject.setRoles(roles);
         }
-        ArrayList<String> roles = new ArrayList<String>();
-        
-
-        
-        /*Role guest = this.identityManager.createRole("guest");
-        Group guests = identityManager.createGroup("Guests");
-
-        identityManager.grantRole(guest, storedUser, guests);*/
-        // necessary because we need to show the user info at the main page. Otherwise the informations will be show only after the second login.
-        PicketBoxUser user = (PicketBoxUser) identity.getUser();
-        PicketBoxCDISubject subject = user.getSubject();
-        
-        subject.setIdmUser(storedUser);
-        
-        subject.setRoleNames(roles);
     }
 
     private TwitterPrincipal getAuthenticatedPrincipal() {
-        PicketBoxUser user = (PicketBoxUser) identity.getUser();
-        PicketBoxSubject subject = user.getSubject();
+        UserContext userContext = identity.getUserContext();
         
-        return (TwitterPrincipal) subject.getUser();
+        return (TwitterPrincipal) userContext.getPrincipal();
     }
 
     private AuthenticationResponse createSuccessfulAuthResponse() {

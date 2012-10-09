@@ -23,40 +23,40 @@
 package org.aerogear.todo.server.security;
 
 import javax.enterprise.inject.Produces;
-import javax.enterprise.inject.spi.BeanManager;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 
 import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.twitter.TwitterAuthenticationMechanism;
-import org.jboss.picketlink.idm.IdentityManager;
-import org.jboss.picketlink.idm.internal.JPAIdentityStore;
-import org.jboss.picketlink.idm.internal.jpa.JPATemplate;
-import org.picketbox.cdi.config.CDIConfigurationBuilder;
+import org.picketbox.cdi.idm.DefaultJPATemplate;
 import org.picketbox.core.config.ConfigurationBuilder;
+import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.internal.jpa.JPATemplate;
 
 /**
- * <p>Bean responsible for producing the {@link CDIConfigurationBuilder}.</p>
+ * <p>
+ * Bean responsible for producing the {@link ConfigurationBuilder}.
+ * </p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
+ * 
  */
 public class PicketBoxConfigurer {
 
+    /**
+     * <p>
+     * Injects a {@link JPATemplate} that should be used to execute IDM operations. PicketBox CDI provides a default
+     * implementation called {@link DefaultJPATemplate}.
+     * </p>
+     */
     @Inject
-    private EntityManager entityManager;
-
-    @Inject
-    private BeanManager beanManager;
+    private JPATemplate jpaTemplate;
 
     @Inject
     private FacebookAuthenticationMechanism fbAuthenticationMechanism;
-    
 
     @Inject
     private OpenIDAuthenticationMechanism openidAuthenticationMechanism;
-    
 
     @Inject
     private TwitterAuthenticationMechanism twitterAuthenticationMechanism;
@@ -64,50 +64,37 @@ public class PicketBoxConfigurer {
     @Inject
     private IdentityManager identityManager;
     
-    
     /**
-     * <p>Produces the {@link ConfigurationBuilder}.</p>
+     * <p>
+     * Produces the {@link ConfigurationBuilder}.
+     * </p>
      * 
      * @return
      */
     @Produces
     public ConfigurationBuilder produceConfiguration() {
-        fbAuthenticationMechanism.setIdentityManager(identityManager);
-        openidAuthenticationMechanism.setIdentityManager(identityManager);
-        twitterAuthenticationMechanism.setIdentityManager(identityManager);
+        ConfigurationBuilder builder = new ConfigurationBuilder();
         
-        CDIConfigurationBuilder builder = new CDIConfigurationBuilder(this.beanManager);
-
         builder.authentication().mechanism(this.fbAuthenticationMechanism).mechanism(openidAuthenticationMechanism)
         .mechanism(twitterAuthenticationMechanism);
         
+        // configure the social authentication mechanisms
         builder
             .authentication()
-                .idmAuthentication()
+                .mechanism(this.fbAuthenticationMechanism)
+                .mechanism(openidAuthenticationMechanism);
+
+        // configure the identity manager using a JPA-based identity store.
+        builder
             .identityManager()
-                .providedStore()
+                .jpaStore().template(this.jpaTemplate);
+               
+        // session management configuration
+        builder
             .sessionManager()
                 .inMemorySessionStore();
-        
+
         return builder;
     }
-    
-    /**
-     * <p>Produces the {@link JPAIdentityStore} that will be used by the PicketLink IDM {@link IdentityManager}.</p>
-     * 
-     * @return
-     */
-    @Produces
-    public JPAIdentityStore produceIdentityStore() {
-        JPAIdentityStore identityStore = new JPAIdentityStore();
 
-        JPATemplate template = new JPATemplate();
-
-        template.setEntityManager(this.entityManager);
-
-        identityStore.setJpaTemplate(template);
-
-        return identityStore;
-    }
-    
 }
