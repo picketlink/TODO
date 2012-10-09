@@ -18,6 +18,7 @@ package org.aerogear.todo.server.rest;
 
 import org.aerogear.todo.server.model.Tag;
 import org.aerogear.todo.server.model.Task;
+import org.picketbox.cdi.authorization.RolesAllowed;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -38,6 +39,7 @@ import java.util.List;
 @Stateless
 @Path("/tags")
 @TransactionAttribute
+@RolesAllowed({"admin"})
 public class TagEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;
@@ -78,6 +80,7 @@ public class TagEndpoint {
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin","simple"})
     public Tag findById(@PathParam("id")
                         Long id) {
         return em.find(Tag.class, id);
@@ -85,6 +88,7 @@ public class TagEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin","simple"})
     public List<Tag> listAll() {
         @SuppressWarnings("unchecked")
         final List<Tag> results = em.createQuery("SELECT x FROM Tag x").getResultList();

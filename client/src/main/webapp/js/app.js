@@ -1,24 +1,36 @@
 $( function() {
-    var projectGet, tagGet, overlayTimer;
+    var overlayTimer;
+
+    // Instantiate our authenticator
+    var restAuth = aerogear.auth({
+        name: "auth",
+        settings: {
+            agAuth: true,
+            baseURL: "/todo-server/"
+        }
+    }).modules.auth;
 
     // Instantiate our pipeline
     var todo = aerogear.pipeline([
             {
                 name: "tasks",
                 settings: {
-                    url: "/todo-server/tasks"
+                    baseURL: "/todo-server/",
+                    authenticator: restAuth
                 }
             },
             {
                 name: "projects",
                 settings: {
-                    url: "/todo-server/projects"
+                    baseURL: "/todo-server/",
+                    authenticator: restAuth
                 }
             },
             {
                 name: "tags",
                 settings: {
-                    url: "/todo-server/tags"
+                    baseURL: "/todo-server/",
+                    authenticator: restAuth
                 }
             }
         ]),
@@ -29,37 +41,19 @@ $( function() {
         projectContainer = $( "#project-list" ),
         tagContainer = $( "#tag-list" );
 
+        //Creating the DataManagers:
+        var dm = aerogear.dataManager([ "tasks", "tags", "projects"]),
+        TasksStore = dm.stores[ "tasks" ],
+        ProjectsStore = dm.stores[ "projects" ],
+        TagsStore = dm.stores[ "tags" ];
+
     // Loading overlays
     $( "#task-overlay" ).height( taskContainer.outerHeight() ).width( taskContainer.outerWidth() );
     $( "#project-overlay" ).height( projectContainer.outerHeight() ).width( projectContainer.outerWidth() );
     $( "#tag-overlay" ).height( tagContainer.outerHeight() ).width( tagContainer.outerWidth() );
 
-    projectGet = Projects.read({
-        ajax: {
-            success: function( data, textStatus, jqXHR ) {
-                $( "#project-loader" ).hide();
-                updateProjectList();
-            }
-        }
-    });
-
-    tagGet = Tags.read({
-        ajax: {
-            success: function( data, textStatus, jqXHR ) {
-                if ( data.length ) {
-                    $( "#task-tag-column" ).empty();
-                }
-                $( "#tag-loader" ).hide();
-                updateTagList();
-            }
-        }
-    });
-
-    // When both the available projects and available tags have returned, get the task data
-    $.when( projectGet, tagGet, Tasks.read() ).done( function( g1, g2, g3 ) {
-        $( "#task-loader" ).hide();
-        updateTaskList();
-    });
+    // Initializes all sections of the TODO app
+    loadAllData();
 
     // Initialize Color pickers
     $( ".color-picker" ).miniColors();
@@ -69,10 +63,22 @@ $( function() {
 
     // Event Bindings
     $( ".add-project, .add-tag, .add-task" ).on( "click", function( event ) {
-        var target = $( event.currentTarget );
-        target.parent().height( "100%" );
-        target.slideUp( "slow" );
-        target.next().slideDown( "slow" );
+        var isAdmin = sessionStorage.getItem( "access" ) === "1" ? true : false;
+        if ( restAuth.isAuthenticated() && ( isAdmin || $( this ).is( ".add-task" ) ) ) {
+            var target = $( event.currentTarget ),
+                today = new Date();
+
+            // Initialize the date field in the task form
+            $( "#task-date" ).val( today.getFullYear() + "-" + ( "0" + ( today.getMonth() + 1 ) ).slice( -2 ) + "-" + ( "0" + today.getDate() ).slice( -2 ) );
+
+            target.parent().height( "100%" );
+            target.slideUp( "slow" );
+            target.next().slideDown( "slow" );
+        } else if ( restAuth.isAuthenticated() && !isAdmin ) {
+            $( "#auth-error-box" ).modal();
+        } else {
+            loadAllData();
+        }
     });
 
     $( ".form-close" ).on( "click", function( event ) {
@@ -105,7 +111,6 @@ $( function() {
 
         // Validate form
         var form = $( this ),
-            // all form id's start with add
             formType = form.attr( "name" ),
             formValid = true,
             // 0 - add items
@@ -145,29 +150,37 @@ $( function() {
             switch ( formType ) {
                 case "project":
                     Projects.save( data, {
-                        ajax: {
-                            success: function( data ) {
-                                updateProjectList();
-                                if ( isUpdate ) {
-                                    updateTaskList();
-                                }
-
-                                $( "#add-project" ).find( ".submit-btn" ).html( plus + " Add Project" );
+                        success: function( data ) {
+                            updateProjectList();
+                            if ( isUpdate ) {
+                                updateTaskList();
                             }
-                        }
+
+                            $( "#add-project" ).find( ".submit-btn" ).html( plus + " Add Project" );
+                        },
+                        statusCode: {
+                            401: function( jqXHR ) {
+                                $( "#auth-error-box" ).modal();
+                            }
+                        },
+                        stores: ProjectsStore
                     } );
                     break;
                 case "tag":
                     Tags.save( data, {
-                        ajax: {
-                            success: function( data ) {
-                                updateTagList();
-                                if ( isUpdate ) {
-                                    updateTaskList();
-                                }
-                                $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Add Tag" );
+                        success: function( data ) {
+                            updateTagList();
+                            if ( isUpdate ) {
+                                updateTaskList();
                             }
-                        }
+                            $( "#add-tag" ).find( ".submit-btn" ).html( plus + " Add Tag" );
+                        },
+                        statusCode: {
+                            401: function( jqXHR ) {
+                                $( "#auth-error-box" ).modal();
+                            }
+                        },
+                        stores: TagsStore
                     } );
                     break;
                 case "task":
@@ -181,18 +194,67 @@ $( function() {
                     });
                     data.tags = tags;
                     Tasks.save( data, {
-                        ajax: {
-                            success: function( data ) {
-                                updateTaskList();
-                                $( "#add-task" ).find( ".submit-btn" ).html( plus + " Add Task" );
+                        success: function( data ) {
+                            updateTaskList();
+                            $( "#add-task" ).find( ".submit-btn" ).html( plus + " Add Task" );
+                        },
+                        statusCode: {
+                            401: function( jqXHR ) {
+                                $( "#auth-error-box" ).modal();
                             }
+                        },
+                        stores: TasksStore
+                    });
+                    break;
+                case "login":
+                    // Reset session storage
+                    sessionStorage.removeItem( "username" );
+                    sessionStorage.removeItem( "access" );
+
+                    restAuth.login( JSON.stringify( data ), {
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function( data ) {
+                            var role = $.inArray( "admin", data.roles ) >= 0 ? 1 : 0;
+                            sessionStorage.setItem( "username", data.username );
+                            sessionStorage.setItem( "access", role );
+
+                            $( "#login-box" ).modal( "hide" );
+                            loadAllData();
+                        },
+                        error: function( data ) {
+                            $( "#login-msg" ).text( "Login failed, please try again" );
+                        }
+                    });
+                    break;
+                case "register":
+                    // Reset session storage
+                    sessionStorage.removeItem( "username" );
+                    sessionStorage.removeItem( "access" );
+
+                    restAuth.register( JSON.stringify( data ), {
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function( data ) {
+                            var role = $.inArray( "admin", data.roles ) >= 0 ? 1 : 0;
+                            sessionStorage.setItem( "username", data.username );
+                            sessionStorage.setItem( "access", role );
+
+                            $( "#register-box" ).modal( "hide" );
+                            $( "#login-btn" ).show();
+                            loadAllData();
+                        },
+                        error: function( data ) {
+                            console.log( data );
                         }
                     });
                     break;
             }
 
             // Close the add form
-            hideForm( $( this ).closest( "div" ) );
+            if ( !form.is( ".auth-form" ) ) {
+                hideForm( form.closest( "div" ) );
+            }
         }
     });
 
@@ -204,24 +266,28 @@ $( function() {
     // Item Hover Menus
     $( ".todo-app" )
         .on( "mouseenter", ".project, .tag, .task", function( event ) {
-            var overlay = $( event.target ).children( ".option-overlay" ).eq( 0 );
+            if ( sessionStorage.getItem( "access" ) === "1" || $( this ).is( ".task" ) ) {
+                var overlay = $( event.target ).children( ".option-overlay" ).eq( 0 );
 
-            // Delay clicking of buttons in the overlay to prevent accidental clicks on touch devices
-            overlay.data( "clickable", false );
-            setTimeout( function() { overlay.data( "clickable", true ); }, 500 );
+                // Delay clicking of buttons in the overlay to prevent accidental clicks on touch devices
+                overlay.data( "clickable", false );
+                setTimeout( function() { overlay.data( "clickable", true ); }, 500 );
 
-            // Show the overlay if not already visible
-            if ( !overlay.is( ":visible" ) ) {
-                overlay.show();
+                // Show the overlay if not already visible
+                if ( !overlay.is( ":visible" ) ) {
+                    overlay.show();
+                }
             }
         })
         .on( "mouseleave", ".project, .tag, .task", function( event ) {
-            var overlay = $( event.target ).closest( ".project, .tag, .task" ).children( ".option-overlay" ).eq( 0 );
-            // Add a delay for touch devices to allow clicking of buttons before the overlay disappears
-            if ( Modernizr.touch ) {
-                setTimeout( function() { overlay.hide(); }, 500 );
-            } else {
-                overlay.hide();
+            if ( sessionStorage.getItem( "access" ) === "1" || $( this ).is( ".task" ) ) {
+                var overlay = $( event.target ).closest( ".project, .tag, .task" ).children( ".option-overlay" ).eq( 0 );
+                // Add a delay for touch devices to allow clicking of buttons before the overlay disappears
+                if ( Modernizr.touch ) {
+                    setTimeout( function() { overlay.hide(); }, 500 );
+                } else {
+                    overlay.hide();
+                }
             }
         });
 
@@ -234,7 +300,7 @@ $( function() {
             current,
             success = function( data ) {
                 for ( var item in data ) {
-                    current = filterData( data[ item ], Tasks.data )[ 0 ];
+                    current = filterData( data[ item ], TasksStore.data )[ 0 ];
                     if ( type == "project" ) {
                         current.project = null;
                     } else if ( type == "tag" ) {
@@ -248,11 +314,14 @@ $( function() {
                 }
                 updateTaskList();
             },
-            options = {
-                record: dataTarget.data( "id" ),
-                ajax: {
-                    success: success
+            statusCode = {
+                401: function( jqXHR ) {
+                    $( "#auth-error-box" ).modal();
                 }
+            },
+            options = {
+                success: success,
+                statusCode: statusCode
             };
         if ( !dataTarget.data( "clickable" ) ) {
             event.preventDefault();
@@ -260,13 +329,16 @@ $( function() {
         }
         switch( type ) {
             case "project":
-                Projects.remove( options );
+                options.stores = ProjectsStore;
+                Projects.remove( dataTarget.data( "id" ), options );
                 break;
             case "tag":
-                Tags.remove( options );
+                options.stores = TagsStore;
+                Tags.remove( dataTarget.data( "id" ), options );
                 break;
             case "task":
-                Tasks.remove( options );
+                options.stores = TasksStore;
+                Tasks.remove( dataTarget.data( "id" ), options );
                 break;
         }
     });
@@ -284,7 +356,7 @@ $( function() {
 
         switch( target.data( "type" ) ) {
             case "project":
-                toEdit = filterData( target, Projects.data )[ 0 ];
+                toEdit = filterData( target, ProjectsStore.data )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -298,7 +370,7 @@ $( function() {
                 $( ".add-project" ).click();
                 break;
             case "tag":
-                toEdit = filterData( target, Tags.data )[ 0 ];
+                toEdit = filterData( target, TagsStore.data )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -312,7 +384,7 @@ $( function() {
                 $( ".add-tag" ).click();
                 break;
             case "task":
-                toEdit = filterData( target, Tasks.data )[ 0 ];
+                toEdit = filterData( target, TasksStore.data )[ 0 ];
 
                 $( "#task-id" ).val( toEdit.id );
                 $( "#task-title" ).val( toEdit.title );
@@ -325,7 +397,7 @@ $( function() {
                 // Reset tag checkboxes
                 $( "#add-task input:checkbox" ).prop( "checked", false );
 
-                if ( toEdit.tags.length ) {
+                if ( toEdit.tags && toEdit.tags.length ) {
                     $.each( toEdit.tags, function( index, value ) {
                         $( "input[name='tag-" + value + "']" ).prop( "checked", true );
                     });
@@ -341,9 +413,112 @@ $( function() {
         $( "#project-list, #tag-list" ).css( "max-height", "none" );
     }
 
+    // Register Button
+    $( "#register-button" ).click( function( event ) {
+        event.preventDefault();
+
+        var regBox = $( "#register-box" );
+
+        $( "#login-box" ).modal( "hide" );
+        regBox.find( "form" )[ 0 ].reset();
+        regBox.modal({
+            backdrop: "static",
+            keyboard: false
+        });
+        $( "#login-btn" ).show();
+    });
+
+    // Logout button
+    $( "#userinfo-msg" ).on( "click", ".btn", function( event ) {
+        event.preventDefault();
+
+        restAuth.logout({
+            success: function() {
+                $( "#userinfo-msg" ).hide();
+                $( ".form-close:visible" ).click();
+                loadAllData();
+            },
+            error: function() {
+                console.log('logout error');
+            }
+        });
+    });
+
+    // Login Cancel
+    $( "#login-cancel" ).click( function( event ) {
+        event.preventDefault();
+
+        $( ".loader" ).hide();
+        $( "#login-btn" ).show();
+        $( "#login-box" ).modal( "hide" );
+    });
+
+    // Login Cancel
+    $( "#register-cancel" ).click( function( event ) {
+        event.preventDefault();
+
+        $( ".loader" ).hide();
+        $( "#login-btn" ).show();
+        $( "#register-box" ).modal( "hide" );
+    });
+
+    // Login button
+    $( "#login-btn" ).click( function( event ) {
+        loadAllData();
+    });
+
+    // Auth Error Close button
+    $( "#auth-error-box" ).on( "click", ".close", function( event ) {
+        event.preventDefault();
+
+        $( "#auth-error-box" ).modal( "hide" );
+    });
+
     // Helper Functions
+    function loadAllData() {
+        var projectGet, tagGet;
+
+        projectGet = Projects.read({
+            complete: function() {
+                $( "#project-loader" ).hide();
+                updateProjectList();
+            },
+            //setting the store
+            stores: ProjectsStore
+        });
+
+        tagGet = Tags.read({
+            complete: function( data, textStatus, jqXHR ) {
+                if ( data && data.length ) {
+                    $( "#task-tag-column" ).empty();
+                }
+                $( "#tag-loader" ).hide();
+                updateTagList();
+            },
+            //setting the store
+            stores: TagsStore
+        });
+
+        // When both the available projects and available tags have returned, get the task data
+        $.when( projectGet, tagGet, Tasks.read( { stores: TasksStore } ) ).done( function( g1, g2, g3 ) {
+            $( "#userinfo-name" ).text( sessionStorage.getItem( "username" ) );
+            $( "#userinfo-msg" ).show();
+        })
+        .fail( function() {
+            restAuth.deauthorize();
+            $( "#login-box" ).modal({
+                backdrop: "static",
+                keyboard: false
+            });
+        })
+        .always( function() {
+            $( "#task-loader, #login-btn" ).hide();
+            updateTaskList();
+        });
+    }
+
     function updateTaskList() {
-        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: Tasks.data, tags: Tags.data, projects: Projects.data } );
+        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: TasksStore.data, tags: TagsStore.data, projects: ProjectsStore.data } );
 
         $( "#task-list-container" ).html( taskList );
 
@@ -356,11 +531,11 @@ $( function() {
             projectSelect = "",
             styleList = "";
 
-        styleList = parseClasses( Projects.data );
+        styleList = parseClasses( ProjectsStore.data );
         $( "#project-styles" ).html( styleList );
 
-        projectList = _.template( $( "#project-tmpl" ).html(), { projects: Projects.data } );
-        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: Projects.data } );
+        projectList = _.template( $( "#project-tmpl" ).html(), { projects: ProjectsStore.data } );
+        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: ProjectsStore.data } );
         $( "#project-container" ).html( projectList );
         projectSelect = '<option value="">No Project</option>' + projectSelect;
         $( "#task-project-select" ).html( projectSelect );
@@ -372,14 +547,14 @@ $( function() {
             tagSelect = "",
             styleList = "";
 
-        styleList = parseClasses( Tags.data, "1" );
+        styleList = parseClasses( TagsStore.data, "1" );
         $( "#tag-styles" ).html( styleList );
 
-        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: Tags.data } );
+        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: TagsStore.data } );
         tagSelect = "";
-        if ( Tags.data.length ) {
-            for ( i = 0; i < Tags.data.length; i += 3 ) {
-                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: Tags.data.slice( i, i+3 ) } );
+        if ( TagsStore.data && TagsStore.data.length ) {
+            for ( i = 0; i < TagsStore.data.length; i += 3 ) {
+                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: TagsStore.data.slice( i, i+3 ) } );
             }
         }
         $( "#tag-container" ).html( tagList );
@@ -416,13 +591,15 @@ $( function() {
         var styleList = "",
             rgb,
             fontColor;
-        $.each( data, function() {
-            if ( this.style ) {
-                rgb = this.style.substr( this.style.indexOf( "-" ) + 1 ).split( "-" );
-                fontColor = calcBrightness( rgb ) < 130 ? "#EEE" : "#222" ;
-                styleList += "#property-container ." + this.style + "," + "#task-container ." + this.style + "{background: rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ",1); color: " + fontColor + ";}";
-            }
-        });
+        if ( data ) {
+            $.each( data, function() {
+                if ( this.style ) {
+                    rgb = this.style.substr( this.style.indexOf( "-" ) + 1 ).split( "-" );
+                    fontColor = calcBrightness( rgb ) < 130 ? "#EEE" : "#222" ;
+                    styleList += "#property-container ." + this.style + "," + "#task-container ." + this.style + "{background: rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ",1); color: " + fontColor + ";}";
+                }
+            });
+        }
         return styleList;
     }
 

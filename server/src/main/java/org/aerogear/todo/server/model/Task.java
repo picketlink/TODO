@@ -39,7 +39,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static org.aerogear.todo.server.util.DateBuilder.*;
+import static org.aerogear.todo.server.util.DateBuilder.newDateBuilder;
 
 @XmlRootElement
 @JsonSerialize(using = TaskCustomSerializer.class)

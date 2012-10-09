@@ -41,6 +41,10 @@ body {
     margin-bottom: 100px;
 }
 
+.todo-app {
+    margin-top: 15px;
+}
+
 .todo-app .span2.navbar {
     color: #000;
 }
@@ -284,6 +288,14 @@ label {
     color: #ff0000;
 }
 
+#userinfo-msg, #login-btn {
+    display: none;
+}
+
+#login-msg, #register-msg {
+    color: #F00;
+}
+
 /* Footer styles */
 footer {
     width: 100%;
@@ -302,6 +314,13 @@ footer {
     margin: 10px auto;
     z-index: 999;
     background-color: transparent;
+}
+
+.modal {
+    top: 10px;
+    width: 250px;
+    padding: 20px;
+    margin: 0 0 0 -135px;
 }
 
 .color-picker {
@@ -395,7 +414,7 @@ footer {
 
 /* Media Queries */
 @media (max-width: 1200px) {
-    
+
 }
 
 @media (max-width: 979px) {
@@ -459,6 +478,17 @@ footer {
 
 @media (max-width: 500px) {
 
+}
+
+@media (max-width: 480px) {
+    .modal {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        width: auto;
+        padding: 20px;
+        margin: 0;
+    }
 }
 
 * {

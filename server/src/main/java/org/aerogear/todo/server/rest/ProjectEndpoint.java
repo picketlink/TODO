@@ -17,10 +17,8 @@
 package org.aerogear.todo.server.rest;
 
 import org.aerogear.todo.server.model.Project;
-import org.aerogear.todo.server.model.Tag;
-import org.aerogear.todo.server.model.Task;
+import org.picketbox.cdi.authorization.RolesAllowed;
 
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
@@ -40,6 +38,7 @@ import java.util.List;
 @Stateless
 @Path("/projects")
 @TransactionAttribute
+@RolesAllowed({"admin"})
 public class ProjectEndpoint {
     @PersistenceContext(type = PersistenceContextType.EXTENDED)
     private EntityManager em;
@@ -81,6 +80,7 @@ public class ProjectEndpoint {
     @GET
     @Path("/{id:[0-9][0-9]*}")
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin","simple"})
     public Project findById(@PathParam("id")
                             Long id) {
         return em.find(Project.class, id);
@@ -88,6 +88,7 @@ public class ProjectEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"admin","simple"})
     public List<Project> listAll() {
         @SuppressWarnings("unchecked")
         final List<Project> results = em.createQuery("SELECT x FROM Project x").getResultList();

@@ -57,6 +57,7 @@ to work with JBoss EAP 6. It requires you have access to the JBoss EAP 6 maven r
     </properties>
 
     <dependencyManagement>
+    	
         <dependencies>
             <!-- JBoss distributes a complete set of Java EE 6 APIs including
 a Bill of Materials (BOM). A BOM specifies the versions of a "stack" (or
@@ -74,7 +75,19 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
     </dependencyManagement>
 
     <dependencies>
-
+		
+		<!-- PicketBox CDI -->
+    	<dependency>
+    		<groupId>org.picketbox</groupId>
+    		<artifactId>picketbox-core</artifactId>
+    		<version>5.0.0-2012Sep26</version>
+    	</dependency>
+    	<dependency>
+    		<groupId>org.picketbox</groupId>
+    		<artifactId>picketbox-cdi</artifactId>
+    		<version>5.0.0-2012Sep26</version>
+    	</dependency>
+		
         <!-- First declare the APIs we depend on and need for compilation.
  All of them are provided by JBoss -->
 
@@ -153,20 +166,10 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
             <scope>test</scope>
         </dependency>
 
-        <!-- Optional, but highly recommended -->
-        <!-- Arquillian allows you to test enterprise code such as EJBs and
-    Transactional(JTA) JPA from JUnit/TestNG -->
         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <version>1.0.0.Final</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.arquillian.protocol</groupId>
-            <artifactId>arquillian-protocol-servlet</artifactId>
-            <version>1.0.0.Final</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
 
@@ -175,7 +178,17 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
             <artifactId>jackson-jaxrs</artifactId>
             <version>1.9.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <version>3.1.0.GA</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.servlet</groupId>
+            <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -215,10 +228,6 @@ given to the generated war, and hence the context root) -->
 
     <profiles>
         <profile>
-            <!-- The default profile skips all tests, though you can tune it
-  to run just unit tests based on a custom pattern -->
-            <!-- Seperate profiles are provided for running all tests, including
-    Arquillian tests that execute in the specified container -->
             <id>default</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -228,118 +237,6 @@ given to the generated war, and hence the context root) -->
                     <plugin>
                         <artifactId>maven-surefire-plugin</artifactId>
                         <version>2.4.3</version>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <!-- We add the JBoss repository as we need the JBoss AS connectors
-          for Arquillian -->
-            <repositories>
-                <!-- The JBoss Community public repository is a composite repository
-            of several major repositories -->
-                <!-- see http://community.jboss.org/wiki/MavenGettingStarted-Users -->
-                <repository>
-                    <id>jboss-public-repository</id>
-                    <name>JBoss Repository</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <!-- These optional flags are designed to speed up your builds
-               by reducing remote server calls -->
-                    <releases>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>jboss-public-repository</id>
-                    <name>JBoss Repository</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <releases>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
-
-            <!-- An optional Arquillian testing profile that executes tests
-       in your JBoss AS instance -->
-            <!-- This profile will start a new JBoss AS instance, and execute
-     the test, shutting it down when done -->
-            <!-- Run with: mvn clean test -Parq-jbossas-managed -->
-            <id>arq-jbossas-managed</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.as</groupId>
-                    <artifactId>jboss-as-arquillian-container-managed</artifactId>
-                    <version>7.1.0.Beta1b</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <!-- We add the JBoss repository as we need the JBoss AS connectors
-          for Arquillian -->
-            <repositories>
-                <!-- The JBoss Community public repository is a composite repository
-            of several major repositories -->
-                <!-- see http://community.jboss.org/wiki/MavenGettingStarted-Users -->
-                <repository>
-                    <id>jboss-public-repository</id>
-                    <name>JBoss Repository</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <!-- These optional flags are designed to speed up your builds
-               by reducing remote server calls -->
-                    <releases>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </repository>
-            </repositories>
-
-            <pluginRepositories>
-                <pluginRepository>
-                    <id>jboss-public-repository</id>
-                    <name>JBoss Repository</name>
-                    <url>http://repository.jboss.org/nexus/content/groups/public</url>
-                    <releases>
-                    </releases>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                </pluginRepository>
-            </pluginRepositories>
-
-            <!-- An optional Arquillian testing profile that executes tests
-      in a remote JBoss AS instance -->
-            <!-- Run with: mvn clean test -Parq-jbossas-remote -->
-            <id>arq-jbossas-remote</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.jboss.as</groupId>
-                    <artifactId>jboss-as-arquillian-container-remote</artifactId>
-                    <version>7.1.1.Final</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <version>2.4.3</version>
-                        <configuration>
-                            <includes>
-                                <include>**/*IT.java</include>
-                            </includes>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

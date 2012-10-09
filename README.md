@@ -28,6 +28,8 @@ With the prerequisites out of the way, you're ready to build and deploy.
 System requirements
 -------------------
 
+This application make use of PicketBox "timed releases" hosted on JBoss Maven repository, follow the configuration instructions [here](https://community.jboss.org/wiki/MavenSettings) for getting PicketBox dependencies working with our TODO application.
+
 To build the projects simply run the following command from the root directory:
 
     mvn clean install
@@ -56,4 +58,38 @@ For example
 
     $JBOSS_HOME/bin/standalone.sh -b 0.0.0.0 
 
-The client application will be running at the following URL <http://localhost:8080/todo/>.
+The client application will be running at the following URL <http://localhost:8080/todo-www/>.a
+
+Login instructions
+------------------
+
+This application aims to show role authorization control based on PicketBox and DeltaSpike integration.
+
+### Admin
+
+**username**: john
+
+**password**: 123
+
+**role**: admin
+
+**grants**: CRUD (*Create, read, update and delete*) Projects, Tags and Tasks
+
+### Simple
+
+**username**: jane
+
+**password**: 123
+
+**role**: simple
+
+**grants**: 
+
+* CRUD (*Create, read, update and delete*) Tasks
+* R (*Read*)  Projects and Tags
+
+
+Notes
+------
+
+This is a working progress using picketbox timed releases, for this reason add this configuration file https://gist.github.com/b8359b1b824ff8dfcf0c at your $HOME/.m2 folder. 
