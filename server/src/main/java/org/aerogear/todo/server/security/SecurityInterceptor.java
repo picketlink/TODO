@@ -35,7 +35,6 @@ import org.aerogear.todo.server.security.authc.social.openid.OpenIDSignInEndpoin
 import org.aerogear.todo.server.security.authc.social.twitter.TwitterSignInEndpoint;
 import org.aerogear.todo.server.security.register.RegistrationEndpoint;
 import org.apache.http.HttpStatus;
-import org.jboss.picketlink.cdi.authentication.AuthenticationException;
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.core.ResourceMethod;
 import org.jboss.resteasy.core.ServerResponse;
@@ -43,6 +42,7 @@ import org.jboss.resteasy.spi.Failure;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import org.picketbox.cdi.PicketBoxIdentity;
+import org.picketlink.cdi.authentication.AuthenticationException;
 
 /**
  * <p>

@@ -52,6 +52,7 @@
 						<webModule>
 							<groupId>org.jboss.aerogear.todo.clients.www</groupId>
 							<artifactId>todo-www</artifactId>
+							<contextRoot>/todo</contextRoot>
 						</webModule>
 					</modules>
 				</configuration>

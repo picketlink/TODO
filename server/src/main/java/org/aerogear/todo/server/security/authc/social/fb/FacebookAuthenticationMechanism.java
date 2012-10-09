@@ -28,20 +28,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.jboss.picketlink.idm.IdentityManager;
-import org.jboss.picketlink.idm.model.Group;
-import org.jboss.picketlink.idm.model.Role;
-import org.jboss.picketlink.idm.model.User;
 import org.picketbox.core.Credential;
 import org.picketbox.core.authentication.AuthenticationInfo;
-import org.picketbox.core.authentication.AuthenticationManager;
 import org.picketbox.core.authentication.AuthenticationResult;
 import org.picketbox.core.authentication.impl.AbstractAuthenticationMechanism;
 import org.picketbox.core.exceptions.AuthenticationException;
+import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.model.Group;
+import org.picketlink.idm.model.Role;
+import org.picketlink.idm.model.User;
 import org.picketlink.social.standalone.fb.FacebookPrincipal;
 import org.picketlink.social.standalone.fb.FacebookProcessor;
 
@@ -61,7 +61,8 @@ public class FacebookAuthenticationMechanism extends AbstractAuthenticationMecha
 
     protected FacebookProcessor processor;
     
-    protected IdentityManager identityManager;
+    @Inject
+    private IdentityManager identityManager;
 
     public FacebookAuthenticationMechanism() {
         clientID = System.getProperty("FB_CLIENT_ID");
@@ -73,15 +74,6 @@ public class FacebookAuthenticationMechanism extends AbstractAuthenticationMecha
         AUTH, AUTHZ, FINISH
     }; 
 
-    public IdentityManager getIdentityManager() {
-        return identityManager;
-    }
-
-    public void setIdentityManager(IdentityManager identityManager) {
-        this.identityManager = identityManager;
-    }
-
-    
     @Override
     public List<AuthenticationInfo> getAuthenticationInfo() {
         ArrayList<AuthenticationInfo> info = new ArrayList<AuthenticationInfo>();
@@ -95,8 +87,7 @@ public class FacebookAuthenticationMechanism extends AbstractAuthenticationMecha
      * @see org.picketbox.core.authentication.impl.AbstractAuthenticationMechanism#doAuthenticate(org.picketbox.core.authentication.AuthenticationManager, org.picketbox.core.Credential, org.picketbox.core.authentication.AuthenticationResult)
      */
     @Override
-    protected Principal doAuthenticate(AuthenticationManager authenticationManager, Credential credential,
-            AuthenticationResult result) throws AuthenticationException {
+    protected Principal doAuthenticate(Credential credential, AuthenticationResult result) throws AuthenticationException {
         FacebookCredential oAuthCredential = (FacebookCredential) credential;
         
         HttpServletRequest request = oAuthCredential.getRequest();

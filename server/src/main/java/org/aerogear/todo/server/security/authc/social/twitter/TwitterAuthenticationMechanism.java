@@ -26,20 +26,20 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.jboss.picketlink.idm.IdentityManager;
-import org.jboss.picketlink.idm.model.Group;
-import org.jboss.picketlink.idm.model.Role;
-import org.jboss.picketlink.idm.model.User;
 import org.picketbox.core.Credential;
 import org.picketbox.core.authentication.AuthenticationInfo;
-import org.picketbox.core.authentication.AuthenticationManager;
 import org.picketbox.core.authentication.AuthenticationResult;
 import org.picketbox.core.authentication.impl.AbstractAuthenticationMechanism;
 import org.picketbox.core.exceptions.AuthenticationException;
+import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.model.Group;
+import org.picketlink.idm.model.Role;
+import org.picketlink.idm.model.User;
 import org.picketlink.social.standalone.fb.FacebookProcessor;
 
 import twitter4j.Twitter;
@@ -64,7 +64,8 @@ public class TwitterAuthenticationMechanism extends AbstractAuthenticationMechan
 
     protected FacebookProcessor processor;
     
-    protected IdentityManager identityManager;
+    @Inject
+    private IdentityManager identityManager;
 
     public TwitterAuthenticationMechanism() {
         clientID = System.getProperty("TWIT_CLIENT_ID");
@@ -72,15 +73,6 @@ public class TwitterAuthenticationMechanism extends AbstractAuthenticationMechan
         returnURL = System.getProperty("TWIT_RETURN_URL");
     }
 
-    public IdentityManager getIdentityManager() {
-        return identityManager;
-    }
-
-    public void setIdentityManager(IdentityManager identityManager) {
-        this.identityManager = identityManager;
-    }
-
-    
     @Override
     public List<AuthenticationInfo> getAuthenticationInfo() {
         ArrayList<AuthenticationInfo> info = new ArrayList<AuthenticationInfo>();
@@ -94,8 +86,7 @@ public class TwitterAuthenticationMechanism extends AbstractAuthenticationMechan
      * @see org.picketbox.core.authentication.impl.AbstractAuthenticationMechanism#doAuthenticate(org.picketbox.core.authentication.AuthenticationManager, org.picketbox.core.Credential, org.picketbox.core.authentication.AuthenticationResult)
      */
     @Override
-    protected Principal doAuthenticate(AuthenticationManager authenticationManager, Credential credential,
-            AuthenticationResult result) throws AuthenticationException {
+    protected Principal doAuthenticate(Credential credential, AuthenticationResult result) throws AuthenticationException {
         TwitterCredential oAuthCredential = (TwitterCredential) credential;
         
         HttpServletRequest request = oAuthCredential.getRequest();

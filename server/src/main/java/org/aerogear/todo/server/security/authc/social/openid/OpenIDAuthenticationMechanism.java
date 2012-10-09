@@ -27,20 +27,20 @@ import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.jboss.picketlink.idm.IdentityManager;
-import org.jboss.picketlink.idm.model.Group;
-import org.jboss.picketlink.idm.model.Role;
-import org.jboss.picketlink.idm.model.User;
 import org.picketbox.core.Credential;
 import org.picketbox.core.authentication.AuthenticationInfo;
-import org.picketbox.core.authentication.AuthenticationManager;
 import org.picketbox.core.authentication.AuthenticationResult;
 import org.picketbox.core.authentication.impl.AbstractAuthenticationMechanism;
 import org.picketbox.core.exceptions.AuthenticationException;
+import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.model.Group;
+import org.picketlink.idm.model.Role;
+import org.picketlink.idm.model.User;
 import org.picketlink.social.standalone.oauth.OpenIDProcessor;
 import org.picketlink.social.standalone.oauth.OpenIdPrincipal;
 
@@ -58,7 +58,8 @@ public class OpenIDAuthenticationMechanism extends AbstractAuthenticationMechani
 
     protected OpenIDProcessor processor;
     
-    protected IdentityManager identityManager;
+    @Inject
+    private IdentityManager identityManager;
 
     public OpenIDAuthenticationMechanism() {
         requiredAttributes = System.getProperty("OPENID_REQUIRED","name,email,ax_firstName,ax_lastName,ax_fullName,ax_email");
@@ -70,15 +71,6 @@ public class OpenIDAuthenticationMechanism extends AbstractAuthenticationMechani
         AUTH, AUTHZ, FINISH
     }; 
 
-    public IdentityManager getIdentityManager() {
-        return identityManager;
-    }
-
-    public void setIdentityManager(IdentityManager identityManager) {
-        this.identityManager = identityManager;
-    }
-
-    
     @Override
     public List<AuthenticationInfo> getAuthenticationInfo() {
         ArrayList<AuthenticationInfo> info = new ArrayList<AuthenticationInfo>();
@@ -92,8 +84,7 @@ public class OpenIDAuthenticationMechanism extends AbstractAuthenticationMechani
      * @see org.picketbox.core.authentication.impl.AbstractAuthenticationMechanism#doAuthenticate(org.picketbox.core.authentication.AuthenticationManager, org.picketbox.core.Credential, org.picketbox.core.authentication.AuthenticationResult)
      */
     @Override
-    protected Principal doAuthenticate(AuthenticationManager authenticationManager, Credential credential,
-            AuthenticationResult result) throws AuthenticationException {
+    protected Principal doAuthenticate(Credential credential, AuthenticationResult result) throws AuthenticationException {
         OpenIDCredential oAuthCredential = (OpenIDCredential) credential;
         if (processor == null)
             processor = new OpenIDProcessor(returnURL, requiredAttributes, optionalAttributes);

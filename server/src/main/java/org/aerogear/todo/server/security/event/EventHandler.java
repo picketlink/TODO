@@ -28,10 +28,11 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Observes;
 
-import org.picketbox.core.authentication.AuthenticationManager;
+import org.picketbox.core.UserContext;
+import org.picketbox.core.authentication.AuthenticationResult;
 import org.picketbox.core.authentication.AuthenticationStatus;
-import org.picketbox.core.authentication.event.AuthenticationEvent;
 import org.picketbox.core.authentication.event.UserAuthenticatedEvent;
+import org.picketbox.core.event.PicketBoxEvent;
 
 /**
  * <p>
@@ -52,7 +53,7 @@ public class EventHandler {
      * @param event
      */
     @SuppressWarnings("rawtypes")
-    public void onAnyAuthenticationEvent(@Observes AuthenticationEvent event) {
+    public void onAnyAuthenticationEvent(@Observes PicketBoxEvent event) {
     }
 
     /**
@@ -64,13 +65,15 @@ public class EventHandler {
      * @param event
      */
     public void onUserAuthenticatedEvent(@Observes UserAuthenticatedEvent event) {
-        AuthenticationStatus status = event.getResult().getStatus();
+        UserContext subject = event.getUserContext();
+        AuthenticationResult authenticationResult = subject.getAuthenticationResult();
+        AuthenticationStatus status = authenticationResult.getStatus();
 
         // list of messages gathered during the authentication
-        List<String> messages = event.getResult().getMessages();
+        List<String> messages = authenticationResult.getMessages();
 
         if (status.equals(AuthenticationStatus.SUCCESS)) {
-            Principal principal = event.getResult().getPrincipal();
+            Principal principal = authenticationResult.getPrincipal();
             // handle a successfull authentication
         } else if (status.equals(AuthenticationStatus.FAILED)) {
             // handle a failed authentication
