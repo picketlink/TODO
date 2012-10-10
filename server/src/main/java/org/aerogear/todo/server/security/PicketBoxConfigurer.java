@@ -25,11 +25,11 @@ package org.aerogear.todo.server.security;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 
-import org.aerogear.todo.server.security.authc.otp.OTPAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.twitter.TwitterAuthenticationMechanism;
 import org.picketbox.cdi.idm.DefaultJPATemplate;
+import org.picketbox.core.authentication.impl.OTPAuthenticationMechanism;
 import org.picketbox.core.config.ConfigurationBuilder;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.internal.jpa.JPATemplate;
