@@ -189,6 +189,12 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
             <artifactId>jboss-servlet-api_3.0_spec</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>3.4.0.GA</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
