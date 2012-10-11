@@ -19,9 +19,12 @@ package org.aerogear.todo.server.model;
 import org.aerogear.todo.server.serializer.TaskCustomSerializer;
 import org.aerogear.todo.server.util.DateBuilder;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -63,7 +66,8 @@ public class Task implements Serializable {
     private Calendar date = GregorianCalendar.getInstance();
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     @JoinTable(name = "task_tag",
             joinColumns = @JoinColumn(name = "task_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tags_id", referencedColumnName = "id"))

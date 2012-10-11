@@ -18,9 +18,12 @@ package org.aerogear.todo.server.model;
 
 import org.aerogear.todo.server.serializer.ProjectCustomSerializer;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -46,7 +49,8 @@ public class Project implements Serializable {
     @Column
     private String style;
 
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER)
+    @Fetch(FetchMode.JOIN)
     private Set<Task> tasks = new HashSet<Task>();
 
     public Project() {
