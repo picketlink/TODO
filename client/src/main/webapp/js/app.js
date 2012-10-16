@@ -2,7 +2,7 @@ $( function() {
     var overlayTimer;
 
     // Instantiate our authenticator
-    var restAuth = aerogear.auth({
+    var restAuth = AeroGear.Auth({
         name: "auth",
         settings: {
             agAuth: true,
@@ -11,7 +11,7 @@ $( function() {
     }).modules.auth;
 
     // Instantiate our pipeline
-    var todo = aerogear.pipeline([
+    var todo = AeroGear.Pipeline([
             {
                 name: "tasks",
                 settings: {
@@ -42,7 +42,7 @@ $( function() {
         tagContainer = $( "#tag-list" );
 
         //Creating the DataManagers:
-        var dm = aerogear.dataManager([ "tasks", "tags", "projects"]),
+        var dm = AeroGear.DataManager([ "tasks", "tags", "projects"]),
         TasksStore = dm.stores[ "tasks" ],
         ProjectsStore = dm.stores[ "projects" ],
         TagsStore = dm.stores[ "tags" ];
@@ -232,7 +232,7 @@ $( function() {
                     sessionStorage.removeItem( "username" );
                     sessionStorage.removeItem( "access" );
 
-                    restAuth.register( JSON.stringify( data ), {
+                    restAuth.enroll( JSON.stringify( data ), {
                         contentType: "application/json",
                         dataType: "json",
                         success: function( data ) {
@@ -300,7 +300,7 @@ $( function() {
             current,
             success = function( data ) {
                 for ( var item in data ) {
-                    current = filterData( data[ item ], TasksStore.data )[ 0 ];
+                    current = filterData( data[ item ], TasksStore.getData() )[ 0 ];
                     if ( type == "project" ) {
                         current.project = null;
                     } else if ( type == "tag" ) {
@@ -356,7 +356,7 @@ $( function() {
 
         switch( target.data( "type" ) ) {
             case "project":
-                toEdit = filterData( target, ProjectsStore.data )[ 0 ];
+                toEdit = filterData( target, ProjectsStore.getData() )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -370,7 +370,7 @@ $( function() {
                 $( ".add-project" ).click();
                 break;
             case "tag":
-                toEdit = filterData( target, TagsStore.data )[ 0 ];
+                toEdit = filterData( target, TagsStore.getData() )[ 0 ];
                 if ( toEdit.style ) {
                     rgb = toEdit.style.substr( toEdit.style.indexOf( "-" ) + 1 ).split( "-" );
                 } else {
@@ -384,7 +384,7 @@ $( function() {
                 $( ".add-tag" ).click();
                 break;
             case "task":
-                toEdit = filterData( target, TasksStore.data )[ 0 ];
+                toEdit = filterData( target, TasksStore.getData() )[ 0 ];
 
                 $( "#task-id" ).val( toEdit.id );
                 $( "#task-title" ).val( toEdit.title );
@@ -518,7 +518,7 @@ $( function() {
     }
 
     function updateTaskList() {
-        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: TasksStore.data, tags: TagsStore.data, projects: ProjectsStore.data } );
+        var taskList = _.template( $( "#task-tmpl" ).html(), { tasks: TasksStore.getData(), tags: TagsStore.getData(), projects: ProjectsStore.getData() } );
 
         $( "#task-list-container" ).html( taskList );
 
@@ -531,11 +531,11 @@ $( function() {
             projectSelect = "",
             styleList = "";
 
-        styleList = parseClasses( ProjectsStore.data );
+        styleList = parseClasses( ProjectsStore.getData() );
         $( "#project-styles" ).html( styleList );
 
-        projectList = _.template( $( "#project-tmpl" ).html(), { projects: ProjectsStore.data } );
-        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: ProjectsStore.data } );
+        projectList = _.template( $( "#project-tmpl" ).html(), { projects: ProjectsStore.getData() } );
+        projectSelect = _.template( $( "#project-select-tmpl" ).html(), { projects: ProjectsStore.getData() } );
         $( "#project-container" ).html( projectList );
         projectSelect = '<option value="">No Project</option>' + projectSelect;
         $( "#task-project-select" ).html( projectSelect );
@@ -547,14 +547,14 @@ $( function() {
             tagSelect = "",
             styleList = "";
 
-        styleList = parseClasses( TagsStore.data, "1" );
+        styleList = parseClasses( TagsStore.getData(), "1" );
         $( "#tag-styles" ).html( styleList );
 
-        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: TagsStore.data } );
+        tagList = _.template( $( "#tag-tmpl" ).html(), { tags: TagsStore.getData()} );
         tagSelect = "";
-        if ( TagsStore.data && TagsStore.data.length ) {
-            for ( i = 0; i < TagsStore.data.length; i += 3 ) {
-                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: TagsStore.data.slice( i, i+3 ) } );
+        if ( TagsStore.getData() && TagsStore.getData().length ) {
+            for ( i = 0; i < TagsStore.getData().length; i += 3 ) {
+                tagSelect += _.template( $( "#tag-select-tmpl" ).html(), { tags: TagsStore.getData().slice( i, i+3 ) } );
             }
         }
         $( "#tag-container" ).html( tagList );
