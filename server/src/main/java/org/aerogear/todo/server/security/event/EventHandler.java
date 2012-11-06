@@ -32,7 +32,6 @@ import org.picketbox.core.UserContext;
 import org.picketbox.core.authentication.AuthenticationResult;
 import org.picketbox.core.authentication.AuthenticationStatus;
 import org.picketbox.core.authentication.event.UserAuthenticatedEvent;
-import org.picketbox.core.event.PicketBoxEvent;
 
 /**
  * <p>
@@ -44,17 +43,6 @@ import org.picketbox.core.event.PicketBoxEvent;
  */
 @ApplicationScoped
 public class EventHandler {
-
-    /**
-     * <p>
-     * Method that observes PicketBox {@link AuthenticationEvent} events.
-     * </p>
-     * 
-     * @param event
-     */
-    @SuppressWarnings("rawtypes")
-    public void onAnyAuthenticationEvent(@Observes PicketBoxEvent event) {
-    }
 
     /**
      * <p>
