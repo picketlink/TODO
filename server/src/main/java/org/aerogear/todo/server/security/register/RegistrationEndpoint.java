@@ -31,6 +31,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.credential.PasswordCredential;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.User;
 
@@ -80,11 +81,11 @@ public class RegistrationEndpoint {
         user.setAttribute("state", state);
         user.setAttribute("country", country);
         
-        identityManager.updatePassword(user, password);
+        this.identityManager.updateCredential(user, new PasswordCredential("123"));
         
         Role roleGuest = this.identityManager.createRole("guest");
         
-        identityManager.grantRole(roleGuest, user, null);
+        this.identityManager.grantRole(roleGuest, user, null);
         
         RegistrationResponse response = new RegistrationResponse();
         response.setStatus("Success");

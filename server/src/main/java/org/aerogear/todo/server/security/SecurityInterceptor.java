@@ -43,7 +43,7 @@ import org.jboss.resteasy.spi.Failure;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import org.picketbox.cdi.PicketBoxIdentity;
-import org.picketlink.cdi.authentication.AuthenticationException;
+import org.picketlink.authentication.AuthenticationException;
 
 /**
  * <p>
