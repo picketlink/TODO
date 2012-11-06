@@ -31,8 +31,7 @@ import org.aerogear.todo.server.security.authc.social.twitter.TwitterAuthenticat
 import org.picketbox.cdi.idm.DefaultJPATemplate;
 import org.picketbox.core.authentication.impl.OTPAuthenticationMechanism;
 import org.picketbox.core.config.ConfigurationBuilder;
-import org.picketlink.idm.IdentityManager;
-import org.picketlink.idm.internal.jpa.JPATemplate;
+import org.picketlink.idm.jpa.schema.internal.JPATemplate;
 
 /**
  * <p>
@@ -65,9 +64,6 @@ public class PicketBoxConfigurer {
 
     @Inject
     private OTPAuthenticationMechanism otpAuthenticationMechanism;
-    
-    @Inject
-    private IdentityManager identityManager;
     
     /**
      * <p>

@@ -30,8 +30,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
-import org.picketbox.core.identity.impl.EntityManagerContext;
+import org.picketbox.core.identity.impl.JPAIdentityStoreContext;
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.credential.PasswordCredential;
 import org.picketlink.idm.model.Group;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.User;
@@ -56,7 +57,7 @@ public class DatabaseIdentityStoreLoader {
     //TODO this entire initialization code will be removed
     @PostConstruct
     public void create() {
-        EntityManagerContext.set(this.entityManager);
+        JPAIdentityStoreContext.set(this.entityManager);
         
         User abstractj = this.identityManager.createUser("abstractj");
 
@@ -64,7 +65,7 @@ public class DatabaseIdentityStoreLoader {
         abstractj.setFirstName("Bruno");
         abstractj.setLastName("Oliveira");
         
-        this.identityManager.updatePassword(abstractj, "123");
+        this.identityManager.updateCredential(abstractj, new PasswordCredential("123"));
         
         Role roleDeveloper = this.identityManager.createRole("developer");
         Role roleAdmin = this.identityManager.createRole("admin");
@@ -80,13 +81,13 @@ public class DatabaseIdentityStoreLoader {
         guest.setFirstName("Guest");
         guest.setLastName("User");
 
-        this.identityManager.updatePassword(guest, "123");
+        this.identityManager.updateCredential(guest, new PasswordCredential("123"));
         
         Role roleGuest = this.identityManager.createRole("guest");
         
         identityManager.grantRole(roleGuest, guest, groupCoreDeveloper);
         
-        EntityManagerContext.clear();
+        JPAIdentityStoreContext.clear();
     }
 
 }
