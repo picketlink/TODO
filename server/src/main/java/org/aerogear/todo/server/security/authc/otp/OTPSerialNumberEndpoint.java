@@ -76,7 +76,7 @@ public class OTPSerialNumberEndpoint {
         
         userInfo.setRoles(rolesArray);
         
-        User idmuser = identityManager.getUser(user.getKey());
+        User idmuser = identityManager.getUser(user.getId());
         String serialNumber = idmuser.getAttribute("serial");
         if(serialNumber == null){
             //Generate serial number
