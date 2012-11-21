@@ -61,6 +61,7 @@ import org.picketlink.authentication.AuthenticationException;
 public class SecurityInterceptor implements PreProcessInterceptor {
 
     private static final String AUTH_TOKEN_HEADER_NAME = "Auth-Token";
+    
     @Inject
     private PicketBoxIdentity identity;
 
