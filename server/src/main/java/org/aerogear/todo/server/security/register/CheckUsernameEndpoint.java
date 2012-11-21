@@ -31,25 +31,19 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.picketlink.idm.IdentityManager;
-import org.picketlink.idm.credential.PasswordCredential;
-import org.picketlink.idm.model.Role;
-import org.picketlink.idm.model.SimpleUser;
 import org.picketlink.idm.model.User;
 
 /**
  * <p>
- * JAX-RS Endpoint to register users.
- * </p>
- * <p>
- * This class demonstrates how to inject and use the {@link IdentityManager} instance to manage users, groups and roles.
+ * JAX-RS Endpoint that checks if an username is already use.
  * </p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  * 
  */
 @Stateless
-@Path("/register")
-public class RegistrationEndpoint {
+@Path("/checkUsername")
+public class CheckUsernameEndpoint {
 
     @Inject
     private IdentityManager identityManager;
@@ -65,44 +59,18 @@ public class RegistrationEndpoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public RegistrationResponse register(final RegistrationRequest request) {
+    public RegistrationResponse checkUsername(final RegistrationRequest request) {
         RegistrationResponse response = new RegistrationResponse();
         
-        if (!validateUserInformation(request)) {
-            response.setStatus("All fields are required.");
-            return response;
-        }
+        if (!"".equals(request.getUserName())) {
+            User user = this.identityManager.getUser(request.getUserName());
+            
+            if (user != null) {
+                response.setStatus("This username is already in use. Choose another one.");
+            }
+        } 
         
-        if (isUsernameAlreadyInUse(request)) {
-            User user = new SimpleUser(request.getUserName());
-
-            user.setFirstName(request.getFirstName());
-            user.setEmail(request.getEmail());
-            user.setLastName(request.getLastName());
-
-            this.identityManager.createUser(user);
-            this.identityManager.updateCredential(user, new PasswordCredential(request.getPassword()));
-
-            Role roleGuest = this.identityManager.createRole("guest");
-
-            this.identityManager.grantRole(roleGuest, user, null);
-
-            response.setStatus("Success");
-        } else {
-            response.setStatus("This username is already in use. Choose another one.");
-        }
-
         return response;
-    }
-
-    /**
-     * <p>Checks if the provided username is already in use.</p>
-     * 
-     * @param request
-     * @return
-     */
-    private boolean isUsernameAlreadyInUse(final RegistrationRequest request) {
-        return this.identityManager.getUser(request.getUserName()) == null;
     }
     
     /**
