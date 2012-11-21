@@ -29,7 +29,6 @@ import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationM
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.twitter.TwitterAuthenticationMechanism;
 import org.picketbox.cdi.idm.DefaultJPATemplate;
-import org.picketbox.core.authentication.impl.OTPAuthenticationMechanism;
 import org.picketbox.core.config.ConfigurationBuilder;
 import org.picketlink.idm.jpa.schema.internal.JPATemplate;
 
@@ -60,11 +59,7 @@ public class PicketBoxConfigurer {
 
     @Inject
     private TwitterAuthenticationMechanism twitterAuthenticationMechanism;
-    
 
-    @Inject
-    private OTPAuthenticationMechanism otpAuthenticationMechanism;
-    
     /**
      * <p>
      * Produces the {@link ConfigurationBuilder}.
@@ -80,12 +75,9 @@ public class PicketBoxConfigurer {
         builder
             .authentication()
                 .mechanism(this.fbAuthenticationMechanism)
-                .mechanism(openidAuthenticationMechanism)
-                .mechanism(twitterAuthenticationMechanism);
+                .mechanism(this.openidAuthenticationMechanism)
+                .mechanism(this.twitterAuthenticationMechanism);
         
-        //Configure OTP
-        builder.authentication().mechanism(otpAuthenticationMechanism);
-
         // configure the identity manager using a JPA-based identity store.
         builder
             .identityManager()

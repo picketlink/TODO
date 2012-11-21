@@ -16,19 +16,20 @@
 <link rel="stylesheet" href="css/security.css">
 <link href='http://fonts.googleapis.com/css?family=Aldrich'
 	rel='stylesheet' type='text/css'>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script>window.jQuery || document.write( '<script src="js/libs/jquery.min.js"><\/script>' )</script>
-    <script src="js/libs/bootstrap.min.js"></script>
-    <script src="js/libs/lodash.min.js"></script>
-    <script src="js/libs/aerogear.min.js"></script>
-    <script src="js/libs/jquery.miniColors.min.js"></script>
-    <script src="js/libs/jquery.maskedinput-1.3.min.js"></script>
-    <!-- Temporary mocking, remove once server side is complete -->
-    <script src="js/libs/jquery.mockjax.js"></script>
-    <script src="js/mocks.js"></script>
-    <script src="js/security.js"></script>
-    <!-- End mocking -->
-    <script src="js/app.js"></script>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>window.jQuery || document.write( '<script src="js/libs/jquery.min.js"><\/script>' )</script>
+<script src="js/libs/bootstrap.min.js"></script>
+<script src="js/libs/lodash.min.js"></script>
+<script src="js/libs/aerogear.min.js"></script>
+<script src="js/libs/jquery.miniColors.min.js"></script>
+<script src="js/libs/jquery.maskedinput-1.3.min.js"></script>
+<!-- Temporary mocking, remove once server side is complete -->
+<script src="js/libs/jquery.mockjax.js"></script>
+<script src="js/mocks.js"></script>
+<script src="js/security.js"></script>
+<!-- End mocking -->
+<script src="js/app.js"></script>
 
 <script src="js/libs/modernizr-2.6.1.min.js"></script>
 
@@ -63,47 +64,44 @@
 				<form name="theForm">
 					<div id="login-msg" style="color: red"></div>
 					<fieldset>
-						<label for="username" id="username_label">User Name</label> 
-						<input
-							name="username" id="username" type="text" required
-							placeholder="" class="medium-text"/> 
-						<label for="password"
-							id="password_label">Password</label> 
-						<input name="password" 
-							id="password" type="password" required placeholder="" class="medium-text"/>
-						<br/>
-						<input type="submit" id="login-btn" value="Sign in" class="login-button"/><span
-							id="result"></span>
+						<label for="username" id="username_label">User Name</label> <input
+							name="username" id="username" type="text" required placeholder="Your Username" required
+							class="medium-text" /> <label for="password" id="password_label">Password</label>
+						<input name="password" id="password" type="password" required
+							placeholder="Your Password" class="medium-text" /> <br /> <input
+							type="submit" id="login-btn" value="Sign in" class="login-button" /><span
+							id="result"></span> <input type="submit" id="signup-btn"
+							value="First access ?" class="login-button" /><span id="result"></span>
 					</fieldset>
 				</form>
+				<p>
+					<b>Do you have a One-Time Password (OTP)</b> ?
+				</p>
+				<label for="otp" id="OTP_label">Token</label> <input name="otp"
+					id="otp" type="password" required placeholder="Your One-Time Password" /> <br /> <i>(You
+					also need to provide your username and password)</i> <br /> <input
+					type="submit" id="otp-btn" value="Sign In" class="login-button" />
+				<br /> <br />
+				<p>
+					<b>Others Authentication Methods</b>:
+				</p>
+				<ul>
+					<li><div id="facebook-login-box">
+							<img id="facebook-sign" src="img/fb_login_icon.gif" border="0" />
+						</div></li>
+					<li>
+						<div id="google-login-box">
+							<img id="google-sign" src="img/login-with-google.png" border="0" />
+						</div>
+					</li>
+					<li>
+						<div id="twitter-login-box">
+							<img id="twitter-sign" src="img/login-with-twitter.png" />
+						</div>
+					</li>
+				</ul>
 			</div>
 		</div>
-		
-		<div class="row todo-app">
-		<div id="facebook-login-box" class="login-box">
-		   <img id="facebook-sign" src="img/login-with-facebook.png" height="50"/>
-		</div>
-		<div id="google-login-box" class="login-box">
-		   <img id="google-sign" src="img/login-with-google.png"/>
-		</div>
-		<div id="twitter-login-box" class="login-box">
-		   <img id="twitter-sign" src="img/login-with-twitter.png"/>
-		</div>
-		<div id="row signup-login-box" class="login-box">
-		   <input type="submit" id="signup-btn" value="Sign Up"/><span
-							id="result"></span>
-		</div>
-		<div id="row otp-login-box" class="login-box">
-		            <label for="otp"
-							id="OTP_label">OTP</label> 
-						<input name="otp" 
-							id="otp" type="password" required placeholder="" class="medium-text"/>
-						<br/>
-		   <input type="submit" id="otp-btn" value="OTP Login"/><span
-							id="result"></span>
-		</div>
-		 
-	</div>
-	<footer class="navbar navbar-fixed-bottom"></footer>
+		<footer class="navbar navbar-fixed-bottom"></footer>
 </body>
 </html>
