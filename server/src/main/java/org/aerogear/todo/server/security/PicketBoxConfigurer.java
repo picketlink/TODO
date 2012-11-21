@@ -60,7 +60,6 @@ public class PicketBoxConfigurer {
 
     @Inject
     private TwitterAuthenticationMechanism twitterAuthenticationMechanism;
-    
 
     @Inject
     private OTPAuthenticationMechanism otpAuthenticationMechanism;

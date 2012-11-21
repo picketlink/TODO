@@ -21,6 +21,29 @@
     border: 1px black solid;
 }
 
+.register-title-box {
+	width: 460px;
+    padding: 12px 10px;
+    margin: 10px auto;
+    background-color: #CCCCCC;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    display: block;
+}
+
+.register-box {
+	width: 460px;
+    padding: 12px 9px;
+    margin: -10px auto;
+    background-color: #FFFFFF;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    display: block;
+    border: 1px black solid;
+}
+
 .login-button {
 	font-weight: bold;
 	height: 35px;

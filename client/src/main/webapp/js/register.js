@@ -28,12 +28,28 @@ $(document).ready(function() {
                 if (data.status.indexOf('Success') > -1) {
                 	alert("Registration Successful. Please login..");
                 	window.location = getHost() + "/login.html";
-                } else {
+                } else if (data.status.length == 0){
                 	$('#register-msg').text("Registration failed. Try again ...");
+                } else {
+                	$('#register-msg').text(data.status);
                 }
             }
         });
         
 		return false; // prevents submit of the form
 	});
+	//Register
+	$('#username').on('focusout', (function(e) {
+		var jqxhr = $.ajax('/todo-server/checkUsername', {
+			contentType: "application/json",
+            dataType:'json',
+            data:JSON.stringify({userName:$('#username').val()}),
+            type:'POST', 
+            success:function (data) {
+                if (data.status && data.status.length > 0){
+                	$('#register-msg').text(data.status);
+                }
+            }
+        });
+	}));
 });
