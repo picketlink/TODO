@@ -72,7 +72,7 @@ read this as the JBoss stack of the Java EE 6 APIs) -->
     	<dependency>
     		<groupId>org.picketbox</groupId>
     		<artifactId>picketbox-cdi</artifactId>
-    		<version>5.0.0-2012Nov21</version>
+    		<version>5.0.0-2012Nov26</version>
     	</dependency>
 
         <!-- First declare the APIs we depend on and need for compilation.
