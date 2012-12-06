@@ -65,11 +65,7 @@ $( function() {
     $( ".add-project, .add-tag, .add-task" ).on( "click", function( event ) {
         var isAdmin = sessionStorage.getItem( "access" ) === "1" ? true : false;
         if ( restAuth.isAuthenticated() && ( isAdmin || $( this ).is( ".add-task" ) ) ) {
-            var target = $( event.currentTarget ),
-                today = new Date();
-
-            // Initialize the date field in the task form
-            $( "#task-date" ).val( today.getFullYear() + "-" + ( "0" + ( today.getMonth() + 1 ) ).slice( -2 ) + "-" + ( "0" + today.getDate() ).slice( -2 ) );
+            var target = $( event.currentTarget );
 
             target.parent().height( "100%" );
             target.slideUp( "slow" );
@@ -120,10 +116,10 @@ $( function() {
             data, hex, tags, errorElement;
 
         form.find( "input" ).each( function() {
-            if ( !$.trim( $( this ).val() ).length && this.type != "hidden" ) {
-                formValid = false;
-                errorElement = $( this );
-                return false;
+            if ( !$.trim( $( this ).val() ).length && this.type != "hidden" && this.name != "date") {
+                    formValid = false;
+                    errorElement = $( this );
+                    return false;
             }
         });
 

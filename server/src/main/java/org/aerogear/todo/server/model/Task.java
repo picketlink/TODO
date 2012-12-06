@@ -138,7 +138,11 @@ public class Task implements Serializable {
     }
 
     public void setDate(final Calendar date) {
-        this.date = newDateBuilder().withCalendar(date).build();
+        if(date != null) {
+            this.date = newDateBuilder().withCalendar(date).build();
+        } else {
+            this.date = date;
+        }
     }
 
     public String toString() {
