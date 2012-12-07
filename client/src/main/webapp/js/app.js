@@ -113,7 +113,7 @@ $( function() {
             isUpdate = false,
             plus = '<i class="icon-plus-sign"></i>',
             filteredData = [],
-            data, hex, tags, errorElement,dateTest;
+            data, hex, tags, errorElement, dateTest;
 
         form.find( "input" ).each( function() {
             if ( !$.trim( $( this ).val() ).length && this.type != "hidden" && this.name != "date") {
@@ -123,7 +123,7 @@ $( function() {
             }
             if( this.name == "date" && $.trim( $( this ).val() ).length ) {
                 dateTest = new Date( $( this ).val() );
-                if( isNaN( dateTest.valueOf() ) ) {
+                if( isNaN( dateTest.getTime() ) ) {
                     formValid = false;
                     errorElement = $( this );
                     return false;
