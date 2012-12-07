@@ -441,8 +441,6 @@ $( function() {
         } else if ( filteredProjects.length < 1 && filteredTags.length ) {
             //Just Tags
             filteredData = TasksStore.filter( { "tags" : { data: getTargetIds( filteredTags ), matchAny: true } } );
-        } else {
-            //Nothing Selected. Restore the Original View
         }
 
         updateTaskList( filteredData );
