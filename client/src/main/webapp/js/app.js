@@ -113,7 +113,7 @@ $( function() {
             isUpdate = false,
             plus = '<i class="icon-plus-sign"></i>',
             filteredData = [],
-            data, hex, tags, errorElement;
+            data, hex, tags, errorElement,dateTest;
 
         form.find( "input" ).each( function() {
             if ( !$.trim( $( this ).val() ).length && this.type != "hidden" && this.name != "date") {
@@ -121,11 +121,23 @@ $( function() {
                     errorElement = $( this );
                     return false;
             }
+            if( this.name == "date" && $.trim( $( this ).val() ).length ) {
+                dateTest = new Date( $( this ).val() );
+                if( isNaN( dateTest.valueOf() ) ) {
+                    formValid = false;
+                    errorElement = $( this );
+                    return false;
+                }
+            }
         });
 
         // Handle invalid form
         if ( !formValid ) {
-            errorElement.addClass( "form-error" ).val( "Field may not be empty" );
+            if( errorElement[0].name == "date" ) {
+                errorElement.addClass( "form-error" ).val( "Not a valid date" );
+            } else {
+                errorElement.addClass( "form-error" ).val( "Field may not be empty" );
+            }
         } else {
             data = form.serializeObject();
             if ( data.id && data.id.length ) {
