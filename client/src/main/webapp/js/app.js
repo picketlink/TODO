@@ -113,7 +113,7 @@ $( function() {
             isUpdate = false,
             plus = '<i class="icon-plus-sign"></i>',
             filteredData = [],
-            data, hex, tags, errorElement, dateTest;
+            data, hex, tags, errorElement, dateTest, today;
 
         form.find( "input" ).each( function() {
             if ( !$.trim( $( this ).val() ).length && this.type != "hidden" && this.name != "date") {
@@ -123,7 +123,8 @@ $( function() {
             }
             if( this.name == "date" && $.trim( $( this ).val() ).length ) {
                 dateTest = new Date( $( this ).val() );
-                if( isNaN( dateTest.getTime() ) ) {
+                today = new Date();
+                if( isNaN( dateTest.getTime() ) || dateTest.getTime() < today.getTime() ) {
                     formValid = false;
                     errorElement = $( this );
                     return false;
@@ -134,7 +135,7 @@ $( function() {
         // Handle invalid form
         if ( !formValid ) {
             if( errorElement[0].name == "date" ) {
-                errorElement.addClass( "form-error" ).val( "Not a valid date" );
+                errorElement.addClass( "form-error" ).val( "Enter a valid date in the future" );
             } else {
                 errorElement.addClass( "form-error" ).val( "Field may not be empty" );
             }
