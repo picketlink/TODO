@@ -49,7 +49,7 @@ public class PicketBoxConfigurer {
      * </p>
      */
     @Inject
-    private JPATemplate jpaTemplate;
+    private DefaultJPATemplate jpaTemplate;
 
     @Inject
     private FacebookAuthenticationMechanism fbAuthenticationMechanism;
