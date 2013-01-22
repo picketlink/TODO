@@ -18,7 +18,6 @@ package org.aerogear.todo.server.rest;
 
 import java.util.List;
 
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;

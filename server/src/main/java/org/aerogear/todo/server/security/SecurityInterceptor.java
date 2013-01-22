@@ -28,8 +28,6 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
 
-import org.aerogear.todo.server.security.authc.AuthenticationResponse;
-import org.aerogear.todo.server.security.authc.SignInEndpoint;
 import org.aerogear.todo.server.security.authc.otp.OTPSignInEndpoint;
 import org.aerogear.todo.server.security.authc.social.fb.FacebookSignInEndpoint;
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDSignInEndpoint;
@@ -43,15 +41,20 @@ import org.jboss.resteasy.core.ServerResponse;
 import org.jboss.resteasy.spi.Failure;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
-import org.picketbox.cdi.PicketBoxIdentity;
+import org.picketbox.jaxrs.model.AuthenticationResponse;
 import org.picketlink.authentication.AuthenticationException;
+import org.picketlink.extensions.core.auth.SignInEndpoint;
+import org.picketlink.extensions.core.pbox.PicketBoxIdentity;
 
 /**
  * <p>
  * Implementation of {@link PreProcessInterceptor} that checks the existence of the authentication token before invoking the
  * destination endpoint.
  * </p>
- * <p>If the token is valid, the {@link PicketBoxIdentity} will restored with the all user information.</p>
+ * <p>
+ * If the token is valid, the {@link PicketBoxIdentity} will be restored with all user information. This can be done given that
+ * PicketBox is configured to manage internal sessions. That said, each token maps to a specific session.
+ * </p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  * 
@@ -61,12 +64,15 @@ import org.picketlink.authentication.AuthenticationException;
 public class SecurityInterceptor implements PreProcessInterceptor {
 
     private static final String AUTH_TOKEN_HEADER_NAME = "Auth-Token";
-    
+
     @Inject
     private PicketBoxIdentity identity;
 
-    /* (non-Javadoc)
-     * @see org.jboss.resteasy.spi.interception.PreProcessInterceptor#preProcess(org.jboss.resteasy.spi.HttpRequest, org.jboss.resteasy.core.ResourceMethod)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.jboss.resteasy.spi.interception.PreProcessInterceptor#preProcess(org.jboss.resteasy.spi.HttpRequest,
+     * org.jboss.resteasy.core.ResourceMethod)
      */
     @Override
     public ServerResponse preProcess(HttpRequest request, ResourceMethod method) throws Failure, WebApplicationException {
@@ -75,7 +81,7 @@ public class SecurityInterceptor implements PreProcessInterceptor {
         if (requiresAuthentication(method) && !this.identity.isLoggedIn()) {
             boolean isLoggedIn = false;
             String token = getToken(request);
-            
+
             if (token != null) {
                 try {
                     isLoggedIn = identity.restoreSession(token);
@@ -86,9 +92,9 @@ public class SecurityInterceptor implements PreProcessInterceptor {
 
             if (!isLoggedIn) {
                 AuthenticationResponse authcResponse = new AuthenticationResponse();
-                
+
                 authcResponse.setLoggedIn(false);
-                
+
                 response = new ServerResponse();
                 response.setEntity(authcResponse);
                 response.setStatus(HttpStatus.SC_FORBIDDEN);
@@ -99,7 +105,9 @@ public class SecurityInterceptor implements PreProcessInterceptor {
     }
 
     /**
-     * <p>Retrieve the token from the request, if present.</p>
+     * <p>
+     * Retrieve the token from the request, if present.
+     * </p>
      * 
      * @param request
      * @return
@@ -107,29 +115,28 @@ public class SecurityInterceptor implements PreProcessInterceptor {
     private String getToken(HttpRequest request) {
         List<String> tokenHeader = request.getHttpHeaders().getRequestHeader(AUTH_TOKEN_HEADER_NAME);
         String token = null;
-        
+
         if (tokenHeader != null && !tokenHeader.isEmpty()) {
             token = tokenHeader.get(0);
         }
-        
+
         return token;
     }
 
     /**
-     * <p>Checks if the {@link ResourceMethod} requires authentication.</p>
+     * <p>
+     * Checks if the {@link ResourceMethod} requires authentication.
+     * </p>
      * 
      * @param method
      * @return
      */
     private boolean requiresAuthentication(ResourceMethod method) {
-        Class<?> declaringClass =method.getMethod().getDeclaringClass(); 
-        return !(declaringClass.equals(SignInEndpoint.class) || 
-                declaringClass.equals(FacebookSignInEndpoint.class) ||
-                declaringClass.equals(OpenIDSignInEndpoint.class) ||
-                declaringClass.equals(TwitterSignInEndpoint.class) ||
-                declaringClass.equals(OTPSignInEndpoint.class) ||
-                declaringClass.equals(RegistrationEndpoint.class) ||
-                declaringClass.equals(CheckUsernameEndpoint.class));
+        Class<?> declaringClass = method.getMethod().getDeclaringClass();
+        return !(declaringClass.equals(SignInEndpoint.class) || declaringClass.equals(FacebookSignInEndpoint.class)
+                || declaringClass.equals(OpenIDSignInEndpoint.class) || declaringClass.equals(TwitterSignInEndpoint.class)
+                || declaringClass.equals(OTPSignInEndpoint.class) || declaringClass.equals(RegistrationEndpoint.class) || declaringClass
+                    .equals(CheckUsernameEndpoint.class));
     }
 
 }
