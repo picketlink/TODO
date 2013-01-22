@@ -31,7 +31,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import org.picketlink.idm.IdentityManager;
-import org.picketlink.idm.credential.PlainTextPassword;
+import org.picketlink.idm.credential.internal.Password;
 import org.picketlink.idm.model.Role;
 import org.picketlink.idm.model.SimpleRole;
 import org.picketlink.idm.model.SimpleUser;
@@ -82,7 +82,7 @@ public class RegistrationEndpoint {
             user.setLastName(request.getLastName());
 
             this.identityManager.add(user);
-            this.identityManager.updateCredential(user, new PlainTextPassword(request.getPassword()));
+            this.identityManager.updateCredential(user, new Password(request.getPassword()));
 
             Role roleGuest = new SimpleRole("guest");
             

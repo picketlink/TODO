@@ -1,7 +1,6 @@
 package org.jboss.aerogear.todo.server.test;
 
 import org.aerogear.todo.server.model.Project;
-import org.aerogear.todo.server.rest.JaxRsActivator;
 import org.aerogear.todo.server.rest.ProjectEndpoint;
 import org.aerogear.todo.server.util.Resources;
 import org.jboss.arquillian.container.test.api.Deployment;

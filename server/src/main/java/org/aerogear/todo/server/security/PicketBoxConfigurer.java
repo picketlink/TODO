@@ -28,9 +28,8 @@ import javax.inject.Inject;
 import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
 import org.aerogear.todo.server.security.authc.social.twitter.TwitterAuthenticationMechanism;
-import org.picketbox.cdi.idm.DefaultJPATemplate;
 import org.picketbox.core.config.ConfigurationBuilder;
-import org.picketlink.idm.jpa.schema.internal.JPATemplate;
+import org.picketbox.core.identity.jpa.EntityManagerLookupStrategy;
 
 /**
  * <p>
@@ -49,7 +48,7 @@ public class PicketBoxConfigurer {
      * </p>
      */
     @Inject
-    private DefaultJPATemplate jpaTemplate;
+    private EntityManagerLookupStrategy entityManagerLookupStrategy;
 
     @Inject
     private FacebookAuthenticationMechanism fbAuthenticationMechanism;
@@ -81,7 +80,7 @@ public class PicketBoxConfigurer {
         // configure the identity manager using a JPA-based identity store.
         builder
             .identityManager()
-                .jpaStore().template(this.jpaTemplate);
+                .jpaStore().entityManagerLookupStrategy(this.entityManagerLookupStrategy);
                
         // session management configuration
         builder

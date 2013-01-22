@@ -16,12 +16,8 @@
  */
 package org.aerogear.todo.server.rest;
 
-import org.aerogear.todo.server.model.Project;
-import org.aerogear.todo.server.model.Tag;
-import org.aerogear.todo.server.model.Task;
-import org.picketbox.cdi.authorization.RolesAllowed;
+import java.util.List;
 
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
@@ -36,7 +32,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
+
+import org.aerogear.todo.server.model.Project;
+import org.picketlink.extensions.core.pbox.authorization.RolesAllowed;
 
 @Stateless
 @Path("/projects")
