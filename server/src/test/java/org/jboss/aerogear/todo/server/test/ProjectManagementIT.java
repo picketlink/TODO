@@ -1,7 +1,12 @@
 package org.jboss.aerogear.todo.server.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import javax.inject.Inject;
+
 import org.aerogear.todo.server.model.Project;
-import org.aerogear.todo.server.rest.JaxRsActivator;
 import org.aerogear.todo.server.rest.ProjectEndpoint;
 import org.aerogear.todo.server.util.Resources;
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -12,10 +17,7 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import javax.inject.Inject;
-
-import static org.junit.Assert.*;
+import org.picketlink.extensions.core.auth.RESTActivation;
 
 /**
  * Uses Arquilian to test the JAX-RS processing class for member registration.
@@ -33,7 +35,7 @@ public class ProjectManagementIT {
     @Deployment
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war").addPackage(Project.class.getPackage())
-                .addClasses(ProjectEndpoint.class, Resources.class, JaxRsActivator.class)
+                .addClasses(ProjectEndpoint.class, Resources.class, RESTActivation.class)
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addAsWebInfResource("arquillian-ds.xml")
                 .addAsWebInfResource(EmptyAsset.INSTANCE, "beans.xml");
