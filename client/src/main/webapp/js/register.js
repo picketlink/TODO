@@ -17,7 +17,7 @@ $(document).ready(function() {
 	
 	//Register
 	$('#register-btn').click(function(e) {
-		var jqxhr = $.ajax('/todo-server/register', {
+		var jqxhr = $.ajax('/todo-server/accregister', {
 			contentType: "application/json",
             dataType:'json',
             data:JSON.stringify({userName:$('#username').val(),password:$('#password').val(),address:$('#address').val(),
@@ -25,7 +25,7 @@ $(document).ready(function() {
             	postalCode:$('#postalCode').val(),city:$('#city').val(),state:$('#state').val(),country:$('#country').val()}),
             type:'POST', 
             success:function (data) {
-                if (data.status.indexOf('Success') > -1) {
+                if (data.registered) {
                 	alert("Registration Successful. Please login..");
                 	window.location = getHost() + "/login.html";
                 } else if (data.status.length == 0){
@@ -33,23 +33,32 @@ $(document).ready(function() {
                 } else {
                 	$('#register-msg').text(data.status);
                 }
-            }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                if (xhr.status == 403) {
+                	alert('You have no permissions for this operation.');
+                }
+              }
         });
         
 		return false; // prevents submit of the form
 	});
+	
 	//Register
 	$('#username').on('focusout', (function(e) {
-		var jqxhr = $.ajax('/todo-server/checkUsername', {
+		var jqxhr = $.ajax('/todo-server/alreadyExists', {
 			contentType: "application/json",
             dataType:'json',
-            data:JSON.stringify({userName:$('#username').val()}),
-            type:'POST', 
+            data:'userName=' + $('#username').val(),
+            type:'GET', 
             success:function (data) {
-                if (data.status && data.status.length > 0){
-                	$('#register-msg').text(data.status);
+                if (data.registered){
+                	$('#register-msg').text('Username is already in use. Choose another one.');
                 }
-            }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                	alert(thrownError);
+              }
         });
 	}));
 });
