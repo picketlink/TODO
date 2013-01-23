@@ -43,7 +43,7 @@ public class PicketBoxConfigurer {
 
     /**
      * <p>
-     * Injects a {@link JPATemplate} that should be used to execute IDM operations. PicketBox CDI provides a default
+     * Injects a {@link JPATemplate} that should be used to execute IDM operations. PicketLink Extensions provides a default
      * implementation called {@link DefaultJPATemplate}.
      * </p>
      */
