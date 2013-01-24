@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import org.aerogear.todo.server.model.Project;
 import org.aerogear.todo.server.rest.ProjectEndpoint;
+import org.aerogear.todo.server.util.RESTActivation;
 import org.aerogear.todo.server.util.Resources;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -17,7 +18,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.picketlink.extensions.core.auth.RESTActivation;
 
 /**
  * Uses Arquilian to test the JAX-RS processing class for member registration.
