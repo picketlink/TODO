@@ -41,10 +41,10 @@ import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import org.picketbox.jaxrs.model.AuthenticationResponse;
 import org.picketlink.authentication.AuthenticationException;
-import org.picketlink.extensions.core.auth.AccountRegistrationEndpoint;
-import org.picketlink.extensions.core.auth.CheckUserNameEndpoint;
-import org.picketlink.extensions.core.auth.SignInEndpoint;
 import org.picketlink.extensions.core.pbox.PicketBoxIdentity;
+import org.picketlink.extensions.core.rest.AccountRegistrationEndpoint;
+import org.picketlink.extensions.core.rest.CheckUserNameEndpoint;
+import org.picketlink.extensions.core.rest.SignInEndpoint;
 
 /**
  * <p>
