@@ -71,7 +71,7 @@
 		<dependency>
 			<groupId>org.picketlink.extensions</groupId>
 			<artifactId>picketlink-extensions-core</artifactId>
-			<version>3.0.0-2013Jan24</version>
+			<version>3.0.0-2013Feb01</version>
 		</dependency>
 
 		<!-- First declare the APIs we depend on and need for compilation. All 
