@@ -24,7 +24,7 @@ package org.aerogear.todo.server.security.authc.social.openid;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.picketbox.core.AbstractUserCredential;
+import org.picketbox.core.authentication.credential.AbstractUserCredential;
 
 public class OpenIDCredential extends AbstractUserCredential {
     private HttpServletRequest request;
