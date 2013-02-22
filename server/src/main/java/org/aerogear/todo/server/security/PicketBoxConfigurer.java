@@ -24,12 +24,12 @@ package org.aerogear.todo.server.security;
 
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
-
-import org.aerogear.todo.server.security.authc.social.fb.FacebookAuthenticationMechanism;
-import org.aerogear.todo.server.security.authc.social.openid.OpenIDAuthenticationMechanism;
-import org.aerogear.todo.server.security.authc.social.twitter.TwitterAuthenticationMechanism;
+ 
 import org.picketbox.core.config.ConfigurationBuilder;
 import org.picketbox.core.identity.jpa.EntityManagerLookupStrategy;
+import org.picketlink.extensions.core.social.fb.FacebookAuthenticationMechanism;
+import org.picketlink.extensions.core.social.openid.OpenIDAuthenticationMechanism;
+import org.picketlink.extensions.core.social.twitter.TwitterAuthenticationMechanism;
 
 /**
  * <p>
