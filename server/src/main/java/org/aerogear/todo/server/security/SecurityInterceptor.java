@@ -27,11 +27,7 @@ import java.util.List;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.ws.rs.WebApplicationException;
-
-import org.aerogear.todo.server.security.authc.otp.OTPSignInEndpoint;
-import org.aerogear.todo.server.security.authc.social.fb.FacebookSignInEndpoint;
-import org.aerogear.todo.server.security.authc.social.openid.OpenIDSignInEndpoint;
-import org.aerogear.todo.server.security.authc.social.twitter.TwitterSignInEndpoint;
+ 
 import org.apache.http.HttpStatus;
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.core.ResourceMethod;
@@ -41,10 +37,14 @@ import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import org.picketbox.jaxrs.model.AuthenticationResponse;
 import org.picketlink.authentication.AuthenticationException;
+import org.picketlink.extensions.core.otp.OTPSignInEndpoint;
 import org.picketlink.extensions.core.pbox.PicketBoxIdentity;
 import org.picketlink.extensions.core.rest.AccountRegistrationEndpoint;
 import org.picketlink.extensions.core.rest.CheckUserNameEndpoint;
 import org.picketlink.extensions.core.rest.SignInEndpoint;
+import org.picketlink.extensions.core.social.fb.FacebookSignInEndpoint;
+import org.picketlink.extensions.core.social.openid.OpenIDSignInEndpoint;
+import org.picketlink.extensions.core.social.twitter.TwitterSignInEndpoint;
 
 /**
  * <p>
@@ -138,5 +138,4 @@ public class SecurityInterceptor implements PreProcessInterceptor {
                 || declaringClass.equals(OTPSignInEndpoint.class) || declaringClass.equals(AccountRegistrationEndpoint.class) || declaringClass
                     .equals(CheckUserNameEndpoint.class));
     }
-
 }
